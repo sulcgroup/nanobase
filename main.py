@@ -1,15 +1,12 @@
-import os
-import sys
-from flask import Flask, Response, request, send_file, session, jsonify, redirect, abort
+from flask import Flask, render_template
+app = Flask(__name__)
 
-app = Flask(__name__, static_url_path='/static', static_folder="static")
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+print("TEST")
 
-@app.route("/")
-def index():
-    print("TEST")
-    return send_file("src/index.html")
+@app.route('/')
+def hello_world():
+    # return "Hello"
+    return render_template('index.html')
 
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=9000)
-    print("SERVER IS RUNNING")
+app.run(host="0.0.0.0", port=9000)
+ 
