@@ -4,6 +4,7 @@ import os
 import subprocess
 from time import sleep
 
+WATCH_INTERVAL = 5.0
 CURRENT_DIRECTORY = os.getcwd()
 directories = os.listdir(CURRENT_DIRECTORY)
 # NON_ANGULAR_DIRS = ['static', 'templates', '__pycache__']
@@ -17,8 +18,6 @@ for directory in directories:
 FLASK_STATIC_PATH = os.path.join(CURRENT_DIRECTORY, 'static')
 FLASK_TEMPLATES_PATH = os.path.join(CURRENT_DIRECTORY, 'templates')
 
-files = os.listdir(DIST_PATH)
-
 subprocess.call(('cd ' + ANGULAR_PROJECT_PATH + ' && ng build --watch --base-href /static/ &'), shell=True)
 
 dir_exists = True
@@ -27,6 +26,11 @@ print('Watching for changes...')
 
 while dir_exists:
     try:
+        try:
+            files = os.listdir(DIST_PATH)
+            print("Moving files from dist to static & templates...")
+        except FileNotFoundError:
+            files = []
         static_files = ""
         html_files = ""
         for file in files:
@@ -43,4 +47,4 @@ while dir_exists:
         print('BUILD DEV FAILURE')
         dir_exists = False
         print(e)
-    sleep(10.0)
+    sleep(WATCH_INTERVAL)
