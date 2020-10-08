@@ -28,7 +28,6 @@ while dir_exists:
     try:
         try:
             files = os.listdir(DIST_PATH)
-            print("Moving files from dist to static & templates...")
         except FileNotFoundError:
             files = []
         static_files = ""
