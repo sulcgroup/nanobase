@@ -30,20 +30,20 @@ while dir_exists:
             files = os.listdir(DIST_PATH)
         except FileNotFoundError:
             files = []
-        static_files = ""
-        html_files = ""
-        for file in files:
-            if '.js' in file or '.js.map' in file or '.ico' in file:
-                static_files += (file + ' ')
-            if '.html' in file:
-                html_files += (file + ' ')
-        if len(static_files) > 0:
-            subprocess.call(('cd ' + DIST_PATH + ' &&' + ' mv ' + static_files + FLASK_STATIC_PATH), shell=True)
-        if len(html_files) > 0:
-            subprocess.call(('cd ' + DIST_PATH + ' &&' + ' mv ' + html_files + FLASK_TEMPLATES_PATH), shell=True)
-        "Updated"
+        if files:
+            static_files = ""
+            html_files = ""
+            for file in files:
+                if '.js' in file or '.js.map' in file or '.ico' in file:
+                    static_files += (file + ' ')
+                if '.html' in file:
+                    html_files += (file + ' ')
+            if len(static_files) > 0:
+                subprocess.call(('cd ' + DIST_PATH + ' &&' + ' mv ' + static_files + FLASK_STATIC_PATH), shell=True)
+            if len(html_files) > 0:
+                subprocess.call(('cd ' + DIST_PATH + ' &&' + ' mv ' + html_files + FLASK_TEMPLATES_PATH), shell=True)
     except Exception as e:
         print('BUILD DEV FAILURE')
         dir_exists = False
-        print(e)
+        print(e.with_traceback)
     sleep(WATCH_INTERVAL)
