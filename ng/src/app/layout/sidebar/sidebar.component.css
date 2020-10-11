@@ -1,10 +1,26 @@
 a {
     display: block;
     text-align: left;
-    font-size: 18px;
+    font-size: calc(10px + 0.55vw);
     position: relative;
     top: 15px;
     margin-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 100%;
+    overflow: hidden;
+}
+
+@media screen and (max-width: 1100px) {
+    a {
+        font-size: 14px;
+        overflow: hidden;
+    }
+    .sidebar-icon {
+        position: relative;
+        top: 1px;
+        font-size: 20px;
+    }
 }
 
 .sidebar-icon {
@@ -12,8 +28,11 @@ a {
 }
 
 #sidebar-container {
+    overflow: hidden;
     height: 100%!important;
-    width: 250px;
+    /* width: 250px; */
+    width: 15%;
+    min-width: 160px;
     background-color: rgb(224, 224, 228);
     border-right: 1px solid rgb(153, 147, 161);
 }
