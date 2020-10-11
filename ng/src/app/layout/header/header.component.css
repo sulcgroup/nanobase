@@ -19,25 +19,26 @@ a {
 #header-title-container {
     background-color: rgba(0, 0, 0, .25);
     border-right: 1px solid  rgb(17, 0, 36);
+    /* width: 249px; */
+    width: 15%;
+    min-width: 160px;
+    /* flex-shrink: 0; */
     /* Vertically centers title within the container */
     display: flex;
     align-items: center;
-    width: 249px
-    
 }
 #search-field-container {
-    /* background-color: rgb(52, 58, 64); */
     margin-top: 10px;
     margin-left: 20px;
+    margin-right: 20px;
     flex-basis: 500px;
 }
 #sign-in-container {
-    /* background-color: rgb(52, 58, 64); */
     margin-left: auto;
     display: flex;
     align-items: center;
 }
-
+/* Header Elements */
 #header-title {
     font-size: 32px;
     margin: auto;
@@ -53,8 +54,10 @@ a {
     margin-left: 10px;
     margin-right: 20px;
     margin-bottom: 0;
+    text-align: center;
 }
 
+/* Overrides Angular Material */
 .mat-input-element, .mat-form-field-autofill-control, .ng-pristine, .ng-valid, .cdk-text-field-autofill-monitored, .ng-touched
 {
     font-size: 16px;
