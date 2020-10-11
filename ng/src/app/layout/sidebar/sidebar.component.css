@@ -1,0 +1,19 @@
+a {
+    display: block;
+    text-align: left;
+    font-size: 18px;
+    position: relative;
+    top: 15px;
+    margin-bottom: 10px;
+}
+
+.sidebar-icon {
+    padding-bottom: 5px;
+}
+
+#sidebar-container {
+    height: 100%!important;
+    width: 250px;
+    background-color: rgb(224, 224, 228);
+    border-right: 1px solid rgb(153, 147, 161);
+}

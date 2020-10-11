@@ -4,7 +4,7 @@ import os
 import subprocess
 from time import sleep
 
-WATCH_INTERVAL = 5.0
+WATCH_INTERVAL = 3
 CURRENT_DIRECTORY = os.getcwd()
 directories = os.listdir(CURRENT_DIRECTORY)
 # NON_ANGULAR_DIRS = ['static', 'templates', '__pycache__']
