@@ -11,9 +11,10 @@ a {
     overflow: hidden;
 }
 
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 1130px) {
     a {
         font-size: 14px;
+        padding-left: 12px;
         overflow: hidden;
     }
     .sidebar-icon {
@@ -28,11 +29,11 @@ a {
 }
 
 #sidebar-container {
+    display: inline-block;
     overflow: hidden;
-    height: 100%!important;
-    /* width: 250px; */
-    width: 15%;
+    height: 100%;
+    width: 100%;
     min-width: 160px;
     background-color: rgb(224, 224, 228);
-    border-right: 1px solid rgb(153, 147, 161);
+    border-right: 1px solid rgb(165, 164, 175);
 }
