@@ -15,11 +15,12 @@ import { MatSliderModule } from '@angular/material/slider';
 import {MatIconModule} from '@angular/material/icon';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    SidebarComponent
+    SidebarComponent,
   ],
   imports: [
     BrowserModule,
@@ -29,7 +30,8 @@ import {MatIconModule} from '@angular/material/icon';
     MatButtonModule,
     MatSliderModule,
     MatFormFieldModule,
-    MatIconModule
+    MatIconModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
