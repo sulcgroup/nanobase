@@ -29,6 +29,7 @@ a {
 }
 
 #sidebar-container {
+    z-index: 15;
     display: inline-block;
     overflow: hidden;
     height: 100%;
