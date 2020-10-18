@@ -1,0 +1,28 @@
+<mat-card id="login-container">
+    <mat-card-header id="card-header">
+        <mat-card-title id="login-header">Sign in</mat-card-title>
+        <mat-card-subtitle><a routerLink="/auth/register">Register an account</a></mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="login-input">
+            <mat-form-field appearance="outline">
+              <mat-label>Enter your email</mat-label>
+              <input matInput placeholder="pat@example.com" [formControl]="email" autocomplete="new-password">
+              <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Enter your password</mat-label>
+                <input matInput [formControl]="password" [type]="hide ? 'password' : 'text'" autocomplete="new-password">
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="email.invalid">{{getPasswordError()}}</mat-error>
+            </mat-form-field>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <button id="submit-button" class="structure-button" mat-raised-button color="primary">
+            Submit
+        </button>
+    </mat-card-actions>
+</mat-card>
