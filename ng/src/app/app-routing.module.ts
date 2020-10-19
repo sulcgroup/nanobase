@@ -6,7 +6,8 @@ const routes: Routes = [
   { path: 'upload', loadChildren: () => import('./upload/upload.module').then(m => m.UploadModule) },
   { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule) },
   { path: 'about', loadChildren: () => import('./about/about.module').then(m => m.AboutModule) },
-  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) }
+  { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
+  { path: 'structure', loadChildren: () => import('./structure/structure.module').then(m => m.StructureModule) }
 ];
 
 @NgModule({

@@ -1,6 +1,7 @@
 #register-container {
     width: 50%;
-    margin: 70px 100px;
+    margin-top: 70px;
+    margin-left: 7%;
     background-color: rgb(229, 229, 235);
     box-shadow: 0 0 8px 2px rgb(197, 197, 197);
 }
@@ -20,7 +21,7 @@ a {
     margin: auto!important;
     width: 50%;
     display: block;
-    margin-top: 5px!important;
+    margin-top: 10px!important;
 }
 
 .name-container {
@@ -28,7 +29,7 @@ a {
     width: 50%;
     display: flex;
     justify-content: space-between;
-    margin-top: 5px!important;
+    margin-top: 10px!important;
 }
 
 :host ::ng-deep .name {

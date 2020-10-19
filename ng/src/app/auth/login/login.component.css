@@ -1,6 +1,7 @@
 #login-container {
     width: 50%;
-    margin: 70px 100px;
+    margin-top: 70px;
+    margin-left: 7%;
     background-color: rgb(229, 229, 235);
     box-shadow: 0 0 8px 2px rgb(197, 197, 197);
 }
@@ -21,7 +22,6 @@ a {
     width: 50%;
     display: block;
     margin-top: 15px!important;
-    /* background-color: rgb(229, 229, 235)!important; */
 }
 
 #submit-button {

@@ -77,25 +77,3 @@ a {
 {
     color: rgba(255, 255, 255, 0.87);
 }
-
-/* Form input */
-/* ::ng-deep input.mat-input-element {
-    color: rgba(255, 255, 255, 0.87);
-}
-
-::ng-deep .mat-focused .mat-form-field-ripple .mat-form-field-underline {
-    color: rgb(103,58,183);
-    color: rgba(255, 255, 255, 0.87)!important;
-}
-
-::ng-deep .mat-label .mat-form-field-appearance-legacy .ng-tns-c59-0 .ng-star-inserted  {
-    color: rgba(255, 255, 255, 0.87)!important;
-}
-
-::ng-deep .mat-form-field-placeholder{
-    color:red;
-} */
-
-/* label {
-    color: red!important;
-} */

@@ -15,14 +15,8 @@
 }
 
 #main  {
-    margin-left: calc(15% + 6px);
+    margin-left: max(166px, calc(15% + 6px));
     margin-top: 82px;
     width: 100%;
-    height: 100%;
-}
-
-@media screen and (max-width: 1130px) {
-    #main {
-        /* Change main div on resize */
-    }
+    height: calc(100% - 82px);
 }
