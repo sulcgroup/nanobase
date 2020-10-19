@@ -7,16 +7,16 @@
         <div class="login-input">
             <mat-form-field appearance="outline">
               <mat-label>Enter your email</mat-label>
-              <input matInput placeholder="pat@example.com" [formControl]="email" autocomplete="new-password">
+              <input matInput placeholder="email@example.com" [formControl]="email" autocomplete="new-password">
               <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
                 <mat-label>Enter your password</mat-label>
                 <input matInput [formControl]="password" [type]="hide ? 'password' : 'text'" autocomplete="new-password">
                 <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
-                <mat-error *ngIf="email.invalid">{{getPasswordError()}}</mat-error>
+                <mat-error *ngIf="password.invalid">{{getPasswordError()}}</mat-error>
             </mat-form-field>
         </div>
     </mat-card-content>
