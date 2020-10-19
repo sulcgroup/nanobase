@@ -45,4 +45,5 @@ export class RegisterComponent implements OnInit {
     }
     return this.password.hasError('minlength') ? 'Must be at least 8 characters' : '';
   }
+
 }
