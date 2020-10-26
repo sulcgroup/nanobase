@@ -1,83 +1,260 @@
-
-
-
 <mat-horizontal-stepper class="form-container" linear #stepper>
-    <mat-step [stepControl]="structureGroup" [optional]="isOptional">
-      <form [formGroup]="structureGroup">
-        <ng-template matStepLabel>Structure Information</ng-template>
-        <mat-form-field>
-          <mat-label>Name</mat-label>
-          <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+  <mat-step [stepControl]="structureGroup" [optional]="isOptional">
+    <form [formGroup]="structureGroup">
+      <ng-template matStepLabel>Structure Information</ng-template>
+
+      <mat-form-field class="field-container">
+        <mat-label>Structure Name</mat-label>
+        <input matInput formControlName="name" required>
+      </mat-form-field><br>
+      
+      <mat-form-field class="field-container">
+        <mat-label>Structure Size</mat-label>
+        <input matInput formControlName="size" required
+        matTooltip="# of nucleotides, strands, or weight" matTooltipClass="tooltip" matTooltipPosition="above">
+      </mat-form-field><br>
+
+      <mat-form-field class="field-container dropdown-field" appearance="fill">
+        <mat-label>Molecule Type</mat-label>
+        <mat-select formControlName="type" required>
+          <mat-option value="dna">DNA</mat-option>
+          <mat-option value="rna">RNA</mat-option>
+          <mat-option value="dna/rna">DNA/RNA hybrid</mat-option>
+          <mat-option value="na/protein">Nucleic acid/protein hybrid</mat-option>
+          <mat-option value="other">other</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div formArrayName="applications">
+        <mat-form-field class="field-container hashtag-field" *ngFor="let application of fieldArray('applications', 1).controls; let i=index" [formGroupName]="i">
+          <mat-label *ngIf="i===0">Application(s)</mat-label>
+          <input matInput formControlName="value" required
+          [matTooltip]="i===0 ? 'e.g. cancer therapy, nanoelectronics, protein scaffolding, crystallography' : ''" matTooltipClass="tooltip" matTooltipPosition="above">
+          <button *ngIf="i>0" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('applications', 1, i)">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
-        <div>
-          <button mat-button matStepperNext>Next</button>
-        </div>
-      </form>
-    </mat-step>
-
-
-    <mat-step [stepControl]="publicationGroup" [optional]="isOptional">
-      <form [formGroup]="publicationGroup">
-        <ng-template matStepLabel>Publication Information</ng-template>
-        <mat-form-field>
-          <mat-label>Address</mat-label>
-          <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
-                 required>
-        </mat-form-field>
-        <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
-        </div>
-      </form>
-    </mat-step>
-
-    <mat-step [stepControl]="fileGroup" [optional]="isOptional">
-        <form [formGroup]="fileGroup">
-          <ng-template matStepLabel>File Uploads</ng-template>
-          <mat-form-field>
-            <mat-label>Address</mat-label>
-            <input matInput formControlName="file" placeholder="Ex. 1 Main St, New York, NY"
-                   required>
-          </mat-form-field>
-          <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext>Next</button>
-          </div>
-        </form>
-      </mat-step>
-
-
-    <mat-step>
-      <ng-template matStepLabel>Done</ng-template>
-      <p>You are now done.</p>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
+        <br>
+        <button class="field-button" (mouseup)="addField('applications', 1)" mat-stroked-button>Add field</button>
       </div>
-    </mat-step>
-  </mat-horizontal-stepper>
+      
+      <div formArrayName="modifications">
+        <mat-form-field class="field-container hashtag-field" *ngFor="let modification of fieldArray('modifications', 1).controls; let i=index" [formGroupName]="i">
+          <mat-label *ngIf="i===0">Modification(s)</mat-label>
+          <input matInput formControlName="value" required
+          [matTooltip]="i===0 ? 'e.g. AuNP, fluorophore, silica coating, dye, linkers, modified nucleotides' : ''" matTooltipClass="tooltip" matTooltipPosition="above">
+          <button *ngIf="i>0" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('modifications', 1, i)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <br>
+        <button class="field-button" (mouseup)="addField('modifications', 1)" mat-stroked-button>Add field</button>
+      </div>
+
+      <div formArrayName="keywords">
+        <mat-form-field class="field-container hashtag-field" *ngFor="let keyword of fieldArray('keywords', 1).controls; let i=index" [formGroupName]="i">
+          <mat-label *ngIf="i===0">Keywords</mat-label>
+          <input matInput formControlName="value" required
+          [matTooltip]="i===0 ? 'e.g. oxDNA, tile, synthetic biology, molecular factory, NAMD simulation' : ''" matTooltipClass="tooltip" matTooltipPosition="above">
+          <button *ngIf="i>0" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('keywords', 1, i)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <br>
+        <button class="field-button" (mouseup)="addField('keywords', 1)" mat-stroked-button>Add field</button>
+      </div>
+
+      <mat-form-field class="field-container description-field">
+        <mat-label>Description (300 characters max)</mat-label>
+        <textarea matInput formControlName="description" required></textarea>
+      </mat-form-field>
+
+      <br><button (click)="test()" class="stepper-button" mat-flat-button matStepperNext color="primary">Next</button>
+    </form>
+  </mat-step>
+
+
+
+
+
+  <mat-step [stepControl]="publicationGroup" [optional]="isOptional">
+    <form [formGroup]="publicationGroup">
+      <ng-template matStepLabel>Publication Information</ng-template>
+
+      <div formArrayName="authors">
+        <mat-form-field class="field-container hashtag-field" *ngFor="let author of fieldArray('authors', 2).controls; let i=index" [formGroupName]="i">
+          <mat-label *ngIf="i===0">Author(s)</mat-label>
+          <input matInput formControlName="value" [placeholder]="i===0 ? 'Jane Doe' : ''" required>
+          <button *ngIf="i>0" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('authors', 2, i)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <br>
+        <button class="field-button" (mouseup)="addField('authors', 2)" mat-stroked-button>Add author</button>
+      </div>
+
+      <mat-form-field class="field-container" appearance="fill">
+        <mat-label>Date Published</mat-label>
+        <input matInput [matDatepicker]="picker1" formControlName="date" required>
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field><br>
+
+      <mat-form-field class="field-container citation-field">
+        <mat-label>Citation</mat-label>
+        <textarea matInput formControlName="citation" required></textarea>
+      </mat-form-field><br>
+
+      <mat-form-field class="field-container licensing-field">
+        <mat-label>Licensing Information</mat-label>
+        <textarea matInput formControlName="licensing" required
+        matTooltip="e.g. any relevant patents" matTooltipClass="tooltip" matTooltipPosition="above"></textarea>
+      </mat-form-field><br>
+
+      <div>
+        <button class="stepper-button" mat-flat-button matStepperPrevious color="primary">Back</button>
+        <button class="stepper-button" mat-flat-button matStepperNext color="primary">Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+
   
 
 
-<h1>Structure Info</h1>
-Structure name (text)
-<br>Molecule type (dropdown - DNA, RNA, DNA/RNA hybrid, nucleic acid/protein hybrid, and other)
-<br>Structure size (text - no of nucleotides, strands, or weight)
-<br>Application(s) (hashtag - Structural, cancer therapy, immunotherapy, other medical, nanoelectronics, Protein scaffolding, chemical factory, crystallography)
-<br>Modifications contained (hashtag - AuNP, fluorophore, silica coating, dye, linkers, modified nucleotides)
-<br>Keywords (hashtag - DNA nanotechnology, synthetic biology, BIOMOD competition design, molecular factory, molecular simulation, oxDNA, oxRNA, NAMD simulation, DNA origami, DNA single-stranded tiles, tile, multiorigami structure)
-<br>General description - (text)
+  <mat-step [stepControl]="fileGroup" [optional]="isOptional">
+    <form [formGroup]="fileGroup">
+      <ng-template matStepLabel>File Uploads</ng-template>
 
-<h1>Publication Info</h1>
-Authors (text array)
-<br>Date published (date)
-<br>Citation (text)
-<br>Licensing Info (text - any relevant patents etc) 
+      <mat-form-field>
+        <ngx-mat-file-input #universal formControlName="universal" placeholder="Universal Format Structure" required></ngx-mat-file-input>
+        <button mat-icon-button matSuffix *ngIf="universal.empty">
+          <mat-icon>folder</mat-icon>
+        </button>
+        <button mat-icon-button matSuffix *ngIf="!universal.empty" (click)="universal.clear($event)">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </mat-form-field><br>
 
-<h1>File Uploads</h1>
-Universal format structure
-<br>Further structure design information (sequences, CaDNAno, other formats)
-<br>Simulation results (mean structure, last configuration, maybe some graphs)
-<br>Experimental results (AFM/TEM images, fluorescent curves, CD curves, Cryo structures (this might be an issue because they can be huge files), gel images)
-<br>Simulation protocol (e.g. input files, topology, conf, VMMC weights,...)
-<br>Experimental protocol (PDF format?)
+      <div formArrayName="otherFormats">
+        <mat-form-field class="field-container multiple-field" *ngFor="let file of fieldArray('otherFormats', 3).controls; let i=index" [formGroupName]="i">
+          <ngx-mat-file-input #otherFormat formControlName="file" [placeholder]="i===0 ? 'Other Formats' : ''" required
+          [matTooltip]="i===0 ? 'e.g. CaDNAno, sequences' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
+          <button *ngIf="i===0 && otherFormat.empty" mat-icon-button matSuffix>
+            <mat-icon>folder</mat-icon>
+          </button>
+          <button *ngIf="i>0 && otherFormat.empty" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('otherFormats', 3, i)">
+            <mat-icon>clear</mat-icon>
+          </button>
+          <button mat-icon-button matSuffix *ngIf="!otherFormat.empty" (click)="otherFormat.clear($event)">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+        <br>
+        <button class="field-button" (mouseup)="addField('otherFormats', 3)" mat-stroked-button>Add file</button>
+      </div>
+
+      <mat-form-field>
+        <ngx-mat-file-input #image formControlName="image" placeholder="Display Image"></ngx-mat-file-input>
+        <button mat-icon-button matSuffix *ngIf="image.empty">
+          <mat-icon>folder</mat-icon>
+        </button>
+        <button mat-icon-button matSuffix *ngIf="!image.empty" (click)="image.clear($event)">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </mat-form-field><br>
+
+      <mat-form-field>
+        <ngx-mat-file-input #expProtocol formControlName="expProtocol" placeholder="Experimental Protocol" required
+        matTooltip="PDF Format" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
+        <button mat-icon-button matSuffix *ngIf="expProtocol.empty">
+          <mat-icon>folder</mat-icon>
+        </button>
+        <button mat-icon-button matSuffix *ngIf="!expProtocol.empty" (click)="expProtocol.clear($event)">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </mat-form-field><br>
+
+      <div formArrayName="expResults" *ngFor="let file of fieldArray('expResults', 3).controls; let i=index">
+        <mat-form-field class="field-container multiple-field" [formGroupName]="i">
+          <ngx-mat-file-input #expResult formControlName="file" [placeholder]="i===0 ? 'Experimental Results' : ''" required
+          [matTooltip]="i===0 ? 'e.g. AFM/TEM images, fluorescent curves, CD curves, Cryo structures' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
+          <button *ngIf="i===0 && expResult.empty" mat-icon-button matSuffix>
+            <mat-icon>folder</mat-icon>
+          </button>
+          <button *ngIf="i>0 && expResult.empty" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('expResults', 3, i)">
+            <mat-icon>clear</mat-icon>
+          </button>
+          <button mat-icon-button matSuffix *ngIf="!expResult.empty" (click)="expResult.clear($event)">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field class="file-description" [formGroupName]="i">
+          <mat-label>File Description</mat-label>
+          <input matInput formControlName="description" required>
+        </mat-form-field><br>
+      </div>
+      <button class="field-button" (mouseup)="addField('expResults', 3)" mat-stroked-button>Add file</button>
+
+      <div formArrayName="simProtocol" *ngFor="let file of fieldArray('simProtocol', 3).controls; let i=index">
+        <mat-form-field class="field-container multiple-field" [formGroupName]="i">
+          <ngx-mat-file-input #simProtocol formControlName="file" [placeholder]="i===0 ? 'Simulation Protocol' : ''" required
+          [matTooltip]="i===0 ? 'e.g. input files, topology, conf, VMMC weights' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
+          <button *ngIf="i===0 && simProtocol.empty" mat-icon-button matSuffix>
+            <mat-icon>folder</mat-icon>
+          </button>
+          <button *ngIf="i>0 && simProtocol.empty" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('simProtocol', 3, i)">
+            <mat-icon>clear</mat-icon>
+          </button>
+          <button mat-icon-button matSuffix *ngIf="!simProtocol.empty" (click)="simProtocol.clear($event)">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field class="file-description" [formGroupName]="i">
+          <mat-label>File Description</mat-label>
+          <input matInput formControlName="description" required>
+        </mat-form-field><br>
+      </div>
+      <button class="field-button" (mouseup)="addField('simProtocol', 3)" mat-stroked-button>Add file</button>
+
+      <div formArrayName="simResults" *ngFor="let file of fieldArray('simResults', 3).controls; let i=index">
+        <mat-form-field class="field-container multiple-field" [formGroupName]="i">
+          <ngx-mat-file-input #simResult formControlName="file" [placeholder]="i===0 ? 'Simulation Results' : ''" required
+          [matTooltip]="i===0 ? 'e.g. mean structure, last configuration, energy' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
+          <button *ngIf="i===0 && simResult.empty" mat-icon-button matSuffix>
+            <mat-icon>folder</mat-icon>
+          </button>
+          <button *ngIf="i>0 && simResult.empty" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('simResults', 3, i)">
+            <mat-icon>clear</mat-icon>
+          </button>
+          <button mat-icon-button matSuffix *ngIf="!simResult.empty" (click)="simResult.clear($event)">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field class="file-description" [formGroupName]="i">
+          <mat-label>File Description</mat-label>
+          <input matInput formControlName="description" required>
+        </mat-form-field><br>
+      </div>
+      <button class="field-button" (mouseup)="addField('simResults', 3)" mat-stroked-button>Add file</button>
+
+      <div>
+      <button class="stepper-button" mat-flat-button matStepperPrevious color="primary">Back</button>
+      <button class="stepper-button" mat-flat-button matStepperNext color="primary">Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+
+
+
+
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button class="stepper-button" mat-flat-button matStepperPrevious color="primary">Back</button>
+      <button class="stepper-button" mat-flat-button (click)="stepper.reset()" color="primary">Reset</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
