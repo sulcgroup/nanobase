@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { ApiService } from '../services/api.service';
-
 
 
 @Component({
@@ -9,25 +9,13 @@ import { ApiService } from '../services/api.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  test = 'a';
+  structures: Array<any> = [];
 
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    const obs = this.apiService.get('/test');
-    obs.subscribe(data => this.test = data.res);
-    console.log(this.test);
+    const obs: Observable<any> = this.apiService.get('/recent_structures');
+    obs.subscribe(data => this.structures = data);
   }
 
 }
-
-// this.tagsService.getAll()
-//     .subscribe(tags => {
-//       this.tags = tags;
-//       this.tagsLoaded = true;
-//     });
-
-// getAll(): Observable<[string]> {
-//   return this.apiService.get('/tags')
-//         .pipe(map(data => data.tags));
-// }
