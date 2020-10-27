@@ -1,14 +1,14 @@
 <div id="content-container">
     <div id="list-container">
-        <mat-card class="structure-container">
+        <mat-card class="structure-container" *ngFor="let structure of structures">
             <mat-card-header>
-                <mat-card-title>Name of Structure</mat-card-title>
-                <mat-card-subtitle>Author | Upload Date</mat-card-subtitle>
+                <mat-card-title>{{structure.title}}</mat-card-title>
+                <mat-card-subtitle>{{structure.author}} | {{structure.date}}</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image src="/images/6.jpg" alt="Photo of a Shiba Inu">
+            <img mat-card-image src="{{structure.img}}" alt="Display Image" *ngIf="structure.img">
             <mat-card-content>
                 <p>
-                {{ test }} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+                {{structure.description}} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
                 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
                 exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                 </p>
@@ -26,7 +26,7 @@
                 <mat-card-title>Name of Structure</mat-card-title>
                 <mat-card-subtitle>Author | Upload Date</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image src="/images/1.jpg" alt="Photo of a Shiba Inu">
+            <img mat-card-image src="/images/1.jpg" alt="Display Image">
             <mat-card-content>
                 <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
@@ -67,7 +67,7 @@
                 <mat-card-title>Name of Structure</mat-card-title>
                 <mat-card-subtitle>Author | Upload Date</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image src="/images/5.jpg" alt="Photo of a Shiba Inu">
+            <img mat-card-image src="/images/5.jpg" alt="Display Image">
             <mat-card-content>
                 <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
@@ -88,7 +88,7 @@
                 <mat-card-title>Name of Structure</mat-card-title>
                 <mat-card-subtitle>Author | Upload Date</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image src="/images/3.jpg" alt="Photo of a Shiba Inu">
+            <img mat-card-image src="/images/3.jpg" alt="Display Image">
             <mat-card-content>
                 <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
@@ -109,7 +109,7 @@
                 <mat-card-title>Name of Structure</mat-card-title>
                 <mat-card-subtitle>Author | Upload Date</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image src="/images/2.jpg" alt="Photo of a Shiba Inu">
+            <img mat-card-image src="/images/2.jpg" alt="Display Image">
             <mat-card-content>
                 <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
@@ -170,7 +170,7 @@
                 <mat-card-title>Name of Structure</mat-card-title>
                 <mat-card-subtitle>Author | Upload Date</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image src="/images/4.jpg" alt="Photo of a Shiba Inu">
+            <img mat-card-image src="/images/4.jpg" alt="Display Image">
             <mat-card-content>
                 <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
