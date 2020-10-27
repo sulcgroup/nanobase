@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
   encapsulation: ViewEncapsulation.None,
 })
 export class UploadComponent implements OnInit {
-  isOptional = false;
+  isOptional = true;
 
   structureGroup: FormGroup;
   publicationGroup: FormGroup;

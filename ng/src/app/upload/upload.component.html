@@ -82,9 +82,18 @@
       <ng-template matStepLabel>Publication Information</ng-template>
 
       <div formArrayName="authors">
-        <mat-form-field class="field-container hashtag-field" *ngFor="let author of fieldArray('authors', 2).controls; let i=index" [formGroupName]="i">
-          <mat-label *ngIf="i===0">Author(s)</mat-label>
-          <input matInput formControlName="value" [placeholder]="i===0 ? 'Jane Doe' : ''" required>
+        <mat-form-field class="field-container hashtag-field" *ngFor="let author of fieldArray('authors', 2).controls; let i=index" [formGroupName]="i" [ngSwitch]="i">
+          <mat-label *ngSwitchCase="0">First author</mat-label>
+          <mat-label *ngSwitchCase="1">Second author</mat-label>
+          <mat-label *ngSwitchCase="2">Third author</mat-label>
+          <mat-label *ngSwitchCase="3">Fourth author</mat-label>
+          <mat-label *ngSwitchCase="4">Fifth author</mat-label>
+          <mat-label *ngSwitchCase="5">Sixth author</mat-label>
+          <mat-label *ngSwitchCase="6">Seventh author</mat-label>
+          <mat-label *ngSwitchCase="7">Eighth author</mat-label>
+          <mat-label *ngSwitchCase="8">Ninth author</mat-label>
+          <mat-label *ngSwitchCase="9">Tenth author</mat-label>
+          <input matInput formControlName="value" placeholder="Jane Doe" required>
           <button *ngIf="i>0" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('authors', 2, i)">
             <mat-icon>close</mat-icon>
           </button>
