@@ -1,5 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder, Validators, ValidatorFn } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null): boolean {
+    const invalidCtrl = !!(control && control.invalid && control.parent.dirty);
+    const invalidParent = !!(control && control.parent && control.parent.invalid && control.parent.dirty);
+    return (invalidCtrl || invalidParent);
+  }
+}
+
+export function conditionalValidator(predicate: () => boolean, validator: ValidatorFn, errorNamespace?: string): ValidatorFn {
+  return formControl => {
+    if (!formControl.parent) {
+      return null;
+    }
+    let error = null;
+    if (predicate()) {
+      error = validator(formControl);
+    }
+    if (errorNamespace && error) {
+      const customError = {};
+      customError[errorNamespace] = error;
+      error = customError;
+    }
+    return error;
+  };
+}
 
 @Component({
   selector: 'app-register',
@@ -8,42 +35,38 @@ import {FormControl, Validators} from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
   hide = true;
+  matcher: MyErrorStateMatcher;
+  registrationForm: FormGroup;
+  firstName: FormControl;
+  lastName: FormControl;
+  institution: FormControl;
+  email: FormControl;
+  passwords: FormGroup;
 
-  firstName = new FormControl('', [Validators.required]);
-  lastName = new FormControl('', [Validators.required]);
-  institution = new FormControl('', [Validators.required]);
-  email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('', [Validators.required, Validators.minLength(8)]);
-
-  constructor() { }
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.matcher = new MyErrorStateMatcher();
+
+    this.registrationForm = this.fb.group({
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      institution: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.minLength(8)]],
+      confirmPassword: ['', conditionalValidator(() => this.registrationForm.get('password').value !== this.registrationForm.get('confirmPassword').value, Validators.pattern(/\A(?!x)x/), 'Match error')]
+    });
   }
 
-  getFirstNameError(): string {
-    return this.firstName.hasError('required') ? 'You must enter a value' : '';
+  checkPasswords(group: FormGroup): object {
+    const test = this.registrationForm.get('passwords.password');
+    const pass = group.get('password').value;
+    const confirmPass = group.get('confirmPassword').value;
+    return pass === confirmPass ? null : { mismatch: true };
   }
 
-  getLastNameError(): string {
-    return this.lastName.hasError('required') ? 'You must enter a value' : '';
-  }
-
-  getInstitutionError(): string {
-    return this.institution.hasError('required') ? 'You must enter a value' : '';
-  }
-
-  getEmailError(): string {
-    if (this.email.hasError('required')) {
-      return 'You must enter a value';
-    }
-    return this.email.hasError('email') ? 'Not a valid email' : '';
-  }
-
-  getPasswordError(): string {
-    if (this.password.hasError('required')) {
-      return 'You must enter a value';
-    }
-    return this.password.hasError('minlength') ? 'Must be at least 8 characters' : '';
+  submitForm(): void {
+    // console.log(check);
   }
 
 }
