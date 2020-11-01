@@ -1,14 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, ValidatorFn } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from '../../core/services/user.service';
 
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null): boolean {
-    const invalidCtrl = !!(control && control.invalid && control.parent.dirty);
-    const invalidParent = !!(control && control.parent && control.parent.invalid && control.parent.dirty);
-    return (invalidCtrl || invalidParent);
-  }
-}
 
 export function conditionalValidator(predicate: () => boolean, validator: ValidatorFn, errorNamespace?: string): ValidatorFn {
   return formControl => {
@@ -35,7 +30,6 @@ export function conditionalValidator(predicate: () => boolean, validator: Valida
 })
 export class RegisterComponent implements OnInit {
   hide = true;
-  matcher: MyErrorStateMatcher;
   registrationForm: FormGroup;
   firstName: FormControl;
   lastName: FormControl;
@@ -43,30 +37,44 @@ export class RegisterComponent implements OnInit {
   email: FormControl;
   passwords: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private route: ActivatedRoute,
+    private router: Router,
+    ) { }
 
   ngOnInit(): void {
-    this.matcher = new MyErrorStateMatcher();
-
     this.registrationForm = this.fb.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       institution: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.minLength(8)]],
-      confirmPassword: ['', conditionalValidator(() => this.registrationForm.get('password').value !== this.registrationForm.get('confirmPassword').value, Validators.pattern(/\A(?!x)x/), 'Match error')]
+      password: ['', [Validators.minLength(8), Validators.required]],
+      confirmPassword: ['', [Validators.required,
+        conditionalValidator(() => this.registrationForm.get('password').value !== this.registrationForm.get('confirmPassword').value,
+        Validators.pattern(/\A(?!x)x/), 'match')]]
+    });
+
+    this.registrationForm.get('password').valueChanges.subscribe(() => {
+      this.registrationForm.get('confirmPassword').updateValueAndValidity();
     });
   }
 
-  checkPasswords(group: FormGroup): object {
-    const test = this.registrationForm.get('passwords.password');
-    const pass = group.get('password').value;
-    const confirmPass = group.get('confirmPassword').value;
-    return pass === confirmPass ? null : { mismatch: true };
-  }
-
   submitForm(): void {
-    // console.log(check);
+    this.registrationForm.disable();
+    const userData = this.registrationForm.value;
+    console.log(userData);
+
+    this.userService
+    .register(userData)
+    .subscribe(
+      data => this.router.navigateByUrl('/'),
+      err => {
+        console.log(err);
+        this.registrationForm.enable();
+      }
+    );
   }
 
 }
