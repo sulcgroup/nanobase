@@ -1,4 +1,4 @@
-from flask import Flask, render_template, make_response, send_file, abort, jsonify
+from flask import Flask, render_template, make_response, send_file, abort, jsonify, request
 import os
 app = Flask(__name__, static_folder="ng/dist/ng", static_url_path="")
 
@@ -18,7 +18,7 @@ def getImage(image=None):
 		abort(404, discription="Image not found")
 
 
-@app.route("/api/recent_structures", methods=["GET"])
+@app.route("/recent_structures", methods=["GET"])
 def test():
 	# Query database to get recent structures
 	structure1 = {
@@ -60,6 +60,12 @@ def test():
 	response = [structure1, structure2, structure3, structure4]
 	
 	return jsonify(response)
+
+@app.route("/users", methods=["POST"])
+def register():
+	user = request.json
+	print(request.json)
+	return user
 
 
 if __name__ == '__main__':

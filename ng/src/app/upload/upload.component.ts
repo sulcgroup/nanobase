@@ -80,7 +80,7 @@ export class UploadComponent implements OnInit {
       images: ['', Validators.required]
     });
 
-    // Require fields when they enter an author name
+    // Update fields when author field changes
     this.fieldArray('authors', 2).valueChanges.subscribe(() => {
       this.publicationGroup.get('year').updateValueAndValidity();
       this.publicationGroup.get('citation').updateValueAndValidity();

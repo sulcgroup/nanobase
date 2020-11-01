@@ -39,8 +39,8 @@
                     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
+                    <mat-error *ngIf="registrationForm.hasError('required','password')">Required</mat-error>
                     <mat-error *ngIf="registrationForm.hasError('minlength','password')">Must be at least 8 characters</mat-error>
-                    
                 </mat-form-field>
     
                 <mat-form-field class="block-field" appearance="outline">
@@ -49,7 +49,8 @@
                     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
-                    <mat-error *ngIf="registrationForm.hasError('pattern','confirmPassword')">Does not match password</mat-error>
+                    <mat-error *ngIf="registrationForm.get('confirmPassword').errors?.required">Required</mat-error>
+                    <mat-error *ngIf="registrationForm.get('confirmPassword').errors?.match">Does not match password</mat-error>
                 </mat-form-field>
 
             </form>
@@ -58,7 +59,7 @@
         </div>
     </mat-card-content>
     <mat-card-actions>
-        <button (click)="submitForm()" id="submit-button" class="structure-button" mat-raised-button color="primary">
+        <button id="submit-button" class="structure-button" (click)="submitForm()" [disabled]="!registrationForm.valid" mat-raised-button color="primary">
             Submit
         </button>
     </mat-card-actions>
