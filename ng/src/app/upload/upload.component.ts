@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, ValidatorFn } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { FormService } from '../core/services/form.service';
 
 
@@ -11,7 +11,7 @@ import { FormService } from '../core/services/form.service';
 })
 export class UploadComponent implements OnInit {
   isOptional = true;
-  checked = true;
+  isSubmitting = false;
 
   structureGroup: FormGroup;
   publicationGroup: FormGroup;
@@ -131,10 +131,11 @@ export class UploadComponent implements OnInit {
   }
 
   submit(): void {
-    console.log(this.structureGroup.value);
-    console.log(this.publicationGroup.value);
-    console.log(this.fileGroup.value);
-    console.log(this.miscGroup.value);
+    this.isSubmitting = true;
+    this.structureGroup.disable();
+    this.publicationGroup.disable();
+    this.fileGroup.disable();
+    this.miscGroup.disable();
 
     const formValue = {
       ...this.structureGroup.value,
@@ -144,6 +145,14 @@ export class UploadComponent implements OnInit {
     };
 
     console.log(formValue);
+
+    setTimeout(() => {
+      this.isSubmitting = false;
+      this.structureGroup.enable();
+      this.publicationGroup.enable();
+      this.fileGroup.enable();
+      this.miscGroup.enable();
+    }, 2000);
   }
 
   test(): void {

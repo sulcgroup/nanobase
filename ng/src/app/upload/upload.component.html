@@ -1,3 +1,4 @@
+<mat-progress-bar [ngClass]="{'invisible': !isSubmitting}" mode="indeterminate"></mat-progress-bar>
 <mat-horizontal-stepper class="form-container" linear #stepper>
   <mat-step [stepControl]="structureGroup" [optional]="isOptional">
     <form [formGroup]="structureGroup">

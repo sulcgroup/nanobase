@@ -15,8 +15,8 @@
 }
 
 #main  {
-    margin-left: max(166px, calc(15% + 6px));
-    margin-top: 82px;
+    margin-left: max(166px, calc(15% + 2px));
+    margin-top: 78px;
     width: 100%;
-    height: calc(100% - 82px);
+    height: calc(100% - 78px);
 }
