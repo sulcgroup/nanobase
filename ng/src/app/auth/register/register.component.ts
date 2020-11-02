@@ -1,27 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators, ValidatorFn } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormControl, FormGroup, FormBuilder, Validators, ValidatorFn, FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
-
-
-export function conditionalValidator(predicate: () => boolean, validator: ValidatorFn, errorNamespace?: string): ValidatorFn {
-  return formControl => {
-    if (!formControl.parent) {
-      return null;
-    }
-    let error = null;
-    if (predicate()) {
-      error = validator(formControl);
-    }
-    if (errorNamespace && error) {
-      const customError = {};
-      customError[errorNamespace] = error;
-      error = customError;
-    }
-    return error;
-  };
-}
+import { FormService } from '../../core/services/form.service';
 
 @Component({
   selector: 'app-register',
@@ -39,10 +20,10 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService,
-    private route: ActivatedRoute,
     private router: Router,
-    ) { }
+    private userService: UserService,
+    private formService: FormService
+  ) { }
 
   ngOnInit(): void {
     this.registrationForm = this.fb.group({
@@ -52,13 +33,16 @@ export class RegisterComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.minLength(8), Validators.required]],
       confirmPassword: ['', [Validators.required,
-        conditionalValidator(() => this.registrationForm.get('password').value !== this.registrationForm.get('confirmPassword').value,
-        Validators.pattern(/\A(?!x)x/), 'match')]]
+        this.formService.conditionalValidator(() => !this.passwordMatch(), Validators.pattern(/\A(?!x)x/), 'match')]]
     });
 
     this.registrationForm.get('password').valueChanges.subscribe(() => {
       this.registrationForm.get('confirmPassword').updateValueAndValidity();
     });
+  }
+
+  passwordMatch(): boolean {
+    return this.registrationForm.get('password').value === this.registrationForm.get('confirmPassword').value;
   }
 
   submitForm(): void {

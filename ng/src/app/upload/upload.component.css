@@ -28,12 +28,13 @@
 }
 
 .multiple-field {
-    margin-right: 15px;
+    margin-right: 10px;
 }
 
 .file-description {
     width: 25%;
     min-width: 200px;
+    margin-right: 10px;
 }
 
 .year-field {
@@ -43,4 +44,13 @@
 
 .month-field {
     width: 192px;
+}
+
+mat-radio-button {
+    position: relative;
+    top: 3px;
+}
+
+h4 {
+    margin-bottom: 5px;
 }
