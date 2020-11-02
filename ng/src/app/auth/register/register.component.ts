@@ -1,5 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder, Validators, ValidatorFn } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from '../../core/services/user.service';
+
+
+export function conditionalValidator(predicate: () => boolean, validator: ValidatorFn, errorNamespace?: string): ValidatorFn {
+  return formControl => {
+    if (!formControl.parent) {
+      return null;
+    }
+    let error = null;
+    if (predicate()) {
+      error = validator(formControl);
+    }
+    if (errorNamespace && error) {
+      const customError = {};
+      customError[errorNamespace] = error;
+      error = customError;
+    }
+    return error;
+  };
+}
 
 @Component({
   selector: 'app-register',
@@ -8,42 +30,51 @@ import {FormControl, Validators} from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
   hide = true;
+  registrationForm: FormGroup;
+  firstName: FormControl;
+  lastName: FormControl;
+  institution: FormControl;
+  email: FormControl;
+  passwords: FormGroup;
 
-  firstName = new FormControl('', [Validators.required]);
-  lastName = new FormControl('', [Validators.required]);
-  institution = new FormControl('', [Validators.required]);
-  email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('', [Validators.required, Validators.minLength(8)]);
-
-  constructor() { }
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private route: ActivatedRoute,
+    private router: Router,
+    ) { }
 
   ngOnInit(): void {
+    this.registrationForm = this.fb.group({
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      institution: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.minLength(8), Validators.required]],
+      confirmPassword: ['', [Validators.required,
+        conditionalValidator(() => this.registrationForm.get('password').value !== this.registrationForm.get('confirmPassword').value,
+        Validators.pattern(/\A(?!x)x/), 'match')]]
+    });
+
+    this.registrationForm.get('password').valueChanges.subscribe(() => {
+      this.registrationForm.get('confirmPassword').updateValueAndValidity();
+    });
   }
 
-  getFirstNameError(): string {
-    return this.firstName.hasError('required') ? 'You must enter a value' : '';
-  }
+  submitForm(): void {
+    this.registrationForm.disable();
+    const userData = this.registrationForm.value;
+    console.log(userData);
 
-  getLastNameError(): string {
-    return this.lastName.hasError('required') ? 'You must enter a value' : '';
-  }
-
-  getInstitutionError(): string {
-    return this.institution.hasError('required') ? 'You must enter a value' : '';
-  }
-
-  getEmailError(): string {
-    if (this.email.hasError('required')) {
-      return 'You must enter a value';
-    }
-    return this.email.hasError('email') ? 'Not a valid email' : '';
-  }
-
-  getPasswordError(): string {
-    if (this.password.hasError('required')) {
-      return 'You must enter a value';
-    }
-    return this.password.hasError('minlength') ? 'Must be at least 8 characters' : '';
+    this.userService
+    .register(userData)
+    .subscribe(
+      data => this.router.navigateByUrl('/'),
+      err => {
+        console.log(err);
+        this.registrationForm.enable();
+      }
+    );
   }
 
 }

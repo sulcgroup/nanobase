@@ -35,3 +35,12 @@
     width: 25%;
     min-width: 200px;
 }
+
+.year-field {
+    margin-right: 16px;
+    width: 192px;
+}
+
+.month-field {
+    width: 192px;
+}
