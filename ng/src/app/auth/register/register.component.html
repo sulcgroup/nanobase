@@ -5,45 +5,61 @@
     </mat-card-header>
     <mat-card-content>
         <div class="register-input">
+            <form [formGroup]="registrationForm">
 
-            <div class="name-container">
-                <mat-form-field class="name" appearance="outline">
-                    <mat-label>Enter First name</mat-label>
-                    <input matInput [formControl]="firstName">
-                    <mat-error *ngIf="firstName.invalid">{{getFirstNameError()}}</mat-error>
+                <div class="name-container">
+                    <mat-form-field class="name" appearance="outline">
+                        <mat-label>Enter First name</mat-label>
+                        <input matInput formControlName="firstName">
+                        <mat-error *ngIf="registrationForm.hasError('required','firstName')">Required</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="name" appearance="outline">
+                        <mat-label>Enter Last name</mat-label>
+                        <input matInput formControlName="lastName">
+                        <mat-error *ngIf="registrationForm.hasError('required','lastName')">Required</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <mat-form-field class="block-field" appearance="outline">
+                    <mat-label>Enter Institution</mat-label>
+                    <input matInput formControlName="institution">
+                    <mat-error *ngIf="registrationForm.hasError('required','institution')">Required</mat-error>
                 </mat-form-field>
-                <mat-form-field class="name" appearance="outline">
-                    <mat-label>Enter Last name</mat-label>
-                    <input matInput [formControl]="lastName">
-                    <mat-error *ngIf="lastName.invalid">{{getLastNameError()}}</mat-error>
+
+                <mat-form-field class="block-field" appearance="outline">
+                <mat-label>Enter Email</mat-label>
+                <input matInput formControlName="email" placeholder="email@example.com">
+                <mat-error *ngIf="registrationForm.hasError('required','email')">Required</mat-error>
+                <mat-error *ngIf="registrationForm.hasError('email','email')">Invalid email</mat-error>
                 </mat-form-field>
-            </div>
 
-            <mat-form-field class="block-field" appearance="outline">
-                <mat-label>Enter Institution</mat-label>
-                <input matInput [formControl]="institution">
-                <mat-error *ngIf="institution.invalid">{{getInstitutionError()}}</mat-error>
-              </mat-form-field>
+                <mat-form-field class="block-field" appearance="outline">
+                    <mat-label>Enter Password</mat-label>
+                    <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" autocomplete="new-password">
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="registrationForm.hasError('required','password')">Required</mat-error>
+                    <mat-error *ngIf="registrationForm.hasError('minlength','password')">Must be at least 8 characters</mat-error>
+                </mat-form-field>
+    
+                <mat-form-field class="block-field" appearance="outline">
+                    <mat-label>Confirm Password</mat-label>
+                    <input matInput formControlName="confirmPassword" [type]="hide ? 'password' : 'text'" autocomplete="new-password">
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="registrationForm.get('confirmPassword').errors?.required">Required</mat-error>
+                    <mat-error *ngIf="registrationForm.get('confirmPassword').errors?.match">Does not match password</mat-error>
+                </mat-form-field>
 
-            <mat-form-field class="block-field" appearance="outline">
-              <mat-label>Enter Email</mat-label>
-              <input matInput [formControl]="email" placeholder="email@example.com">
-              <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
-            </mat-form-field>
-
-            <mat-form-field class="block-field" appearance="outline">
-                <mat-label>Enter Password</mat-label>
-                <input matInput [formControl]="password" [type]="hide ? 'password' : 'text'" autocomplete="new-password">
-                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </button>
-                <mat-error *ngIf="password.invalid">{{getPasswordError()}}</mat-error>
-            </mat-form-field>
+            </form>
+            
 
         </div>
     </mat-card-content>
     <mat-card-actions>
-        <button id="submit-button" class="structure-button" mat-raised-button color="primary">
+        <button id="submit-button" class="structure-button" (click)="submitForm()" [disabled]="!registrationForm.valid" mat-raised-button color="primary">
             Submit
         </button>
     </mat-card-actions>

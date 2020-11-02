@@ -1,6 +1,24 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, ValidatorFn } from '@angular/forms';
 
+
+export function conditionalValidator(predicate: () => boolean, validator: ValidatorFn, errorNamespace?: string): ValidatorFn {
+  return formControl => {
+    if (!formControl.parent) {
+      return null;
+    }
+    let error = null;
+    if (predicate()) {
+      error = validator(formControl);
+    }
+    if (errorNamespace && error) {
+      const customError = {};
+      customError[errorNamespace] = error;
+      error = customError;
+    }
+    return error;
+  };
+}
 
 @Component({
   selector: 'app-upload',
@@ -9,7 +27,7 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
   encapsulation: ViewEncapsulation.None,
 })
 export class UploadComponent implements OnInit {
-  isOptional = false;
+  isOptional = true;
 
   structureGroup: FormGroup;
   publicationGroup: FormGroup;
@@ -18,28 +36,34 @@ export class UploadComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    // Define each section and field of the form
     this.structureGroup = this.fb.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
-      size: ['', Validators.required],
       applications: this.fb.array([this.fb.group({ value: ['', Validators.required] })]),
       modifications: this.fb.array([this.fb.group({ value: ['', Validators.required] })]),
       keywords: this.fb.array([this.fb.group({ value: ['', Validators.required] })]),
       description: ['', Validators.compose([Validators.required, Validators.maxLength(300)])],
     });
+
     this.publicationGroup = this.fb.group({
-      authors: this.fb.array([this.fb.group({ value: ['', Validators.required] })]),
-      date: ['', Validators.required],
-      citation: ['', Validators.required],
-      licensing: ['', Validators.required]
+      authors: this.fb.array([this.fb.group({ value: [''] })]),
+      year: ['', Validators.compose([Validators.pattern(/^(19|20)\d{2}$/),
+                 conditionalValidator(() => this.fieldArray('authors', 2).value[0].value, Validators.required, 'Year error')])],
+      month: ['', Validators.pattern(/(^0?[1-9]$)|(^1[0-2]$)/)],
+      citation: ['', conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
+                     Validators.required, 'Citation error')],
+      link: ['', conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
+                       Validators.required, 'Link error')],
+      licensing: ['', conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
+                       Validators.required, 'Licensing error')],
     });
+
     this.fileGroup = this.fb.group({
-      universal: ['', Validators.required],
-      otherFormats: this.fb.array([this.fb.group({
+      structureFiles: this.fb.array([this.fb.group({
         file: ['', Validators.required],
         description: ['', Validators.required]
       })]),
-      image: ['', Validators.required],
       expProtocol: ['', Validators.required],
       expResults: this.fb.array([this.fb.group({
         file: ['', Validators.required],
@@ -53,6 +77,15 @@ export class UploadComponent implements OnInit {
         file: ['', Validators.required],
         description: ['', Validators.required]
       })]),
+      images: ['', Validators.required]
+    });
+
+    // Update fields when author field changes
+    this.fieldArray('authors', 2).valueChanges.subscribe(() => {
+      this.publicationGroup.get('year').updateValueAndValidity();
+      this.publicationGroup.get('citation').updateValueAndValidity();
+      this.publicationGroup.get('link').updateValueAndValidity();
+      this.publicationGroup.get('licensing').updateValueAndValidity();
     });
   }
 
@@ -66,9 +99,9 @@ export class UploadComponent implements OnInit {
   }
 
   addField(type: string, group: number): void {
-    let limit = 5;
+    let limit = 10;
     if (type === 'authors') {
-      limit = 10;
+      limit = 20;
     }
     if (this.fieldArray(type, group).value.length < limit) {
       let newField: FormGroup;
@@ -94,7 +127,7 @@ export class UploadComponent implements OnInit {
   }
 
   test(): void {
-    console.log(this.fileGroup.valid, this.fileGroup.value);
+    console.log(this.structureGroup.valid, this.structureGroup.value);
   }
 
 }
