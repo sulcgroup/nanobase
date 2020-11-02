@@ -1,24 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, ValidatorFn } from '@angular/forms';
+import { FormService } from '../core/services/form.service';
 
-
-export function conditionalValidator(predicate: () => boolean, validator: ValidatorFn, errorNamespace?: string): ValidatorFn {
-  return formControl => {
-    if (!formControl.parent) {
-      return null;
-    }
-    let error = null;
-    if (predicate()) {
-      error = validator(formControl);
-    }
-    if (errorNamespace && error) {
-      const customError = {};
-      customError[errorNamespace] = error;
-      error = customError;
-    }
-    return error;
-  };
-}
 
 @Component({
   selector: 'app-upload',
@@ -28,12 +11,17 @@ export function conditionalValidator(predicate: () => boolean, validator: Valida
 })
 export class UploadComponent implements OnInit {
   isOptional = true;
+  checked = true;
 
   structureGroup: FormGroup;
   publicationGroup: FormGroup;
   fileGroup: FormGroup;
+  miscGroup: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder,
+    private formService: FormService
+  ) { }
 
   ngOnInit(): void {
     // Define each section and field of the form
@@ -49,13 +37,14 @@ export class UploadComponent implements OnInit {
     this.publicationGroup = this.fb.group({
       authors: this.fb.array([this.fb.group({ value: [''] })]),
       year: ['', Validators.compose([Validators.pattern(/^(19|20)\d{2}$/),
-                 conditionalValidator(() => this.fieldArray('authors', 2).value[0].value, Validators.required, 'Year error')])],
+                 this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
+                 Validators.required, 'Year error')])],
       month: ['', Validators.pattern(/(^0?[1-9]$)|(^1[0-2]$)/)],
-      citation: ['', conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
+      citation: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
                      Validators.required, 'Citation error')],
-      link: ['', conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
+      link: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
                        Validators.required, 'Link error')],
-      licensing: ['', conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
+      licensing: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
                        Validators.required, 'Licensing error')],
     });
 
@@ -64,7 +53,10 @@ export class UploadComponent implements OnInit {
         file: ['', Validators.required],
         description: ['', Validators.required]
       })]),
-      expProtocol: ['', Validators.required],
+      expProtocol: this.fb.array([this.fb.group({
+        file: ['', Validators.required],
+        description: ['', Validators.required]
+      })]),
       expResults: this.fb.array([this.fb.group({
         file: ['', Validators.required],
         description: ['', Validators.required]
@@ -77,7 +69,15 @@ export class UploadComponent implements OnInit {
         file: ['', Validators.required],
         description: ['', Validators.required]
       })]),
-      images: ['', Validators.required]
+      images: this.fb.array([this.fb.group({
+        file: [''],
+        description: ['']
+      })]),
+      displayImage: this.fb.control('')
+    });
+
+    this.miscGroup = this.fb.group({
+      isPrivate: this.fb.control(true)
     });
 
     // Update fields when author field changes
@@ -122,12 +122,32 @@ export class UploadComponent implements OnInit {
     this.fieldArray(type, group).removeAt(i);
   }
 
-  onSubmit(): void {
+  isImageFile(fileName?: string): boolean {
+    if (fileName === undefined || fileName === null) {
+      return;
+    }
+    const imgFormats = ['.jpg', '.png', '.tiff'];
+    return imgFormats.some(suffix => fileName.endsWith(suffix));
+  }
+
+  submit(): void {
     console.log(this.structureGroup.value);
+    console.log(this.publicationGroup.value);
+    console.log(this.fileGroup.value);
+    console.log(this.miscGroup.value);
+
+    const formValue = {
+      ...this.structureGroup.value,
+      ...this.publicationGroup.value,
+      ...this.fileGroup.value,
+      ...this.miscGroup.value,
+    };
+
+    console.log(formValue);
   }
 
   test(): void {
-    console.log(this.structureGroup.valid, this.structureGroup.value);
+    console.log(this.miscGroup.value);
   }
 
 }
