@@ -303,7 +303,7 @@
 
       <div>
         <button class="stepper-button" mat-flat-button matStepperPrevious color="primary">Back</button>
-        <button class="stepper-button" mat-flat-button (click)="submit()" color="primary">Submit</button>
+        <button class="stepper-button" mat-flat-button (click)="submit()" [disabled]="isSubmitting" color="primary">Submit</button>
       </div>
     </form>
   </mat-step>
