@@ -3,7 +3,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { StructureComponent } from './structure.component';
 
-const routes: Routes = [{ path: '', component: StructureComponent }];
+const routes: Routes = [
+  { path: '', redirectTo: '/', pathMatch: 'full' },
+  { path: ':sid', component: StructureComponent }
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
