@@ -1,6 +1,7 @@
 from flask import Flask, render_template, make_response, send_file, abort, jsonify, request
 import os
-app = Flask(__name__, static_folder="ng/dist/ng", static_url_path="")
+from time import sleep
+app = Flask(__name__, static_folder='ng/dist/ng', static_url_path='')
 
 structure1 = {'title': 'testTitle1','author': 'testAuthor1','date': 'testDate1','description': 'testDescription1','img': '/images/6.jpg','sid': 0}
 structure2 = {'title': 'testTitle2','author': 'testAuthor2','date': 'testDate2','description': 'testDescription2','img': '/images/1.jpg','sid': 1}
@@ -16,24 +17,30 @@ def home():
 def not_found_error(error):
     return make_response(open('ng/dist/ng/index.html').read())
 
-@app.route("/images/<image>")
+@app.route('/images/<image>')
 def getImage(image=None):
-	if os.path.isfile("assets/images/{}".format(image)):
-		return send_file("assets/images/{}".format(image))
+	if os.path.isfile('assets/images/{}'.format(image)):
+		return send_file('assets/images/{}'.format(image))
 	else:
-		abort(404, discription="Image not found")
+		abort(404, discription='Image not found')
 
-@app.route("/api/structure/<sid>", methods=["GET"])
+@app.route('/api/structure', methods=['POST'])
+def uploadStructure():
+	sleep(2)
+	# Insert structure into database
+	return request.json
+
+@app.route('/api/structure/<sid>', methods=['GET'])
 def getStructure(sid):
 	# Query database for structure
 	return jsonify(structures[int(sid)])
 
-@app.route("/api/recent_structures", methods=["GET"])
+@app.route('/api/recent_structures', methods=['GET'])
 def test():
 	# Query database to get recent structures
 	return jsonify(structures)
 
-@app.route("/api/users", methods=["POST"])
+@app.route('/api/users', methods=['POST'])
 def register():
 	user = request.json
 	print(request.json)
@@ -41,4 +48,4 @@ def register():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=9000)
+    app.run(host='0.0.0.0', port=9000)

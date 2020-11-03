@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable ,  BehaviorSubject ,  ReplaySubject } from 'rxjs';
+import { Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 
 import { ApiService } from './api.service';
 import { User, UserRegistration } from '../models/user.model';
-import { map ,  distinctUntilChanged } from 'rxjs/operators';
+import { map , distinctUntilChanged } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
