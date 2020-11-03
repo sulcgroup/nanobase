@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { FormService } from '../core/services/form.service';
+import { ApiService } from '../core/services/api.service';
 
 
 @Component({
@@ -20,7 +21,8 @@ export class UploadComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private formService: FormService
+    private formService: FormService,
+    private apiService: ApiService
   ) { }
 
   ngOnInit(): void {
@@ -77,7 +79,9 @@ export class UploadComponent implements OnInit {
     });
 
     this.miscGroup = this.fb.group({
-      isPrivate: this.fb.control(true)
+      isPrivate: this.fb.control(true),
+      isDelayed: this.fb.control(false),
+      date: this.fb.control('')
     });
 
     // Update fields when author field changes
@@ -144,19 +148,23 @@ export class UploadComponent implements OnInit {
       ...this.miscGroup.value,
     };
 
-    console.log(formValue);
+    this.apiService.post('/structure', {structure: formValue})
+    .subscribe(
+      data => {
+        console.log('UPLOAD SUCCESS', data);
+        this.isSubmitting = false;
+        this.structureGroup.enable();
+        this.publicationGroup.enable();
+        this.fileGroup.enable();
+        this.miscGroup.enable();
+      },
+      err => console.log('UPLOAD ERROR', err)
+    );
 
-    setTimeout(() => {
-      this.isSubmitting = false;
-      this.structureGroup.enable();
-      this.publicationGroup.enable();
-      this.fileGroup.enable();
-      this.miscGroup.enable();
-    }, 2000);
   }
 
   test(): void {
-    console.log(this.miscGroup.value);
+    console.log(this.miscGroup.get('isDelayed'));
   }
 
 }

@@ -205,7 +205,7 @@
             <mat-label>File Description</mat-label>
             <input matInput formControlName="description">
           </mat-form-field>
-          <mat-radio-button [value]="'expResults'+i" *ngIf="isImageFile(fileGroup.get('expResults')?.value[i].file?._fileNames)" color="primary">
+          <mat-radio-button [value]="'expResults'+i" *ngIf="isImageFile(fileGroup.get('expResults')?.value[i].file?._fileNames)" color="accent">
             Primary image
           </mat-radio-button><br>
         </div>
@@ -297,12 +297,24 @@
       <br>
       <ng-template matStepLabel>Upload</ng-template>
       <mat-checkbox formControlName="isPrivate" [value]="true" color="accent"
-      matTooltip="If unchecked, only those with a link will be able to view your structure" matTooltipClass="tooltip" matTooltipPosition="above">
-          Upload as public structure
+      matTooltip="If unchecked, only people with a link will be able to view your structure" matTooltipClass="tooltip" matTooltipPosition="right">
+        Upload as public structure
       </mat-checkbox><br><br>
 
+      <mat-checkbox formControlName="isDelayed" [value]="true" color="accent"
+      matTooltip="Upload structure at a later date" matTooltipClass="tooltip" matTooltipPosition="right">
+        Delay upload
+      </mat-checkbox><br><br>
+
+      <mat-form-field *ngIf="miscGroup.get('isDelayed').value" class="field-container" appearance="fill">
+        <mat-label>Upload date</mat-label>
+        <input matInput [matDatepicker]="picker1" formControlName="date" required>
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+
       <div>
-        <button class="stepper-button" mat-flat-button matStepperPrevious color="primary">Back</button>
+        <button class="stepper-button" (click)="test()" mat-flat-button matStepperPrevious color="primary">Back</button>
         <button class="stepper-button" mat-flat-button (click)="submit()" [disabled]="isSubmitting" color="primary">Submit</button>
       </div>
     </form>

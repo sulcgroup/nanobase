@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { UploadRoutingModule } from './upload-routing.module';
 import { UploadComponent } from './upload.component';
@@ -26,6 +27,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   imports: [
     CommonModule,
     UploadRoutingModule,
+    FormsModule,
     MatCardModule,
     MatButtonModule,
     MatInputModule,
