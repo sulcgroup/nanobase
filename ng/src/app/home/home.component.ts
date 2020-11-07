@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService } from '../core/services/api.service';
-import { StructureCover } from '../core/models/structure.model';
+import { ApiService, StructureCover } from '../core';
 
 @Component({
   selector: 'app-home',

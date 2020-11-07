@@ -21,7 +21,7 @@
         </div>
     </mat-card-content>
     <mat-card-actions>
-        <button id="submit-button" class="structure-button" mat-raised-button color="primary">
+        <button id="submit-button" class="structure-button" (click)="submitForm()" [disabled]="!(email.valid && password.valid)" mat-raised-button color="primary">
             Submit
         </button>
     </mat-card-actions>
