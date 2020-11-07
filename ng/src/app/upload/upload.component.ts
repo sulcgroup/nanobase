@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { FormService } from '../core/services/form.service';
-import { ApiService } from '../core/services/api.service';
+import { FormService, ApiService } from '../core';
 
 
 @Component({

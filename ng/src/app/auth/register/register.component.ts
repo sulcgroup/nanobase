@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService } from '../../core/services/user.service';
-import { FormService } from '../../core/services/form.service';
+import { UserService, FormService } from '../../core/services';
 
 
 @Component({
@@ -60,7 +59,7 @@ export class RegisterComponent implements OnInit {
     .subscribe(
       data => {
         if (Object.keys(data).length === 0) {
-          // this.router.navigateByUrl('/');
+          this.router.navigateByUrl('/');
         }
         else if (data.email === 'email already registered') {
           this.registrationForm.enable();

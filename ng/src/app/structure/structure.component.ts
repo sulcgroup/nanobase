@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Structure } from '../core/models/structure.model';
-import { ApiService } from '../core/services/api.service';
+import { Structure, ApiService } from '../core';
 
 @Component({
   selector: 'app-structure',
