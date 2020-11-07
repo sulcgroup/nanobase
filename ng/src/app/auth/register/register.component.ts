@@ -59,7 +59,6 @@ export class RegisterComponent implements OnInit {
     .register(userData)
     .subscribe(
       data => {
-        console.log(data)
         if (Object.keys(data).length === 0) {
           // this.router.navigateByUrl('/');
         }
