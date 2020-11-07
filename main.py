@@ -1,5 +1,7 @@
 from flask import Flask, render_template, make_response, send_file, abort, jsonify, request
 import os
+import auth
+import database as db
 from time import sleep
 app = Flask(__name__, static_folder='ng/dist/ng', static_url_path='')
 
@@ -18,20 +20,20 @@ def not_found_error(error):
     return make_response(open('ng/dist/ng/index.html').read())
 
 @app.route('/images/<image>')
-def getImage(image=None):
+def get_image(image=None):
 	if os.path.isfile('assets/images/{}'.format(image)):
 		return send_file('assets/images/{}'.format(image))
 	else:
 		abort(404, discription='Image not found')
 
 @app.route('/api/structure', methods=['POST'])
-def uploadStructure():
+def upload_structure():
 	sleep(2)
 	# Insert structure into database
 	return request.json
 
 @app.route('/api/structure/<sid>', methods=['GET'])
-def getStructure(sid):
+def get_structure(sid):
 	# Query database for structure
 	return jsonify(structures[int(sid)])
 
@@ -42,10 +44,8 @@ def test():
 
 @app.route('/api/users', methods=['POST'])
 def register():
-	user = request.json
-	print(request.json)
-	return user
-
+	user_data = request.json['user']
+	return auth.register_user(user_data)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=9000)
