@@ -7,15 +7,15 @@ from user import get_user_id
 import bcrypt
 import os
 import binascii
-# import EmailScript
+from nanobase_email.email_script import send_email
 import random
 import database as db
 
 
 add_user_query = (
-"INSERT INTO Users"
-"(`firstName`, `lastName`, `email`, `institution`, `password`, `creationDate`, `verifycode`)"
-"VALUES (%s, %s, %s, %s, %s, %s, %s)"
+	'INSERT INTO Users'
+	'(`firstName`, `lastName`, `email`, `institution`, `password`, `creationDate`, `verifycode`)'
+	'VALUES (%s, %s, %s, %s, %s, %s, %s)'
 )
 
 
@@ -43,10 +43,10 @@ def register_user(user):
 	with connection.cursor() as cursor:
 		cursor.execute(add_user_query, user_data)
 
-	# user_id = Account.getUserId(email)
+	user_id = get_user_id(email)
 
-	# verifylink = request.url_root + 'verify?id={userId}&verify={verifycode}'.format(userId = user_id, verifycode = verifycode)
-	# EmailScript.SendEmail('-t 0 -n {username} -u {verifylink} -d {email}'.format(username = firstName, verifylink = verifylink, email = email).split(' '))
+	verifylink = request.url_root + 'verify?id={}&verify={}'.format(user_id, verifycode)
+	send_email('-t 0 -n {} -u {} -d {}'.format(firstName, verifylink, email).split(' '))
 
 	connection.close()
 	return errors
