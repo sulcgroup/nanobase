@@ -48,17 +48,27 @@ export class RegisterComponent implements OnInit {
 
   submitForm(): void {
     this.registrationForm.disable();
-    const userData = this.registrationForm.value;
-    console.log(userData);
-
+    const userData = {
+      firstName: this.registrationForm.get('firstName').value,
+      lastName: this.registrationForm.get('lastName').value,
+      email: this.registrationForm.get('email').value,
+      institution: this.registrationForm.get('institution').value,
+      password: this.registrationForm.get('password').value,
+    };
     this.userService
     .register(userData)
     .subscribe(
-      data => this.router.navigateByUrl('/'),
-      err => {
-        console.log(err);
-        this.registrationForm.enable();
-      }
+      data => {
+        console.log(data)
+        if (Object.keys(data).length === 0) {
+          // this.router.navigateByUrl('/');
+        }
+        else if (data.email === 'email already registered') {
+          this.registrationForm.enable();
+          this.registrationForm.get('email').setErrors({registered: true});
+        }
+      },
+      err => this.registrationForm.enable()
     );
   }
 

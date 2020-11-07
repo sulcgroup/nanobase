@@ -18,14 +18,7 @@ export class UserService {
   constructor(private apiService: ApiService) { }
 
   register(credentials: UserRegistration): Observable<User> {
-    return this.apiService.post('/users', { user: credentials })
-      .pipe(map(
-      data => {
-        // do stuff here
-        console.log('DATA', data);
-        return data;
-      }
-    ));
+    return this.apiService.post('/users', { user: credentials });
   }
 
 }

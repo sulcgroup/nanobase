@@ -1,69 +1,74 @@
 from __future__ import print_function
 from datetime import date, datetime, timedelta
 from flask import Flask, make_response, render_template, request
-import time
-import Login
-import Account
+from time import time
+from user import get_user_id
+# import Login
 import bcrypt
 import os
 import binascii
-import EmailScript
+# import EmailScript
 import random
-
-import Database
-
-from flask import request
+import database as db
 
 
+add_user_query = (
+"INSERT INTO Users"
+"(`firstName`, `lastName`, `email`, `institution`, `password`, `creationDate`, `verifycode`)"
+"VALUES (%s, %s, %s, %s, %s, %s, %s)"
+)
 
-def registerUser(user, requires_verification=True):
-	# connection = Database.pool.get_connection()
 
-	response = validate(user)
-	print(response)
-	if len(response) > 0:
+def register_user(user):
+	connection = db.pool.get_connection()
+
+	print('user', user)
+
+	errors = validate(user)
+	print(errors)
+	if len(errors) > 0:
 		connection.close()
-		return response
+		return errors
 	
 	firstName = user['firstName']
 	lastName = user['lastName']
-	institution = user['institution']
 	email = user['email']
-	password = user['password']
-
+	institution = user['institution']
+	password = bcrypt.hashpw(user['password'].encode('utf-8'),bcrypt.gensalt())
+	creationDate = int(time())
 	verifycode = binascii.b2a_hex(os.urandom(15)).decode('utf-8')
-	user_data = (email, bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()), 0, int(time.time()), verifycode, 0, firstName, lastName, institution)
 
-	# with connection.cursor() as cursor:
-	# 	cursor.execute(add_user_query, user_data)
+	user_data = (firstName, lastName, email, institution, password, creationDate, verifycode)
+
+	with connection.cursor() as cursor:
+		cursor.execute(add_user_query, user_data)
 
 	# user_id = Account.getUserId(email)
 
-	# if requires_verification:
-	# 	verifylink = request.url_root + 'verify?id={userId}&verify={verifycode}'.format(userId = user_id, verifycode = verifycode)
-	# 	EmailScript.SendEmail('-t 0 -n {username} -u {verifylink} -d {email}'.format(username = firstName, verifylink = verifylink, email = email).split(' '))
+	# verifylink = request.url_root + 'verify?id={userId}&verify={verifycode}'.format(userId = user_id, verifycode = verifycode)
+	# EmailScript.SendEmail('-t 0 -n {username} -u {verifylink} -d {email}'.format(username = firstName, verifylink = verifylink, email = email).split(' '))
 
-	# connection.close()
-	return 'Success'
+	connection.close()
+	return errors
 
 def validate(user):
 	errors = {}
 
 	if 'firstName' not in user:
-		errors['firstName'] = 'Empty field'
+		errors['firstName'] = 'firstName empty'
 	if 'lastName' not in user:
-		errors['lastName'] = 'Empty field'
+		errors['lastName'] = 'lastName empty'
 	if 'institution' not in user:
-		errors['institution'] = 'Empty field'
+		errors['institution'] = 'institution empty'
 	if 'email' not in user:
-		errors[''] = 'Empty field'
+		errors['email'] = 'email empty'
 	else:
 		if '@' not in user['email']:
-			errors['email'] = 'Invalid email'
-		# elif Account.getUserId(user['email']):
-		# 	errors['email'] = 'Email is already registered'
+			errors['email'] = 'email invalid'
+		elif get_user_id(user['email']):
+			errors['email'] = 'email already registered'
 	if 'password' not in user or len(user['password']) < 8:
-		errors['password'] = 'Must be at least 8 characters'
+		errors['password'] = 'password too short'
 
 	return errors
 

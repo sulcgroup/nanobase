@@ -19,20 +19,21 @@
                         <mat-error *ngIf="registrationForm.hasError('required','lastName')">Required</mat-error>
                     </mat-form-field>
                 </div>
-
+                
+                <mat-form-field class="block-field" appearance="outline">
+                    <mat-label>Enter Email</mat-label>
+                    <input matInput formControlName="email" placeholder="email@example.com">
+                    <mat-error *ngIf="registrationForm.hasError('required','email')">Required</mat-error>
+                    <mat-error *ngIf="registrationForm.hasError('email','email')">Invalid email</mat-error>
+                    <mat-error *ngIf="registrationForm.hasError('registered','email')">Email already registered</mat-error>
+                </mat-form-field>
+                
                 <mat-form-field class="block-field" appearance="outline">
                     <mat-label>Enter Institution</mat-label>
                     <input matInput formControlName="institution">
                     <mat-error *ngIf="registrationForm.hasError('required','institution')">Required</mat-error>
                 </mat-form-field>
-
-                <mat-form-field class="block-field" appearance="outline">
-                <mat-label>Enter Email</mat-label>
-                <input matInput formControlName="email" placeholder="email@example.com">
-                <mat-error *ngIf="registrationForm.hasError('required','email')">Required</mat-error>
-                <mat-error *ngIf="registrationForm.hasError('email','email')">Invalid email</mat-error>
-                </mat-form-field>
-
+                
                 <mat-form-field class="block-field" appearance="outline">
                     <mat-label>Enter Password</mat-label>
                     <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" autocomplete="new-password">
@@ -59,8 +60,9 @@
         </div>
     </mat-card-content>
     <mat-card-actions>
-        <button id="submit-button" class="structure-button" (click)="submitForm()" [disabled]="!registrationForm.valid" mat-raised-button color="primary">
+        <button id="submit-button" class="structure-button" (click)="submitForm()" mat-raised-button color="primary">
             Submit
+            <!-- [disabled]="!registrationForm.valid"  -->
         </button>
     </mat-card-actions>
 </mat-card>

@@ -11,5 +11,4 @@ export interface UserRegistration {
     institution: string;
     email: string;
     password: string;
-    confirmPassword: string;
 }

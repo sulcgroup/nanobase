@@ -26,7 +26,7 @@ class MyConnection:
 class MyPool:
 	def __init__(self):
 		pymysqlpool.logger.setLevel('DEBUG')
-		config = {'host':'localhost', 'user':'root', 'password':'', 'database':'azdna', 'autocommit':True}
+		config = {'host':'localhost', 'user':'root', 'password':'', 'database':'nanobase', 'autocommit':True}
 		self._pool = pymysqlpool.ConnectionPool(size=10, name='pool1', **config)
 	
 	def get_connection(self):
@@ -42,6 +42,5 @@ class MyPool:
 		wrapped_connection = MyConnection(self._pool.get_connection(), function_caller, connection_identifier)
 
 		return wrapped_connection
-
 
 pool = MyPool()
