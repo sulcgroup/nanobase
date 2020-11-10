@@ -1,1 +1,8 @@
-<p>verify works!</p>
+<div *ngIf="attemptedVerify">
+    <h1 *ngIf="verified">You are now verified! Go to the <a routerLink="/auth/login">login</a> page to continue.</h1>
+    <h1 *ngIf="!verified">Invalid verification link</h1>
+</div>
+
+<div *ngIf="defaultMessage">
+    <h1>A verification link has been sent to your email. Please click the link in order to continue.</h1>
+</div>

@@ -1,8 +1,9 @@
 from flask import Flask, render_template, make_response, send_file, abort, jsonify, request
+from time import sleep
 import os
 import auth
-import database as db
-from time import sleep
+import user
+
 app = Flask(__name__, static_folder='ng/dist/ng', static_url_path='')
 
 structure1 = {'title': 'testTitle1','author': 'testAuthor1','date': 'testDate1','description': 'testDescription1','img': '/images/6.jpg','sid': 0}
@@ -38,7 +39,7 @@ def get_structure(sid):
 	return jsonify(structures[int(sid)])
 
 @app.route('/api/recent_structures', methods=['GET'])
-def test():
+def get_recent_structures():
 	# Query database to get recent structures
 	return jsonify(structures)
 
@@ -46,6 +47,13 @@ def test():
 def register():
 	user_data = request.json['user']
 	return auth.register_user(user_data)
+
+@app.route('/api/users/verify', methods=['PUT'])
+def verify():
+	user_id = request.json['user_id']
+	verifycode = request.json['verify_code']
+
+	return 'OK' if user.verify(user_id, verifycode) else "INVALID"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=9000)
