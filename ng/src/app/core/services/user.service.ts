@@ -21,4 +21,8 @@ export class UserService {
     return this.apiService.post('/users', { user: credentials });
   }
 
+  attemptVerify(userId: string, verifyCode: string): Observable<any> {
+    return this.apiService.put('/users/verify', { user_id: userId, verify_code: verifyCode });
+  }
+
 }

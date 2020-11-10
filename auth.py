@@ -1,15 +1,14 @@
 from __future__ import print_function
-from datetime import date, datetime, timedelta
 from flask import Flask, make_response, render_template, request
+from datetime import date, datetime, timedelta
 from time import time
-from user import get_user_id
-# import Login
 import bcrypt
 import os
 import binascii
-from nanobase_email.email_script import send_email
 import random
-import database as db
+from nanobase_email.email_script import send_email
+from user import get_user_id
+from database import pool
 
 
 add_user_query = (
@@ -20,7 +19,7 @@ add_user_query = (
 
 
 def register_user(user):
-	connection = db.pool.get_connection()
+	connection = pool.get_connection()
 
 	print('user', user)
 
@@ -45,7 +44,7 @@ def register_user(user):
 
 	user_id = get_user_id(email)
 
-	verifylink = request.url_root + 'verify?id={}&verify={}'.format(user_id, verifycode)
+	verifylink = request.url_root + 'auth/verify?id={}&verify={}'.format(user_id, verifycode)
 	send_email('-t 0 -n {} -u {} -d {}'.format(firstName, verifylink, email).split(' '))
 
 	connection.close()

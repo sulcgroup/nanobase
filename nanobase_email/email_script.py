@@ -19,7 +19,6 @@ try:
 except FileNotFoundError:
 	print('Error: login/help file not found')
 
-print(credentials)
 # Initialize email server
 yag = yagmail.SMTP(credentials[0], credentials[1])
 

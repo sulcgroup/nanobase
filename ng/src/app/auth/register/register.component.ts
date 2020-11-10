@@ -54,12 +54,11 @@ export class RegisterComponent implements OnInit {
       institution: this.registrationForm.get('institution').value,
       password: this.registrationForm.get('password').value,
     };
-    this.userService
-    .register(userData)
+    this.userService.register(userData)
     .subscribe(
       data => {
         if (Object.keys(data).length === 0) {
-          this.router.navigateByUrl('/');
+          this.router.navigateByUrl('/auth/verify');
         }
         else if (data.email === 'email already registered') {
           this.registrationForm.enable();
