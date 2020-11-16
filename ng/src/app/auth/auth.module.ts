@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { VerifyComponent } from './verify/verify.component';
+import { NoAuthGuard } from './no-auth.guard';
 
 
 @NgModule({
@@ -23,6 +24,9 @@ import { VerifyComponent } from './verify/verify.component';
     MatButtonModule,
     MatInputModule,
     MatIconModule
+  ],
+  providers: [
+    NoAuthGuard
   ]
 })
 export class AuthModule { }

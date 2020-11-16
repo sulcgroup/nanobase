@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
     this.email = new FormControl('', [Validators.required, Validators.email]);
     this.password = new FormControl('', [Validators.required]);
     this.userService.currentUser.subscribe(data => console.log('cur', data));
+    this.userService.isAuthenticated.subscribe(data => console.log('is', data));
   }
 
   getEmailError(): string {
@@ -44,14 +45,13 @@ export class LoginComponent implements OnInit {
     this.userService.attemptLogin({email, password})
     .subscribe(
       data => {
-        console.log('data', data);
         if (typeof(data) === 'string') {
           this.error = data;
           this.email.enable();
           this.password.enable();
         }
         else {
-          // this.router.navigateByUrl('/');
+          this.router.navigateByUrl('/');
         }
       },
       err => {
@@ -60,7 +60,6 @@ export class LoginComponent implements OnInit {
         this.password.enable();
       }
     );
-
 
   }
 

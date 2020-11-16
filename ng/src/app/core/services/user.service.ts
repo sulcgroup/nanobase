@@ -67,18 +67,12 @@ export class UserService {
     this.isAuthenticatedSubject.next(false);
   }
 
-  // Runs once on application startup.
+  // Runs once on application startup
   populate(): void {
-    const user: User = this.getSessionUser();
-    user ? this.setAuth(user) : this.purgeAuth();
-  }
-
-  // Get user based on Flask session id
-  getSessionUser(): User {
-    //
-    //
-    //
-    return null;
+    this.apiService.get('/users').subscribe(
+      data => data === '404' ? this.purgeAuth() : this.setAuth(data),
+      err => console.log('err', err)
+    );
   }
 
 }

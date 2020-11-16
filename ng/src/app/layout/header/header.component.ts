@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { User, UserService } from 'src/app/core';
 
 @Component({
   selector: 'app-header',
@@ -7,10 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
   search = '';
+  user: User;
 
-  constructor() { }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
+    this.userService.currentUser.subscribe(
+      userData => this.user = userData
+    );
   }
 
 }
