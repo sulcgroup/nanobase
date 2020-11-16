@@ -2,8 +2,15 @@
     width: 50%;
     margin-top: 70px;
     margin-left: 7%;
+}
+
+#password-card {
     background-color: rgb(229, 229, 235);
     box-shadow: 0 0 8px 2px rgb(197, 197, 197);
+}
+
+#logout-button {
+    margin-bottom: 25px;
 }
 
 #login-header {

@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UserService } from '../core';
+
 
 @Component({
   selector: 'app-profile',
@@ -12,9 +15,15 @@ export class ProfileComponent implements OnInit {
   oldPassword = new FormControl('', [Validators.required]);
   newPassword = new FormControl('', [Validators.required, Validators.minLength(8)]);
 
-  constructor() { }
+  constructor(private userService: UserService, private router: Router) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
+
+  logout(): void {
+    this.userService.logout().subscribe(
+      data => data.response === 'OK' ? this.router.navigateByUrl('/') : console.log(data),
+      err => console.log(err)
+    );
   }
 
   getOldPasswordError(): string {
@@ -27,5 +36,9 @@ export class ProfileComponent implements OnInit {
     }
     return this.newPassword.hasError('minlength') ? 'Must be at least 8 characters' : '';
   }
+
+  // setPassword(): {
+
+  // }
 
 }

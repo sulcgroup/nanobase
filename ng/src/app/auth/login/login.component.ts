@@ -12,15 +12,13 @@ export class LoginComponent implements OnInit {
   hide = true;
   email: FormControl;
   password: FormControl;
-  error: string;
+  error = '';
 
   constructor(private router: Router, private userService: UserService) { }
 
   ngOnInit(): void {
     this.email = new FormControl('', [Validators.required, Validators.email]);
     this.password = new FormControl('', [Validators.required]);
-    this.userService.currentUser.subscribe(data => console.log('cur', data));
-    this.userService.isAuthenticated.subscribe(data => console.log('is', data));
   }
 
   getEmailError(): string {
