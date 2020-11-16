@@ -16,6 +16,8 @@
     </div>
 
     <div id="sign-in-container">
-        <button id="sign-in" mat-raised-button routerLink="/auth/login">Sign in</button>
+        <button id="sign-in" mat-raised-button routerLink="{{user.firstName ? '/profile' : '/auth/login'}}">
+            {{user.firstName ? user.firstName : 'Sign in'}}
+        </button>
     </div>
 </div>

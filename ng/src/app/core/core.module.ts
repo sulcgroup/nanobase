@@ -6,7 +6,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import {
   ApiService,
   FormService,
-  UserService
+  UserService,
+  AuthGuard
 } from './services';
 
 @NgModule({
@@ -15,7 +16,8 @@ import {
     // { provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true },
     ApiService,
     FormService,
-    UserService
+    UserService,
+    AuthGuard
   ],
   declarations: []
 })

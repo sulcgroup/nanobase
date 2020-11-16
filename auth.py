@@ -115,7 +115,7 @@ def login(credentials):
 				'institution': institution,
 				'email': email
 			}
-			session["user_id"] = user_id
+			session['user_id'] = user_id
 			return user
 		else:
 			return 'Please check your email to verify your account'

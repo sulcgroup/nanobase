@@ -1,4 +1,4 @@
-from flask import Flask, render_template, make_response, send_file, abort, jsonify, request
+from flask import Flask, render_template, make_response, send_file, abort, jsonify, request, session
 from time import sleep
 import os
 import auth
@@ -44,10 +44,18 @@ def get_recent_structures():
 	# Query database to get recent structures
 	return jsonify(structures)
 
-@app.route('/api/users', methods=['POST'])
+@app.route('/api/users', methods=['GET', 'POST'])
 def register():
-	user_data = request.json['user']
-	return auth.register_user(user_data)
+	if request.method == 'GET':
+		try:
+			user_id = session['user_id']
+			return user.get_user(user_id)
+		except KeyError:
+			return '404'
+
+	if request.method == 'POST':
+		user_data = request.json['user']
+		return auth.register_user(user_data)
 
 @app.route('/api/users/verify', methods=['PUT'])
 def verify():
