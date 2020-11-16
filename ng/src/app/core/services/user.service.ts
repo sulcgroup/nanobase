@@ -25,4 +25,60 @@ export class UserService {
     return this.apiService.put('/users/verify', { user_id: userId, verify_code: verifyCode });
   }
 
+  getCurrentUser(): User {
+    return this.currentUserSubject.value;
+  }
+
+  updateUser(user: User): Observable<User> {
+    return this.apiService
+    .put('/user', { user })
+    .pipe(map(data => {
+      this.currentUserSubject.next(data.user);
+      return data.user;
+    }));
+  }
+
+  attemptLogin(credentials: object): Observable<User> {
+    return this.apiService.post('/users/login', {credentials})
+      .pipe(map(
+      data => {
+        try {
+          data = JSON.parse(data);
+          this.setAuth(data);
+          return data;
+        }
+        catch (e) {
+          if (!(e instanceof SyntaxError)) {
+            throw e;
+          }
+          return data;
+        }
+      }
+    ));
+  }
+
+  setAuth(user: User): void {
+    this.currentUserSubject.next(user);
+    this.isAuthenticatedSubject.next(true);
+  }
+
+  purgeAuth(): void {
+    this.currentUserSubject.next({} as User);
+    this.isAuthenticatedSubject.next(false);
+  }
+
+  // Runs once on application startup.
+  populate(): void {
+    const user: User = this.getSessionUser();
+    user ? this.setAuth(user) : this.purgeAuth();
+  }
+
+  // Get user based on Flask session id
+  getSessionUser(): User {
+    //
+    //
+    //
+    return null;
+  }
+
 }

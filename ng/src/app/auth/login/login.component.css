@@ -6,6 +6,12 @@
     box-shadow: 0 0 8px 2px rgb(197, 197, 197);
 }
 
+#error {
+    color: #f44336;
+    font-size: 90%;
+    text-align: center;
+}
+
 #login-header {
     font-weight: 500;
     font-size: 30px;

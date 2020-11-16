@@ -24,5 +24,6 @@
         <button id="submit-button" class="structure-button" (click)="submitForm()" [disabled]="!(email.valid && password.valid)" mat-raised-button color="primary">
             Submit
         </button>
+        <p id="error" *ngIf="error">{{ error }}</p>
     </mat-card-actions>
 </mat-card>

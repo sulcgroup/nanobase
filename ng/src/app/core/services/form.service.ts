@@ -8,6 +8,7 @@ export class FormService {
 
   constructor() { }
 
+  // Used for creating a validator based on a condition
   conditionalValidator(predicate: () => boolean, validator: ValidatorFn, errorNamespace?: string): ValidatorFn {
     return formControl => {
       if (!formControl.parent) {
