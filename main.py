@@ -49,24 +49,31 @@ def register():
 	if request.method == 'GET':
 		try:
 			user_id = session['user_id']
-			return user.get_user(user_id)
+			if not user_id:
+				raise KeyError
+			return {'response': user.get_user(user_id)}
 		except KeyError:
-			return '404'
+			return {'response': '404'}
 
 	if request.method == 'POST':
 		user_data = request.json['user']
-		return auth.register_user(user_data)
+		return {'response':auth.register_user(user_data)}
 
 @app.route('/api/users/verify', methods=['PUT'])
 def verify():
 	user_id = request.json['user_id']
 	verifycode = request.json['verify_code']
-	return 'OK' if auth.verify(user_id, verifycode) else "INVALID"
+	return {'response': 'OK'} if auth.verify(user_id, verifycode) else {'response': 'INVALID'}
 
 @app.route('/api/users/login', methods=['POST'])
 def login():
 	credentials = request.json['credentials']
-	return auth.login(credentials)
+	return {'response': auth.login(credentials)}
+
+@app.route('/api/logout')
+def logout():
+	session["user_id"] = None
+	return {'response': 'OK'}
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=9000)

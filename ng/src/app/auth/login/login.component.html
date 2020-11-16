@@ -12,7 +12,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
                 <mat-label>Enter your password</mat-label>
-                <input matInput [formControl]="password" [type]="hide ? 'password' : 'text'" autocomplete="new-password">
+                <input (keydown.enter)="submitForm()" matInput [formControl]="password" [type]="hide ? 'password' : 'text'" autocomplete="new-password">
                 <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                     <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
@@ -24,6 +24,6 @@
         <button id="submit-button" class="structure-button" (click)="submitForm()" [disabled]="!(email.valid && password.valid)" mat-raised-button color="primary">
             Submit
         </button>
-        <p id="error" *ngIf="error">{{ error }}</p>
+        <p id="error">{{ error }}</p>
     </mat-card-actions>
 </mat-card>

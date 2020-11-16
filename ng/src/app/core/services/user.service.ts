@@ -18,11 +18,13 @@ export class UserService {
   constructor(private apiService: ApiService) { }
 
   register(credentials: UserRegistration): Observable<User> {
-    return this.apiService.post('/users', { user: credentials });
+    return this.apiService.post('/users', { user: credentials })
+    .pipe(map(data => data.response));
   }
 
   attemptVerify(userId: string, verifyCode: string): Observable<any> {
-    return this.apiService.put('/users/verify', { user_id: userId, verify_code: verifyCode });
+    return this.apiService.put('/users/verify', { user_id: userId, verify_code: verifyCode })
+    .pipe(map(data => data.response));
   }
 
   getCurrentUser(): User {
@@ -31,30 +33,34 @@ export class UserService {
 
   updateUser(user: User): Observable<User> {
     return this.apiService
-    .put('/user', { user })
+    .put('/users', { user })
     .pipe(map(data => {
-      this.currentUserSubject.next(data.user);
-      return data.user;
+      this.currentUserSubject.next(data.response.user);
+      return data.response.user;
     }));
   }
 
   attemptLogin(credentials: object): Observable<User> {
     return this.apiService.post('/users/login', {credentials})
-      .pipe(map(
-      data => {
-        try {
-          data = JSON.parse(data);
-          this.setAuth(data);
-          return data;
-        }
-        catch (e) {
-          if (!(e instanceof SyntaxError)) {
-            throw e;
-          }
-          return data;
-        }
+    .pipe(map(data => {
+      try {
+        data = JSON.parse(data.response);
+        this.setAuth(data);
+        return data;
       }
+      catch (e) {
+        if (!(e instanceof SyntaxError)) {
+          throw e;
+        }
+        return data.response;
+      }
+    }
     ));
+  }
+
+  logout(): Observable<any> {
+    this.purgeAuth();
+    return this.apiService.get('/logout');
   }
 
   setAuth(user: User): void {
@@ -69,9 +75,11 @@ export class UserService {
 
   // Runs once on application startup
   populate(): void {
-    this.apiService.get('/users').subscribe(
-      data => data === '404' ? this.purgeAuth() : this.setAuth(data),
-      err => console.log('err', err)
+    this.apiService.get('/users')
+    .pipe(map(data => data.response))
+    .subscribe(
+      data => data === 404 ? this.purgeAuth() : this.setAuth(data),
+      err => this.purgeAuth()
     );
   }
 

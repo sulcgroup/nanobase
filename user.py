@@ -5,8 +5,8 @@ import subprocess
 import bcrypt
 from database import pool
 
-get_user_id_query = ('SELECT id FROM Users WHERE email = %s')
-get_user_query = ('SELECT firstName, lastName, institution, email FROM Users WHERE id= %s')
+get_user_id_query = ("SELECT id FROM Users WHERE email = %s")
+get_user_query = ("SELECT firstName, lastName, institution, email FROM Users WHERE id = %s")
 
 def get_user_id(email):
     connection = pool.get_connection()
