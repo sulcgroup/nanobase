@@ -1,5 +1,5 @@
 from __future__ import print_function
-from flask import Flask, make_response, render_template, request
+from flask import Flask, make_response, render_template, request, session
 from datetime import date, datetime, timedelta
 from time import time
 import bcrypt
@@ -10,21 +10,37 @@ from nanobase_email.email_script import send_email
 from user import get_user_id
 from database import pool
 
-
-add_user_query = (
+get_verify_code_query = ("SELECT verifycode FROM Users WHERE id = %s")
+verify_user = ("UPDATE Users SET verified = 1 WHERE id = %s")
+get_user_query = ("SELECT id, firstName, lastName, institution, password, verified FROM Users WHERE email = %s")
+insert_user = (
 	'INSERT INTO Users'
 	'(`firstName`, `lastName`, `email`, `institution`, `password`, `creationDate`, `verifycode`)'
 	'VALUES (%s, %s, %s, %s, %s, %s, %s)'
 )
 
 
+def verify(user_id, verify_code):
+	connection = pool.get_connection()
+
+	code = None
+	with connection.cursor() as cursor:
+		cursor.execute(get_verify_code_query, (user_id))
+		code = cursor.fetchone()
+
+	if code and code[0] == verify_code:
+		with connection.cursor() as cursor:
+			cursor.execute(verify_user, (user_id))
+		connection.close()
+		return True
+        
+	connection.close()
+	return False
+
 def register_user(user):
 	connection = pool.get_connection()
 
-	print('user', user)
-
 	errors = validate(user)
-	print(errors)
 	if len(errors) > 0:
 		connection.close()
 		return errors
@@ -40,7 +56,7 @@ def register_user(user):
 	user_data = (firstName, lastName, email, institution, password, creationDate, verifycode)
 
 	with connection.cursor() as cursor:
-		cursor.execute(add_user_query, user_data)
+		cursor.execute(insert_user, user_data)
 
 	user_id = get_user_id(email)
 
@@ -70,4 +86,40 @@ def validate(user):
 		errors['password'] = 'password too short'
 
 	return errors
+
+def login(credentials):
+	email = credentials['email']
+	password = credentials['password']
+
+	if not (email and password):
+		return 'Invalid username or password'
+
+	connection = pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(get_user_query, (email))
+		user_data = cursor.fetchone()
+	
+	connection.close()
+
+	if user_data:
+		user_id, firstName, lastName, institution, password_hash, verified = user_data
+	if not (user_data and user_id and password_hash):
+		return 'Invalid username or password'
+
+	if bcrypt.checkpw(password.encode("utf8"), password_hash.encode("utf8")):
+		if verified:
+			user = {
+				'firstName': firstName,
+				'lastName': lastName,
+				'institution': institution,
+				'email': email
+			}
+			session["user_id"] = user_id
+			return user
+		else:
+			return 'Please check your email to verify your account'
+
+	return 'Invalid username or password'
+
 

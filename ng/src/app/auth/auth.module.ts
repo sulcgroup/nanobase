@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AuthRoutingModule } from './auth-routing.module';
-import { AuthComponent } from './auth.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 
@@ -15,7 +14,7 @@ import { VerifyComponent } from './verify/verify.component';
 
 
 @NgModule({
-  declarations: [AuthComponent, LoginComponent, RegisterComponent, VerifyComponent],
+  declarations: [LoginComponent, RegisterComponent, VerifyComponent],
   imports: [
     CommonModule,
     AuthRoutingModule,

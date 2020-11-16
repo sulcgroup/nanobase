@@ -5,6 +5,7 @@ import auth
 import user
 
 app = Flask(__name__, static_folder='ng/dist/ng', static_url_path='')
+app.secret_key = b'_6#y2L"F4Q8z\n\xec]/'
 
 structure1 = {'title': 'testTitle1','author': 'testAuthor1','date': 'testDate1','description': 'testDescription1','img': '/images/6.jpg','sid': 0}
 structure2 = {'title': 'testTitle2','author': 'testAuthor2','date': 'testDate2','description': 'testDescription2','img': '/images/1.jpg','sid': 1}
@@ -52,8 +53,12 @@ def register():
 def verify():
 	user_id = request.json['user_id']
 	verifycode = request.json['verify_code']
+	return 'OK' if auth.verify(user_id, verifycode) else "INVALID"
 
-	return 'OK' if user.verify(user_id, verifycode) else "INVALID"
+@app.route('/api/users/login', methods=['POST'])
+def login():
+	credentials = request.json['credentials']
+	return auth.login(credentials)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=9000)

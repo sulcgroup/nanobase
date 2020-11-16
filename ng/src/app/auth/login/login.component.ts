@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UserService } from 'src/app/core';
 
 @Component({
   selector: 'app-login',
@@ -10,12 +12,14 @@ export class LoginComponent implements OnInit {
   hide = true;
   email: FormControl;
   password: FormControl;
+  error: string;
 
-  constructor() { }
+  constructor(private router: Router, private userService: UserService) { }
 
   ngOnInit(): void {
     this.email = new FormControl('', [Validators.required, Validators.email]);
     this.password = new FormControl('', [Validators.required]);
+    this.userService.currentUser.subscribe(data => console.log('cur', data));
   }
 
   getEmailError(): string {
@@ -30,10 +34,34 @@ export class LoginComponent implements OnInit {
   }
 
   submitForm(): void {
-    console.log(this.email.value);
-    console.log(this.password.value);
+    this.email.disable();
+    this.password.disable();
+    this.error = '';
 
-    
+    const email = this.email.value;
+    const password = this.password.value;
+
+    this.userService.attemptLogin({email, password})
+    .subscribe(
+      data => {
+        console.log('data', data);
+        if (typeof(data) === 'string') {
+          this.error = data;
+          this.email.enable();
+          this.password.enable();
+        }
+        else {
+          // this.router.navigateByUrl('/');
+        }
+      },
+      err => {
+        console.log(err);
+        this.email.enable();
+        this.password.enable();
+      }
+    );
+
+
   }
 
 }
