@@ -1,0 +1,94 @@
+{
+  "structure": {
+    "name": "S2",
+    "type": "dna/rna",
+    "applications": [
+      {
+        "value": "a1"
+      },
+      {
+        "value": "a2"
+      }
+    ],
+    "modifications": [
+      {
+        "value": "m1"
+      }
+    ],
+    "keywords": [
+      {
+        "value": "k1"
+      },
+      {
+        "value": "k2"
+      }
+    ],
+    "description": "A long description here",
+    "structureFiles": [
+      {
+        "file": {
+          "_files": [
+            {}
+          ],
+          "delimiter": ", ",
+          "_fileNames": "7510-history-20201109.txt"
+        },
+        "description": "Some file"
+      },
+      {
+        "file": {
+          "_files": [
+            {}
+          ],
+          "delimiter": ", ",
+          "_fileNames": "vagrant_2.2.13_linux_amd64.zip"
+        },
+        "description": "another file"
+      },
+      {
+        "file": {
+          "_files": [
+            {}
+          ],
+          "delimiter": ", ",
+          "_fileNames": "nanobase_env-master.zip"
+        },
+        "description": "third file"
+      }
+    ],
+    "expProtocol": [
+      {
+        "file": "",
+        "description": ""
+      }
+    ],
+    "expResults": [
+      {
+        "file": "",
+        "description": ""
+      }
+    ],
+    "simProtocol": [
+      {
+        "file": "",
+        "description": ""
+      }
+    ],
+    "simResults": [
+      {
+        "file": "",
+        "description": ""
+      }
+    ],
+    "images": [
+      {
+        "file": "",
+        "description": ""
+      }
+    ],
+    "displayImage": "",
+    "isPrivate": true,
+    "isDelayed": false,
+    "date": ""
+  }
+}
