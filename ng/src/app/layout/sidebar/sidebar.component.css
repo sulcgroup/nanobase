@@ -9,6 +9,7 @@ a {
     padding-bottom: 5px;
     width: 100%;
     overflow: hidden;
+    color: rgba(34, 18, 63, 0.878)!important
 }
 
 @media screen and (max-width: 1130px) {
@@ -26,6 +27,8 @@ a {
 
 .sidebar-icon {
     padding-bottom: 5px;
+    /* color: rgba(104, 58, 183, 0.847)!important; */
+    color: rgba(75, 24, 161, 0.847)!important;
 }
 
 #sidebar-container {

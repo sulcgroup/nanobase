@@ -17,7 +17,7 @@ export class UserService {
 
   constructor(private apiService: ApiService) { }
 
-  register(credentials: UserRegistration): Observable<User> {
+  register(credentials: UserRegistration): Observable<any> {
     return this.apiService.post('/users', { user: credentials })
     .pipe(map(data => data.response));
   }
@@ -31,20 +31,16 @@ export class UserService {
     return this.currentUserSubject.value;
   }
 
-  updateUser(user: User): Observable<User> {
-    return this.apiService
-    .put('/users', { user })
-    .pipe(map(data => {
-      this.currentUserSubject.next(data.response.user);
-      return data.response.user;
-    }));
+  updatePassword(oldPass: string, newPass: string): Observable<any> {
+    return this.apiService.put('/users/password', { old_pass: oldPass, new_pass: newPass})
+    .pipe(map(data => data.response));
   }
 
-  attemptLogin(credentials: object): Observable<User> {
+  attemptLogin(credentials: object): Observable<any> {
     return this.apiService.post('/users/login', {credentials})
     .pipe(map(data => {
+      data = data.response;
       try {
-        data = JSON.parse(data.response);
         this.setAuth(data);
         return data;
       }
@@ -52,7 +48,7 @@ export class UserService {
         if (!(e instanceof SyntaxError)) {
           throw e;
         }
-        return data.response;
+        return data;
       }
     }
     ));
