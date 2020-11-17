@@ -3,6 +3,7 @@ from time import sleep
 import os
 import auth
 import user
+from utilities import get_session_id
 
 app = Flask(__name__, static_folder='ng/dist/ng', static_url_path='')
 app.secret_key = b'_6#y2L"F4Q8z\n\xec]/'
@@ -47,13 +48,8 @@ def get_recent_structures():
 @app.route('/api/users', methods=['GET', 'POST'])
 def register():
 	if request.method == 'GET':
-		try:
-			user_id = session['user_id']
-			if not user_id:
-				raise KeyError
-			return {'response': user.get_user(user_id)}
-		except KeyError:
-			return {'response': '404'}
+		user_id = get_session_id()
+		return {'response': user.get_user(user_id)} if user_id else {'response': '404'}
 
 	if request.method == 'POST':
 		user_data = request.json['user']
@@ -65,6 +61,13 @@ def verify():
 	verifycode = request.json['verify_code']
 	return {'response': 'OK'} if auth.verify(user_id, verifycode) else {'response': 'INVALID'}
 
+@app.route('/api/users/password', methods=['PUT'])
+def setPassword():
+	user_id = get_session_id()
+	new_pass = request.json['new_pass']
+	old_pass = request.json['old_pass']
+	return {'response': user.setPassword(user_id, new_pass, old_pass)}
+
 @app.route('/api/users/login', methods=['POST'])
 def login():
 	credentials = request.json['credentials']
@@ -72,7 +75,7 @@ def login():
 
 @app.route('/api/logout')
 def logout():
-	session["user_id"] = None
+	session['user_id'] = None
 	return {'response': 'OK'}
 
 if __name__ == '__main__':

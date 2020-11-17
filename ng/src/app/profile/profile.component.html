@@ -26,9 +26,10 @@
             </div>
         </mat-card-content>
         <mat-card-actions>
-            <button id="submit-button" class="structure-button" mat-raised-button color="primary">
+            <button id="submit-button" (click)='updatePassword()' mat-raised-button color="primary" [disabled]="!newPassword.valid || !oldPassword.valid">
                 Submit
             </button>
+            <p id="password-response">{{ passwordResponse }}</p>
         </mat-card-actions>
     </mat-card>
 </div>

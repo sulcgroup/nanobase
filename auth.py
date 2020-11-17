@@ -10,9 +10,9 @@ from nanobase_email.email_script import send_email
 from user import get_user_id
 from database import pool
 
-get_verify_code_query = ("SELECT verifycode FROM Users WHERE id = %s")
-verify_user = ("UPDATE Users SET verified = 1 WHERE id = %s")
-get_user_query = ("SELECT id, firstName, lastName, institution, password, verified FROM Users WHERE email = %s")
+get_verify_code_query = ('SELECT verifycode FROM Users WHERE id = %s')
+verify_user = ('UPDATE Users SET verified = 1 WHERE id = %s')
+get_user_query = ('SELECT id, firstName, lastName, institution, password, verified FROM Users WHERE email = %s')
 insert_user = (
 	'INSERT INTO Users'
 	'(`firstName`, `lastName`, `email`, `institution`, `password`, `creationDate`, `verifycode`)'
@@ -107,7 +107,7 @@ def login(credentials):
 	if not (user_data and user_id and password_hash):
 		return 'Invalid username or password'
 
-	if bcrypt.checkpw(password.encode("utf8"), password_hash.encode("utf8")):
+	if bcrypt.checkpw(password.encode('utf8'), password_hash.encode('utf8')):
 		if verified:
 			user = {
 				'firstName': firstName,
