@@ -50,7 +50,7 @@ export class UploadComponent implements OnInit {
     });
 
     this.fileGroup = this.fb.group({
-      structureFiles: this.fb.array([this.fb.group({
+      structure: this.fb.array([this.fb.group({
         file: ['', Validators.required],
         description: ['', Validators.required]
       })]),
@@ -134,20 +134,19 @@ export class UploadComponent implements OnInit {
   }
 
   submit(): void {
+    const structure = {
+      ...this.structureGroup.value,
+      ...this.publicationGroup.value,
+      ...this.fileGroup.value,
+      ...this.miscGroup.value,
+    };
     this.isSubmitting = true;
     this.structureGroup.disable();
     this.publicationGroup.disable();
     this.fileGroup.disable();
     this.miscGroup.disable();
 
-    const formValue = {
-      ...this.structureGroup.value,
-      ...this.publicationGroup.value,
-      ...this.fileGroup.value,
-      ...this.miscGroup.value,
-    };
-
-    this.apiService.post('/structure', {structure: formValue})
+    this.apiService.post('/structure', { structure })
     .subscribe(
       data => {
         console.log('UPLOAD SUCCESS', data);

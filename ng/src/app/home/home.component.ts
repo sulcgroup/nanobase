@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService, StructureCover } from '../core';
+import { StructureService, StructureCover } from 'src/app/core';
 
 @Component({
   selector: 'app-home',
@@ -8,17 +8,19 @@ import { ApiService, StructureCover } from '../core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  numStructures: 20;
   structures: Array<StructureCover> = [];
 
-  constructor(private apiService: ApiService) { }
+  constructor(private structService: StructureService) { }
 
   ngOnInit(): void {
-    const obs: Observable<any> = this.apiService.get('/recent_structures');
-    obs.subscribe(data => this.structures = data);
-    setTimeout(() => {
-      console.log(this.structures);
-    }, 100);
-
+    this.structService.get_recent(this.numStructures).subscribe(
+      data => {
+        console.log('data', data);
+        this.structures = data;
+      },
+      err => console.log('err', err)
+    );
   }
 
 }

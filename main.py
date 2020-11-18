@@ -8,10 +8,10 @@ from utilities import get_session_id
 app = Flask(__name__, static_folder='ng/dist/ng', static_url_path='')
 app.secret_key = b'_6#y2L"F4Q8z\n\xec]/'
 
-structure1 = {'title': 'testTitle1','author': 'testAuthor1','date': 'testDate1','description': 'testDescription1','img': '/images/6.jpg','sid': 0}
-structure2 = {'title': 'testTitle2','author': 'testAuthor2','date': 'testDate2','description': 'testDescription2','img': '/images/1.jpg','sid': 1}
-structure3 = {'title': 'testTitle3','author': 'testAuthor3','date': 'testDate3','description': 'testDescription3','sid': 2}
-structure4 = {'title': 'testTitle4','author': 'testAuthor4','date': 'testDate4','description': 'testDescription4','img': '/images/5.jpg','sid': 3}
+structure1 = {'title': 'testTitle1','user': {'firstName': 'first1', 'lastName': 'last1'},'uploadDate': 'testDate1','description': 'testDescription1','img': '/images/6.jpg','sid': 0}
+structure2 = {'title': 'testTitle2','user': {'firstName': 'first2', 'lastName': 'last2'},'uploadDate': 'testDate2','description': 'testDescription2','img': '/images/1.jpg','sid': 1}
+structure3 = {'title': 'testTitle3','user': {'firstName': 'first3', 'lastName': 'last3'},'uploadDate': 'testDate3','description': 'testDescription3','sid': 2}
+structure4 = {'title': 'testTitle4','user': {'firstName': 'first4', 'lastName': 'last4'},'uploadDate': 'testDate4','description': 'testDescription4','img': '/images/5.jpg','sid': 3}
 structures = [structure1, structure2, structure3, structure4]
 
 @app.route('/')
@@ -31,8 +31,8 @@ def get_image(image=None):
 
 @app.route('/api/structure', methods=['POST'])
 def upload_structure():
-	sleep(2)
 	# Insert structure into database
+	print(request.json)
 	return request.json
 
 @app.route('/api/structure/<sid>', methods=['GET'])

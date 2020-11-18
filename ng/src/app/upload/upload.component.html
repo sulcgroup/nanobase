@@ -64,7 +64,7 @@
         <textarea matInput formControlName="description"></textarea>
       </mat-form-field>
 
-      <br><button (click)="test()" class="stepper-button" mat-flat-button matStepperNext color="primary">Next</button>
+      <br><button class="stepper-button" mat-flat-button matStepperNext color="primary">Next</button>
     </form>
   </mat-step>
 
@@ -145,17 +145,17 @@
       <mat-radio-group formControlName="displayImage">
         <ng-template matStepLabel>File Uploads</ng-template>
 
-        <div formArrayName="structureFiles" *ngFor="let file of fieldArray('structureFiles', 3).controls; let i=index">
+        <div formArrayName="structure" *ngFor="let file of fieldArray('structure', 3).controls; let i=index">
           <mat-form-field class="field-container multiple-field" [formGroupName]="i">
-            <ngx-mat-file-input #structureFile formControlName="file" [placeholder]="i===0 ? 'Structure File(s)' : ''"
+            <ngx-mat-file-input #structure formControlName="file" [placeholder]="i===0 ? 'Structure File(s)' : ''"
             [matTooltip]="i===0 ? 'e.g. oxDNA, CaDNAno, sequences' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
-            <button *ngIf="i===0 && structureFile.empty" mat-icon-button matSuffix>
+            <button *ngIf="i===0 && structure.empty" mat-icon-button matSuffix>
               <mat-icon>folder</mat-icon>
             </button>
-            <button *ngIf="i>0 && structureFile.empty" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('structureFiles', 3, i)">
+            <button *ngIf="i>0 && structure.empty" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('structure', 3, i)">
               <mat-icon>clear</mat-icon>
             </button>
-            <button mat-icon-button matSuffix *ngIf="!structureFile.empty" (click)="structureFile.clear($event)">
+            <button mat-icon-button matSuffix *ngIf="!structure.empty" (click)="structure.clear($event)">
               <mat-icon>clear</mat-icon>
             </button>
           </mat-form-field>
@@ -164,7 +164,7 @@
             <input matInput formControlName="description">
           </mat-form-field><br>
         </div>
-        <button class="field-button" (mouseup)="addField('structureFiles', 3)" mat-stroked-button>Add file</button>
+        <button class="field-button" (mouseup)="addField('structure', 3)" mat-stroked-button>Add file</button>
 
         <div formArrayName="expProtocol" *ngFor="let file of fieldArray('expProtocol', 3).controls; let i=index">
           <mat-form-field class="field-container multiple-field" [formGroupName]="i">
@@ -285,7 +285,7 @@
 
       <div>
       <button class="stepper-button" mat-flat-button matStepperPrevious color="primary">Back</button>
-      <button (click)="test()" class="stepper-button" mat-flat-button matStepperNext color="primary">Next</button>
+      <button class="stepper-button" mat-flat-button matStepperNext color="primary">Next</button>
       </div>
     </form>
   </mat-step>
@@ -314,7 +314,7 @@
       </mat-form-field>
 
       <div>
-        <button class="stepper-button" (click)="test()" mat-flat-button matStepperPrevious color="primary">Back</button>
+        <button class="stepper-button" mat-flat-button matStepperPrevious color="primary">Back</button>
         <button class="stepper-button" mat-flat-button (click)="submit()" [disabled]="isSubmitting" color="primary">Submit</button>
       </div>
     </form>

@@ -3,7 +3,7 @@
         <mat-card class="structure-container" *ngFor="let structure of structures">
             <mat-card-header>
                 <mat-card-title>{{structure.title}}</mat-card-title>
-                <mat-card-subtitle>{{structure.author}} | {{structure.date}}</mat-card-subtitle>
+                <mat-card-subtitle>{{structure.user.lastName}} | {{structure.uploadDate}}</mat-card-subtitle>
             </mat-card-header>
             <img mat-card-image src="{{structure.img}}" alt="Display Image" *ngIf="structure.img">
             <mat-card-content>
