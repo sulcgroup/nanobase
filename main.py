@@ -3,6 +3,7 @@ from time import sleep
 import os
 import auth
 import user
+import structure
 from utilities import get_session_id
 
 app = Flask(__name__, static_folder='ng/dist/ng', static_url_path='')
@@ -31,9 +32,14 @@ def get_image(image=None):
 
 @app.route('/api/structure', methods=['POST'])
 def upload_structure():
-	# Insert structure into database
-	print(request.json)
-	return request.json
+	user_id = get_session_id()
+	if not user_id:
+		return 'You are not logged in'
+
+	sleep(1)
+	structure_data = request.json['structure']
+
+	return {'response': structure.upload_structure(structure_data)}
 
 @app.route('/api/structure/<sid>', methods=['GET'])
 def get_structure(sid):

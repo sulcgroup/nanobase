@@ -1,7 +1,14 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { FormService, ApiService } from '../core';
+import { FileInput } from 'ngx-material-file-input';
+import { FormService, ApiService, StructureUpload, UserService, StructureService, User } from '../core';
 
+const required = ['', Validators.required];
+const fileForm = {
+  file: required,
+  description: required,
+  contents: [''],
+};
 
 @Component({
   selector: 'app-upload',
@@ -11,7 +18,9 @@ import { FormService, ApiService } from '../core';
 })
 export class UploadComponent implements OnInit {
   isOptional = true;
-  isSubmitting = false;
+  loadBar = false;
+  today = new Date();
+  user: User;
 
   structureGroup: FormGroup;
   publicationGroup: FormGroup;
@@ -21,17 +30,21 @@ export class UploadComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private formService: FormService,
+    private structService: StructureService,
+    private userService: UserService,
     private apiService: ApiService
   ) { }
 
   ngOnInit(): void {
+    this.userService.currentUser.subscribe(user => this.user = user);
+
     // Define each section and field of the form
     this.structureGroup = this.fb.group({
-      name: ['', Validators.required],
-      type: ['', Validators.required],
-      applications: this.fb.array([this.fb.group({ value: ['', Validators.required] })]),
-      modifications: this.fb.array([this.fb.group({ value: ['', Validators.required] })]),
-      keywords: this.fb.array([this.fb.group({ value: ['', Validators.required] })]),
+      name: required,
+      type: required,
+      applications: this.fb.array([this.fb.group({ value: required })]),
+      modifications: this.fb.array([this.fb.group({ value: required })]),
+      keywords: this.fb.array([this.fb.group({ value: required })]),
       description: ['', Validators.compose([Validators.required, Validators.maxLength(300)])],
     });
 
@@ -50,37 +63,19 @@ export class UploadComponent implements OnInit {
     });
 
     this.fileGroup = this.fb.group({
-      structure: this.fb.array([this.fb.group({
-        file: ['', Validators.required],
-        description: ['', Validators.required]
-      })]),
-      expProtocol: this.fb.array([this.fb.group({
-        file: ['', Validators.required],
-        description: ['', Validators.required]
-      })]),
-      expResults: this.fb.array([this.fb.group({
-        file: ['', Validators.required],
-        description: ['', Validators.required]
-      })]),
-      simProtocol: this.fb.array([this.fb.group({
-        file: ['', Validators.required],
-        description: ['', Validators.required]
-      })]),
-      simResults: this.fb.array([this.fb.group({
-        file: ['', Validators.required],
-        description: ['', Validators.required]
-      })]),
-      images: this.fb.array([this.fb.group({
-        file: [''],
-        description: ['']
-      })]),
+      structure: this.fb.array([this.fb.group(fileForm)]),
+      expProtocol: this.fb.array([this.fb.group(fileForm)]),
+      expResults: this.fb.array([this.fb.group(fileForm)]),
+      simProtocol: this.fb.array([this.fb.group(fileForm)]),
+      simResults: this.fb.array([this.fb.group(fileForm)]),
+      images: this.fb.array([this.fb.group(fileForm)]),
       displayImage: this.fb.control('')
     });
 
     this.miscGroup = this.fb.group({
       isPrivate: this.fb.control(true),
       isDelayed: this.fb.control(false),
-      date: this.fb.control('')
+      uploadDate: this.fb.control('')
     });
 
     // Update fields when author field changes
@@ -90,6 +85,64 @@ export class UploadComponent implements OnInit {
       this.publicationGroup.get('link').updateValueAndValidity();
       this.publicationGroup.get('licensing').updateValueAndValidity();
     });
+  }
+
+  submit(): void {
+    const structure: StructureUpload = this.processForm();
+    // console.log(structure);
+
+    this.loadBar = true;
+    this.disableForm();
+
+    this.apiService.post('/structure', { structure })
+    .subscribe(
+      data => {
+        console.log('UPLOAD SUCCESS', data);
+        this.loadBar = false;
+        this.enableForm();
+      },
+      err => {
+        console.log('UPLOAD ERROR', err);
+        this.loadBar = false;
+        this.enableForm();
+      }
+    );
+
+  }
+
+  processForm(): StructureUpload {
+    const structure = {
+      ...this.structureGroup.value,
+      ...this.publicationGroup.value,
+      ...this.fileGroup.value,
+      ...this.miscGroup.value,
+    };
+    const month = structure.month;
+    const year = structure.year;
+    if (structure.isDelayed) {
+      structure.uploadDate = structure.uploadDate.toISOString().slice(0, 10);
+    }
+    if (year) {
+      structure.publishDate = year;
+      if (month) {
+        structure.publishDate += (month.length === 1) ? '-0' + month : '-' + month;
+      }
+    }
+    delete structure.year;
+    delete structure.month;
+
+    return structure;
+  }
+
+  uploadFile(fileInput: FileInput, type: string, index: number): void {
+    const fileReader: FileReader = new FileReader();
+    const file: File = fileInput.files[0];
+    this.isImageFile(file.name) ? fileReader.readAsDataURL(file) : fileReader.readAsText(file);
+
+    fileReader.onloadend = () => {
+      this.fileGroup.controls[type].value[index].contents = fileReader.result;
+    };
+
   }
 
   fieldArray(type: string, group: number): FormArray {
@@ -102,21 +155,9 @@ export class UploadComponent implements OnInit {
   }
 
   addField(type: string, group: number): void {
-    let limit = 10;
-    if (type === 'authors') {
-      limit = 20;
-    }
+    const limit = (type === 'authors') ? 20 : 10;
     if (this.fieldArray(type, group).value.length < limit) {
-      let newField: FormGroup;
-      if (group === 3) {
-        newField = this.fb.group({
-          file: ['', Validators.required],
-          description: ['', Validators.required]
-        });
-      }
-      else {
-        newField = this.fb.group({ value: ['', Validators.required] });
-      }
+      const newField = (group === 3) ? this.fb.group(fileForm) : this.fb.group({ value: required });
       this.fieldArray(type, group).push(newField);
     }
   }
@@ -133,36 +174,18 @@ export class UploadComponent implements OnInit {
     return imgFormats.some(suffix => fileName.endsWith(suffix));
   }
 
-  submit(): void {
-    const structure = {
-      ...this.structureGroup.value,
-      ...this.publicationGroup.value,
-      ...this.fileGroup.value,
-      ...this.miscGroup.value,
-    };
-    this.isSubmitting = true;
+  disableForm(): void {
     this.structureGroup.disable();
     this.publicationGroup.disable();
     this.fileGroup.disable();
     this.miscGroup.disable();
-
-    this.apiService.post('/structure', { structure })
-    .subscribe(
-      data => {
-        console.log('UPLOAD SUCCESS', data);
-        this.isSubmitting = false;
-        this.structureGroup.enable();
-        this.publicationGroup.enable();
-        this.fileGroup.enable();
-        this.miscGroup.enable();
-      },
-      err => console.log('UPLOAD ERROR', err)
-    );
-
   }
 
-  test(): void {
-    console.log(this.miscGroup.get('isDelayed'));
+  enableForm(): void {
+    this.structureGroup.enable();
+    this.publicationGroup.enable();
+    this.fileGroup.enable();
+    this.miscGroup.enable();
   }
 
 }

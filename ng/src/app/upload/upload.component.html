@@ -1,4 +1,4 @@
-<mat-progress-bar [ngClass]="{'invisible': !isSubmitting}" mode="indeterminate"></mat-progress-bar>
+<mat-progress-bar [ngClass]="{'invisible': !loadBar}" mode="indeterminate"></mat-progress-bar>
 <mat-horizontal-stepper class="form-container" linear #stepper>
   <mat-step [stepControl]="structureGroup" [optional]="isOptional">
     <form [formGroup]="structureGroup">
@@ -147,7 +147,7 @@
 
         <div formArrayName="structure" *ngFor="let file of fieldArray('structure', 3).controls; let i=index">
           <mat-form-field class="field-container multiple-field" [formGroupName]="i">
-            <ngx-mat-file-input #structure formControlName="file" [placeholder]="i===0 ? 'Structure File(s)' : ''"
+            <ngx-mat-file-input (change)="uploadFile($event.target, 'structure', i)" #structure formControlName="file" [placeholder]="i===0 ? 'Structure File(s)' : ''"
             [matTooltip]="i===0 ? 'e.g. oxDNA, CaDNAno, sequences' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
             <button *ngIf="i===0 && structure.empty" mat-icon-button matSuffix>
               <mat-icon>folder</mat-icon>
@@ -168,7 +168,7 @@
 
         <div formArrayName="expProtocol" *ngFor="let file of fieldArray('expProtocol', 3).controls; let i=index">
           <mat-form-field class="field-container multiple-field" [formGroupName]="i">
-            <ngx-mat-file-input #expProtocol formControlName="file" [placeholder]="i===0 ? 'Experimental Protocols' : ''" accept=".docx,.doc,.txt,.pdf,.odt"
+            <ngx-mat-file-input (change)="uploadFile($event.target, 'expProtocol', i)" #expProtocol formControlName="file" [placeholder]="i===0 ? 'Experimental Protocols' : ''" accept=".docx,.doc,.txt,.pdf,.odt"
             [matTooltip]="i===0 ? 'accepts docx, txt, pdf, odt' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
             <button *ngIf="i===0 && expProtocol.empty" mat-icon-button matSuffix>
               <mat-icon>folder</mat-icon>
@@ -189,7 +189,7 @@
 
         <div formArrayName="expResults" *ngFor="let file of fieldArray('expResults', 3).controls; let i=index">
           <mat-form-field class="field-container multiple-field" [formGroupName]="i">
-            <ngx-mat-file-input #expResult formControlName="file" [placeholder]="i===0 ? 'Experimental Results' : ''" accept=".docx,.doc,.txt,.pdf,.jpg,.png,.tiff,.mrc"
+            <ngx-mat-file-input (change)="uploadFile($event.target, 'expResults', i)" #expResult formControlName="file" [placeholder]="i===0 ? 'Experimental Results' : ''" accept=".docx,.doc,.txt,.pdf,.jpg,.png,.tiff,.mrc"
             [matTooltip]="i===0 ? 'accepts docx, txt, pdf, jpg, png, tiff, mrc' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
             <button *ngIf="i===0 && expResult.empty" mat-icon-button matSuffix>
               <mat-icon>folder</mat-icon>
@@ -213,7 +213,7 @@
 
         <div formArrayName="simProtocol" *ngFor="let file of fieldArray('simProtocol', 3).controls; let i=index">
           <mat-form-field class="field-container multiple-field" [formGroupName]="i">
-            <ngx-mat-file-input #simProtocol formControlName="file" [placeholder]="i===0 ? 'Simulation Protocol' : ''" accept=".docx,.doc,.txt,.pdf"
+            <ngx-mat-file-input (change)="uploadFile($event.target, 'simProtocol', i)" #simProtocol formControlName="file" [placeholder]="i===0 ? 'Simulation Protocol' : ''" accept=".docx,.doc,.txt,.pdf"
             [matTooltip]="i===0 ? 'accepts docx, txt, pdf' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
             <button *ngIf="i===0 && simProtocol.empty" mat-icon-button matSuffix>
               <mat-icon>folder</mat-icon>
@@ -234,7 +234,7 @@
 
         <div formArrayName="simResults" *ngFor="let file of fieldArray('simResults', 3).controls; let i=index">
           <mat-form-field class="field-container multiple-field" [formGroupName]="i">
-            <ngx-mat-file-input #simResult formControlName="file" [placeholder]="i===0 ? 'Simulation Results' : ''"
+            <ngx-mat-file-input (change)="uploadFile($event.target, 'simResults', i)" #simResult formControlName="file" [placeholder]="i===0 ? 'Simulation Results' : ''"
             [matTooltip]="i===0 ? 'e.g. mean structure, last configuration, energy' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
             <button *ngIf="i===0 && simResult.empty" mat-icon-button matSuffix>
               <mat-icon>folder</mat-icon>
@@ -259,7 +259,7 @@
 
         <div formArrayName="images" *ngFor="let file of fieldArray('images', 3).controls; let i=index">
           <mat-form-field class="field-container multiple-field" [formGroupName]="i">
-            <ngx-mat-file-input #image formControlName="file" [placeholder]="i===0 ? 'Other Images (optional)' : ''" accept=".jpg,.png,.tiff"
+            <ngx-mat-file-input (change)="uploadFile($event.target, 'images', i)" #image formControlName="file" [placeholder]="i===0 ? 'Other Images (optional)' : ''" accept=".jpg,.png,.tiff"
             [matTooltip]="i===0 ? 'accepts jpg, png, tiff' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
             <button *ngIf="i===0 && image.empty" mat-icon-button matSuffix>
               <mat-icon>folder</mat-icon>
@@ -308,14 +308,14 @@
 
       <mat-form-field *ngIf="miscGroup.get('isDelayed').value" class="field-container" appearance="fill">
         <mat-label>Upload date</mat-label>
-        <input matInput [matDatepicker]="picker1" formControlName="date" required>
+        <input matInput [matDatepicker]="picker1" [min]="today" formControlName="uploadDate" required>
         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
         <mat-datepicker #picker1></mat-datepicker>
       </mat-form-field>
 
       <div>
         <button class="stepper-button" mat-flat-button matStepperPrevious color="primary">Back</button>
-        <button class="stepper-button" mat-flat-button (click)="submit()" [disabled]="isSubmitting" color="primary">Submit</button>
+        <button class="stepper-button" mat-flat-button (click)="submit()" [disabled]="loadBar" color="primary">Submit</button>
       </div>
     </form>
   </mat-step>

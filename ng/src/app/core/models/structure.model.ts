@@ -31,6 +31,9 @@ export interface Structure {
 
     private: boolean;
     uploadDate: Date;
+
+    /*** TEMPORARY ***/
+    img: string;
 }
 
 // Structure uploaded to database
@@ -63,7 +66,7 @@ export interface StructureFiles {
     simProtocol: Array<FileDisplay>;
     simResults: Array<FileDisplay>;
     images: Array<FileDisplay>;
-    displayImage: FileDisplay;
+    displayImage: string;
 }
 
 export interface FileDisplay {
@@ -78,7 +81,7 @@ export interface StructureFilesUpload {
     simProtocol: Array<File>;
     simResults: Array<File>;
     images: Array<File>;
-    displayImagge: File;
+    displayImage: string;
 }
 
 export interface File {
