@@ -122,11 +122,16 @@ export class UploadComponent implements OnInit {
     if (structure.isDelayed) {
       structure.uploadDate = structure.uploadDate.toISOString().slice(0, 10);
     }
+    structure.publishDate = '';
     if (year) {
       structure.publishDate = year;
       if (month) {
         structure.publishDate += (month.length === 1) ? '-0' + month : '-' + month;
       }
+      else {
+        structure.publishDate += '-00';
+      }
+      structure.publishDate += '-00';
     }
     delete structure.year;
     delete structure.month;

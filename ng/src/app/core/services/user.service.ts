@@ -74,7 +74,7 @@ export class UserService {
     this.apiService.get('/users')
     .pipe(map(data => data.response))
     .subscribe(
-      data => data === 404 ? this.purgeAuth() : this.setAuth(data),
+      data => typeof(data) === 'object' ? this.setAuth(data) : this.purgeAuth(),
       err => this.purgeAuth()
     );
   }

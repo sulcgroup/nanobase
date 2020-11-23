@@ -39,7 +39,7 @@ def upload_structure():
 	sleep(1)
 	structure_data = request.json['structure']
 
-	return {'response': structure.upload_structure(structure_data)}
+	return {'response': structure.upload_structure(structure_data, user_id)}
 
 @app.route('/api/structure/<sid>', methods=['GET'])
 def get_structure(sid):
