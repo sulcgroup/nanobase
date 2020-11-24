@@ -4,8 +4,6 @@ from typing import List
 from werkzeug.exceptions import BadRequest
 from app.models import Structure, Application
 
-FILE_LIKE_TYPES = ["images", "expResults", "expProtocol", "simProtocol", "simResults", "structureFiles"]
-
 
 @dataclass
 class FileLike:
@@ -30,7 +28,10 @@ class StructureDto:
     files: List[FileLike]
 
 
-def from_json(payload):
+FILE_LIKE_TYPES = ["images", "expResults", "expProtocol", "simProtocol", "simResults", "structureFiles"]
+
+
+def dto_from_json(payload):
     try:
         sn = payload['structure']
         file_likes = []
@@ -85,7 +86,7 @@ def add(structure_dto):
     return s
 
 
-def find(structure_id):
+def get(structure_id):
     return Structure.query.get(structure_id)
 
 
