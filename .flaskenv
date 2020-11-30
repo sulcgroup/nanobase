@@ -1,1 +1,3 @@
 FLASK_APP=nanobase.py
+FLASK_RUN_HOST=localhost
+FLASK_RUN_PORT=9000
