@@ -205,7 +205,7 @@
             <mat-label>File Description</mat-label>
             <input matInput formControlName="description">
           </mat-form-field>
-          <mat-radio-button [value]="'expResults'+i" *ngIf="isImageFile(fileGroup.get('expResults')?.value[i].file?._fileNames)" color="accent">
+          <mat-radio-button [value]="'expResults/'+fileGroup.get('expResults')?.value[i].file?._fileNames" *ngIf="isImageFile(fileGroup.get('expResults')?.value[i].file?._fileNames)" color="accent">
             Primary image
           </mat-radio-button><br>
         </div>
@@ -301,9 +301,8 @@
         Upload as public structure
       </mat-checkbox><br><br>
 
-      <mat-checkbox formControlName="isDelayed" [value]="true" color="accent"
-      matTooltip="Upload structure at a later date" matTooltipClass="tooltip" matTooltipPosition="right">
-        Delay upload
+      <mat-checkbox formControlName="isDelayed" [value]="true" color="accent">
+        Make public at a later date
       </mat-checkbox><br><br>
 
       <mat-form-field *ngIf="miscGroup.get('isDelayed').value" class="field-container" appearance="fill">

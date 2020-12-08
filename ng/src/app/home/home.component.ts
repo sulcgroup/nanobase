@@ -10,6 +10,7 @@ import { StructureService, StructureCover } from 'src/app/core';
 export class HomeComponent implements OnInit {
   numStructures: 20;
   structures: Array<StructureCover> = [];
+  months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec'];
 
   constructor(private structService: StructureService) { }
 
@@ -17,10 +18,15 @@ export class HomeComponent implements OnInit {
     this.structService.get_recent(this.numStructures).subscribe(
       data => {
         console.log('data', data);
+        data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
         this.structures = data;
       },
       err => console.log('err', err)
     );
+  }
+
+  dateFormat(date: Date): string {
+    return this.months[date.getMonth()] + ` ${date.getDate()}, ${date.getFullYear()}`;
   }
 
 }

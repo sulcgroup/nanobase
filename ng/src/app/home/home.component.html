@@ -3,9 +3,10 @@
         <mat-card class="structure-container" *ngFor="let structure of structures">
             <mat-card-header>
                 <mat-card-title>{{structure.title}}</mat-card-title>
-                <mat-card-subtitle>{{structure.user.lastName}} | {{structure.uploadDate}}</mat-card-subtitle>
+                <mat-card-subtitle>{{structure.lastName}} | {{dateFormat(structure.uploadDate)}}</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image src="{{structure.img}}" alt="Display Image" *ngIf="structure.img">
+            <img mat-card-image src="{{'images/' + structure.id + '/' + structure.displayImage}}" alt="Display Image" *ngIf="structure.displayImage">
+
             <mat-card-content>
                 <p>
                 {{structure.description}} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
@@ -14,7 +15,7 @@
                 </p>
             </mat-card-content>
             <mat-card-actions>
-                <button class="structure-button" mat-button color="primary" [routerLink]="['/structure', structure.sid]">
+                <button class="structure-button" mat-button color="primary" [routerLink]="['/structure', structure.id]">
                     <mat-icon color="primary">subject</mat-icon>
                     VIEW STRUCTURE
                 </button>

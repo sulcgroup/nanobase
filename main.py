@@ -5,15 +5,10 @@ import auth
 import user
 import structure
 from utilities import get_session_id
+import database
 
 app = Flask(__name__, static_folder='ng/dist/ng', static_url_path='')
 app.secret_key = b'_6#y2L"F4Q8z\n\xec]/'
-
-structure1 = {'title': 'testTitle1','user': {'firstName': 'first1', 'lastName': 'last1'},'uploadDate': 'testDate1','description': 'testDescription1','img': '/images/6.jpg','sid': 0}
-structure2 = {'title': 'testTitle2','user': {'firstName': 'first2', 'lastName': 'last2'},'uploadDate': 'testDate2','description': 'testDescription2','img': '/images/1.jpg','sid': 1}
-structure3 = {'title': 'testTitle3','user': {'firstName': 'first3', 'lastName': 'last3'},'uploadDate': 'testDate3','description': 'testDescription3','sid': 2}
-structure4 = {'title': 'testTitle4','user': {'firstName': 'first4', 'lastName': 'last4'},'uploadDate': 'testDate4','description': 'testDescription4','img': '/images/5.jpg','sid': 3}
-structures = [structure1, structure2, structure3, structure4]
 
 @app.route('/')
 def home():
@@ -23,12 +18,12 @@ def home():
 def not_found_error(error):
     return make_response(open('ng/dist/ng/index.html').read())
 
-@app.route('/images/<image>')
-def get_image(image=None):
-	if os.path.isfile('assets/images/{}'.format(image)):
-		return send_file('assets/images/{}'.format(image))
+@app.route('/images/<id>/<file_type>/<image>')
+def get_image(id=None, file_type=None, image=None):
+	if os.path.isfile('structures/{}/{}/{}'.format(id, file_type, image)):
+		return send_file('structures/{}/{}/{}'.format(id, file_type, image))
 	else:
-		abort(404, discription='Image not found')
+		abort(404, description='Image not found')
 
 @app.route('/api/structure', methods=['POST'])
 def upload_structure():
@@ -48,8 +43,9 @@ def get_structure(sid):
 
 @app.route('/api/recent_structures', methods=['GET'])
 def get_recent_structures():
-	# Query database to get recent structures
-	return jsonify(structures)
+	# connection = database.pool.get_connection()
+	# connection.close()
+	return structure.get_recent_structures()
 
 @app.route('/api/users', methods=['GET', 'POST'])
 def register():

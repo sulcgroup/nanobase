@@ -131,7 +131,7 @@ export class UploadComponent implements OnInit {
       else {
         structure.publishDate += '-00';
       }
-      structure.publishDate += '-00';
+      structure.publishDate += '-01';
     }
     delete structure.year;
     delete structure.month;
@@ -140,9 +140,11 @@ export class UploadComponent implements OnInit {
   }
 
   uploadFile(fileInput: FileInput, type: string, index: number): void {
+    console.log(fileInput);
+    console.log(this.fileGroup.controls)
     const fileReader: FileReader = new FileReader();
     const file: File = fileInput.files[0];
-    this.isImageFile(file.name) ? fileReader.readAsDataURL(file) : fileReader.readAsText(file);
+    this.isDataURLFile(file.name) ? fileReader.readAsDataURL(file) : fileReader.readAsText(file);
 
     fileReader.onloadend = () => {
       this.fileGroup.controls[type].value[index].contents = fileReader.result;
@@ -169,6 +171,15 @@ export class UploadComponent implements OnInit {
 
   removeField(type: string, group: number, i: number): void {
     this.fieldArray(type, group).removeAt(i);
+  }
+
+  // Returns true if we should read the file as a data URL, rather than text
+  isDataURLFile(fileName?: string): boolean {
+    if (fileName === undefined || fileName === null) {
+      return;
+    }
+    const imgFormats = ['.jpg', '.png', '.tiff', '.pdf', '.doc', '.docx', '.xls', '.xlsx'];
+    return imgFormats.some(suffix => fileName.endsWith(suffix));
   }
 
   isImageFile(fileName?: string): boolean {

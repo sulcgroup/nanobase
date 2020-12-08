@@ -2,11 +2,12 @@ import { User } from './user.model';
 
 // Structure displayed on the home page
 export interface StructureCover {
-    sid: number;
-    user: User;
+    id: number;
+    firstName: string;
+    lastName: string;
     title: string;
     description: string;
-    img: string;
+    displayImage: string;
     uploadDate: Date;
 }
 
