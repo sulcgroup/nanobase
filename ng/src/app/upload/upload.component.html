@@ -159,9 +159,9 @@
               <mat-icon>clear</mat-icon>
             </button>
           </mat-form-field>
-          <mat-form-field class="file-description" [formGroupName]="i">
+          <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('structure')?.value[i].file?._fileNames">
             <mat-label>File Description</mat-label>
-            <input matInput formControlName="description">
+            <input matInput (change)="fileGroup.controls['structure'].value[i].description = $event.target.value">
           </mat-form-field><br>
         </div>
         <button class="field-button" (mouseup)="addField('structure', 3)" mat-stroked-button>Add file</button>
@@ -180,9 +180,9 @@
               <mat-icon>clear</mat-icon>
             </button>
           </mat-form-field>
-          <mat-form-field class="file-description" [formGroupName]="i">
+          <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('expProtocol')?.value[i].file?._fileNames">
             <mat-label>File Description</mat-label>
-            <input matInput formControlName="description">
+            <input matInput (change)="fileGroup.controls['expProtocol'].value[i].description = $event.target.value">
           </mat-form-field>
         </div>
         <button class="field-button" (mouseup)="addField('expProtocol', 3)" mat-stroked-button>Add file</button>
@@ -201,9 +201,9 @@
               <mat-icon>clear</mat-icon>
             </button>
           </mat-form-field>
-          <mat-form-field class="file-description" [formGroupName]="i">
+          <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('expResults')?.value[i].file?._fileNames">
             <mat-label>File Description</mat-label>
-            <input matInput formControlName="description">
+            <input matInput (change)="fileGroup.controls['expResults'].value[i].description = $event.target.value">
           </mat-form-field>
           <mat-radio-button [value]="'expResults/'+fileGroup.get('expResults')?.value[i].file?._fileNames" *ngIf="isImageFile(fileGroup.get('expResults')?.value[i].file?._fileNames)" color="accent">
             Primary image
@@ -225,9 +225,9 @@
               <mat-icon>clear</mat-icon>
             </button>
           </mat-form-field>
-          <mat-form-field class="file-description" [formGroupName]="i">
+          <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('simProtocol')?.value[i].file?._fileNames">
             <mat-label>File Description</mat-label>
-            <input matInput formControlName="description">
+            <input matInput (change)="fileGroup.controls['simProtocol'].value[i].description = $event.target.value">
           </mat-form-field><br>
         </div>
         <button class="field-button" (mouseup)="addField('simProtocol', 3)" mat-stroked-button>Add file</button>
@@ -246,9 +246,9 @@
               <mat-icon>clear</mat-icon>
             </button>
           </mat-form-field>
-          <mat-form-field class="file-description" [formGroupName]="i">
+          <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('simResults')?.value[i].file?._fileNames">
             <mat-label>File Description</mat-label>
-            <input matInput formControlName="description">
+            <input matInput (change)="fileGroup.controls['simResults'].value[i].description = $event.target.value">
           </mat-form-field>
           <mat-radio-button [value]="'simResults/'+fileGroup.get('simResults')?.value[i].file?._fileNames" *ngIf="isImageFile(fileGroup.get('simResults')?.value[i].file?._fileNames)" color="accent">
             Primary image
@@ -271,9 +271,9 @@
               <mat-icon>clear</mat-icon>
             </button>
           </mat-form-field>
-          <mat-form-field class="file-description" [formGroupName]="i">
+          <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('images')?.value[i].file?._fileNames">
             <mat-label>File Description</mat-label>
-            <input matInput formControlName="description">
+            <input matInput (change)="fileGroup.controls['images'].value[i].description = $event.target.value">
           </mat-form-field>
           <mat-radio-button [value]="'images/'+fileGroup.get('images')?.value[i].file?._fileNames" *ngIf="isImageFile(fileGroup.get('images')?.value[i].file?._fileNames)" color="accent">
             Primary image

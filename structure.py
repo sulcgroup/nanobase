@@ -44,6 +44,7 @@ recent_structures_query = (
     'SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY Structures.uploadDate DESC LIMIT 5'
 )
 get_last_id = ('SELECT LAST_INSERT_ID()')
+get_user_name = ('SELECT firstName, lastName FROM Users WHERE id = %s')
 
 get_app_id = ('SELECT id FROM Applications WHERE application = %s')
 insert_app = ('INSERT INTO Applications (application) VALUES (%s)')
@@ -86,18 +87,21 @@ def upload_structure(structure, user_id):
     structure['keywords'] = [d['value'] for d in structure['keywords'] if d['value'] != '']
     structure['authors'] = [d['value'] for d in structure['authors'] if d['value'] != '']
 
-    # Get structure id
+    # Get structure id and user name
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
         cursor.execute(insert_max_structure_id)
         cursor.execute(get_max_structure_id)
         id = cursor.fetchone()[0]
+        cursor.execute(get_user_name, (user_id))
+        first_name, last_name = cursor.fetchall()[0]
+        
 
     file_names, file_descriptions = upload_files(id, structure)
     insert_structure(id, structure, user_id, file_names, file_descriptions, connection)
     connection.close()
 
-    index_structure(id, structure, user_id)
+    index_structure(id, structure, first_name, last_name)
     print(es.search(index='structures', body={"query": {"match_all" : {}}}))
     return structure
 
@@ -195,12 +199,12 @@ def insert_structure(id, structure, user_id, file_names, file_descriptions, conn
 
 
 # Store structure in ES
-def index_structure(id, structure, user_id):
-    es.index(index = 'structures', id = id, 
+def index_structure(id, structure, first_name, last_name):
+    print('namename,', first_name, last_name)
+    es.index(index = 'structures', id = id,
     body = {
         'title': structure['name'],
-        # CHANGE TO FULL NAME LATER
-        'user': user_id,
+        'user_name': first_name + ' ' + last_name,
         'applications': structure['applications'],
         'modifications': structure['modifications'],
         'keywords': structure['keywords'],

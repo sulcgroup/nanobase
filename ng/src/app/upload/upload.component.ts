@@ -17,7 +17,7 @@ const fileForm = {
   encapsulation: ViewEncapsulation.None,
 })
 export class UploadComponent implements OnInit {
-  isOptional = false;
+  isOptional = true;
   loadBar = false;
   today = new Date();
   user: User;
@@ -89,7 +89,7 @@ export class UploadComponent implements OnInit {
 
   submit(): void {
     const structure: StructureUpload = this.processForm();
-    // console.log(structure);
+    console.log(structure);
 
     this.loadBar = true;
     this.disableForm();
@@ -141,17 +141,24 @@ export class UploadComponent implements OnInit {
 
   uploadFile(fileInput: FileInput, type: string, index: number): void {
     console.log(fileInput);
-    console.log('asdf',this.fileGroup.controls)
     const fileReader: FileReader = new FileReader();
     const file: File = fileInput.files[0];
     this.isDataURLFile(file.name) ? fileReader.readAsDataURL(file) : fileReader.readAsText(file);
 
     fileReader.onloadend = () => {
-      console.log(type,index)
-      console.log(fileReader.result)
+      // const description = this.fileGroup.controls[type].value[index].description;
       this.fileGroup.controls[type].value[index].contents = fileReader.result;
+      // Prevents a bug that deletes the description
+      // this.fileGroup.controls[type].value[index].description = description;
+      // console.log(description)
+      console.log(this.fileGroup.value)
     };
+  }
 
+  updateDescription(description: string, type: string, index: number): void {
+    console.log(this.fileGroup.controls[type].value[index].contents)
+    this.fileGroup.controls[type].value[index].description = description;
+    console.log(this.fileGroup.controls[type].value[index].contents)
   }
 
   fieldArray(type: string, group: number): FormArray {
