@@ -36,10 +36,10 @@ def upload_structure():
 
 	return {'response': structure.upload_structure(structure_data, user_id)}
 
-@app.route('/api/structure/<sid>', methods=['GET'])
-def get_structure(sid):
+@app.route('/api/structure/<id>', methods=['GET'])
+def get_structure(id):
 	# Query database for structure
-	return jsonify(structures[int(sid)])
+	return jsonify(structures[int(id)])
 
 @app.route('/api/recent_structures', methods=['GET'])
 def get_recent_structures():

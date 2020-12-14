@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
         console.log('data', data);
         data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
         this.structures = data;
+        console.log(this.structures[0]);
       },
       err => console.log('err', err)
     );

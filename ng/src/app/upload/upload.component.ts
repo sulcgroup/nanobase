@@ -17,7 +17,7 @@ const fileForm = {
   encapsulation: ViewEncapsulation.None,
 })
 export class UploadComponent implements OnInit {
-  isOptional = true;
+  isOptional = false;
   loadBar = false;
   today = new Date();
   user: User;
@@ -141,12 +141,14 @@ export class UploadComponent implements OnInit {
 
   uploadFile(fileInput: FileInput, type: string, index: number): void {
     console.log(fileInput);
-    console.log(this.fileGroup.controls)
+    console.log('asdf',this.fileGroup.controls)
     const fileReader: FileReader = new FileReader();
     const file: File = fileInput.files[0];
     this.isDataURLFile(file.name) ? fileReader.readAsDataURL(file) : fileReader.readAsText(file);
 
     fileReader.onloadend = () => {
+      console.log(type,index)
+      console.log(fileReader.result)
       this.fileGroup.controls[type].value[index].contents = fileReader.result;
     };
 

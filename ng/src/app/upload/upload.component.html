@@ -250,7 +250,7 @@
             <mat-label>File Description</mat-label>
             <input matInput formControlName="description">
           </mat-form-field>
-          <mat-radio-button [value]="'simResults'+i" *ngIf="isImageFile(fileGroup.get('simResults')?.value[i].file?._fileNames)" color="accent">
+          <mat-radio-button [value]="'simResults/'+fileGroup.get('simResults')?.value[i].file?._fileNames" *ngIf="isImageFile(fileGroup.get('simResults')?.value[i].file?._fileNames)" color="accent">
             Primary image
           </mat-radio-button><br>
         </div>
@@ -275,7 +275,7 @@
             <mat-label>File Description</mat-label>
             <input matInput formControlName="description">
           </mat-form-field>
-          <mat-radio-button [value]="'images'+i" *ngIf="isImageFile(fileGroup.get('images')?.value[i].file?._fileNames)" color="accent">
+          <mat-radio-button [value]="'images/'+fileGroup.get('images')?.value[i].file?._fileNames" *ngIf="isImageFile(fileGroup.get('images')?.value[i].file?._fileNames)" color="accent">
             Primary image
           </mat-radio-button><br>
         </div>

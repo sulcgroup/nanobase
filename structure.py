@@ -11,30 +11,7 @@ from elasticsearch import Elasticsearch
 import json
 import requests
 
-print('helloooooo')
 es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-
-e1={
-    'title': 'structure',
-    'applications': ['vase', 'light', 'lamp'],
-    'modifications': ['couch'],
-    'keywords': ['table', 'dog'],
-    'authors': ['Sam Johnson'],
-}
-e2={
-    'title': 'test',
-    'applications': ['pin', 'needle'],
-    'modifications': ['couch'],
-    'keywords': ['dog', 'cat'],
-    'authors': ['Jill Jones'],
-}
-e3={
-    'title': 'thing',
-    'applications': ['cord'],
-    'modifications': [''],
-    'keywords': ['bench', 'pen', 'ball'],
-    'authors': ['Aatmik Mallya', 'Michael Jackson'],
-}
 
 query = {
   "query": {
@@ -47,39 +24,42 @@ query = {
   }
 }
 
-res = es.index(index = 'structures', id = 1, body = e1)
-res = es.index(index = 'structures', id = 2, body = e2)
-res = es.index(index = 'structures', id = 3, body = e3)
+# PRINT SPECIFIC ID
 # print(es.get(index='structures', id=3))
-print(es.search(index='structures',body=query))
 
-# r = requests.get('http://localhost:9200') 
-# i = 1
-# while r.status_code == 200:
-#     r = requests.get('http://swapi.co/api/people/'+ str(i))
-#     print(r.content)
-#     # es.index(index='sw', doc_type='people', id=i, body=json.loads(r.content))
-#     i=i+1
- 
-# print(i)
+# PRINT ALL
+# print(es.search(index='structures', body={"query": {"match_all" : {}}}))
 
 
 
-insert_published_structure = (
+insert_structure_query = (
     'REPLACE INTO Structures'
-    '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `private`, `uploadDate`)'
-	'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
-)
-insert_structure = (
-	'REPLACE INTO Structures'
-    '(`id`, `userId`, `title`, `type`, `description`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `private`, `uploadDate`)'
-	'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    # So many columns :(
+    '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `structureDescriptions`, `expProtocolDescriptions`, `expResultsDescriptions`, `simProtocolDescriptions`, `simResultsDescriptions`, `imageDescriptions`, `private`, `uploadDate`)'
+	'VALUES (%s, %s, %s, %s, %s, STR_TO_DATE(%s, "%%Y-%%c-%%e"), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 )
 insert_max_structure_id = ('INSERT INTO Structures () VALUES ()')
 get_max_structure_id = ('SELECT MAX(id) FROM Structures')
 recent_structures_query = (
     'SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY Structures.uploadDate DESC LIMIT 5'
 )
+get_last_id = ('SELECT LAST_INSERT_ID()')
+
+get_app_id = ('SELECT id FROM Applications WHERE application = %s')
+insert_app = ('INSERT INTO Applications (application) VALUES (%s)')
+insert_app_join = ('INSERT INTO ApplicationsJoin (structureId, applicationId) VALUES (%s, %s)')
+
+get_mod_id = ('SELECT id FROM Modifications WHERE modification = %s')
+insert_mod = ('INSERT INTO Modifications (modification) VALUES (%s)')
+insert_mod_join = ('INSERT INTO ModificationsJoin (structureId, modificationId) VALUES (%s, %s)')
+
+get_keyword_id = ('SELECT id FROM Keywords WHERE keyword = %s')
+insert_keyword = ('INSERT INTO Keywords (keyword) VALUES (%s)')
+insert_keyword_join = ('INSERT INTO KeywordsJoin (structureId, keywordId) VALUES (%s, %s)')
+
+get_author_id = ('SELECT id FROM Authors WHERE author = %s')
+insert_author = ('INSERT INTO Authors (author) VALUES (%s)')
+insert_author_join = ('INSERT INTO AuthorsJoin (structureId, authorId) VALUES (%s, %s)')
 
 
 def get_recent_structures():
@@ -98,24 +78,37 @@ def get_recent_structures():
     return jsonify(structures)
 
 def upload_structure(structure, user_id):
+    print('Uploading: ', structure)
+    # Convert dicts to arrays
+    applications, modifications, keywords, authors = [], [], [], []
+    structure['applications'] = [d['value'] for d in structure['applications'] if d['value'] != '']
+    structure['modifications'] = [d['value'] for d in structure['modifications'] if d['value'] != '']
+    structure['keywords'] = [d['value'] for d in structure['keywords'] if d['value'] != '']
+    structure['authors'] = [d['value'] for d in structure['authors'] if d['value'] != '']
+
     # Get structure id
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
         cursor.execute(insert_max_structure_id)
         cursor.execute(get_max_structure_id)
         id = cursor.fetchone()[0]
-        print(id)
-    
+
+    file_names, file_descriptions = upload_files(id, structure)
+    insert_structure(id, structure, user_id, file_names, file_descriptions, connection)
+    connection.close()
+
+    index_structure(id, structure, user_id)
+    print(es.search(index='structures', body={"query": {"match_all" : {}}}))
+    return structure
+
+# Write all files into filesystem
+def upload_files(id, structure):
     struct_path = 'structures/' + str(id)
-    if not os.path.exists(struct_path):
-        os.mkdir(struct_path)
-    else:
-        connection.close()
-        return "Error: Structure folder " + str(id) + " already exists"
+    os.mkdir(struct_path)
     
-    # Upload sturcture into filesystem
     file_types = ['structure', 'expProtocol', 'expResults', 'simProtocol', 'simResults', 'images']
     file_names = [''] * len(file_types)
+    file_descriptions = [''] * len(file_types)
     for i, file_type in enumerate(file_types):
         file_dir = os.path.join(struct_path, file_type)
         if structure[file_type][0]['file']:
@@ -124,60 +117,95 @@ def upload_structure(structure, user_id):
         for f in structure[file_type]:
             try:
                 file_name = f['file']['_fileNames']
-                file_names[i] += file_name + ','
                 file_path = os.path.join(file_dir, file_name)
+                file_names[i] += file_name + '|'
+                file_descriptions[i] += f['description'] + '|'
             except TypeError:
                 continue
             if is_data_url(file_name):
                 file = open(file_path, "wb")
                 data_uri = f['contents']
+                print("FILE WRITING: ", file_name, data_uri[:15])
                 data = request.urlopen(data_uri).read()
                 file.write(data)
             else:
                 file = open(file_path, "w")
                 file.write(f['contents'])
             file.close()
-        
-    # Insert structure into database
-    is_published = True if structure['authors'][0]['value'] else False
     
-    if is_published:
-        structure_data = (
-            id,
-            int(user_id),
-            structure['name'],
-            structure['type'],
-            structure['description'],
-            structure['publishDate'],
-            structure['citation'],
-            structure['link'],
-            structure['licensing'],
-            file_names[0][:-1], file_names[1][:-1], file_names[2][:-1], file_names[3][:-1], file_names[4][:-1], file_names[5][:-1],
-            structure['displayImage'],
-            1 if structure['isPrivate'] == 'true' else 0,
-            structure['uploadDate'] if structure['uploadDate'] else date.today().strftime("%Y-%m-%d"),
-        )
-        with connection.cursor() as cursor:
-            cursor.execute(insert_published_structure, (structure_data))
-    else:
-        structure_data = (
-            id,
-            int(user_id),
-            structure['name'],
-            structure['type'],
-            structure['description'],
-            file_names[0][:-1], file_names[1][:-1], file_names[2][:-1], file_names[3][:-1], file_names[4][:-1], file_names[5][:-1],
-            structure['displayImage'],
-            1 if structure['isPrivate'] == 'true' else 0,
-            structure['uploadDate'] if structure['uploadDate'] else date.today().strftime("%Y-%m-%d"),
-        )
-        with connection.cursor() as cursor:
-            cursor.execute(insert_structure, (structure_data))
+    return file_names, file_descriptions
+
+# Add structure to MySQL database
+def insert_structure(id, structure, user_id, file_names, file_descriptions, connection):    
+    structure_data = (
+        id,
+        int(user_id),
+        structure['name'],
+        structure['type'],
+        structure['description'],
+        structure['publishDate'] if structure['publishDate'] else '0000-0-0',
+        structure['citation'],
+        structure['link'] ,
+        structure['licensing'],
+        file_names[0][:-1], file_names[1][:-1], file_names[2][:-1], file_names[3][:-1], file_names[4][:-1], file_names[5][:-1],
+        structure['displayImage'],
+        file_descriptions[0][:-1], file_descriptions[1][:-1], file_descriptions[2][:-1], file_descriptions[3][:-1], file_descriptions[4][:-1], file_descriptions[5][:-1],
+        1 if structure['isPrivate'] == 'true' else 0,
+        structure['uploadDate'] if structure['uploadDate'] else date.today().strftime("%Y-%m-%d"),
+    )
+    
+    with connection.cursor() as cursor:
+        cursor.execute(insert_structure_query, (structure_data))
+        # Using this repetitive structure because table names cannot be parameterized :/
+        for application in structure['applications']:
+            cursor.execute(get_app_id, (application))
+            tag_id = cursor.fetchone()
+            if not tag_id:
+                cursor.execute(insert_app, (application))
+                cursor.execute(get_last_id)
+                tag_id = cursor.fetchone()
+            cursor.execute(insert_app_join, (id, tag_id))
+
+        for modification in structure['modifications']:
+            cursor.execute(get_mod_id, (modification))
+            tag_id = cursor.fetchone()
+            if not tag_id:
+                cursor.execute(insert_mod, (modification))
+                cursor.execute(get_last_id)
+                tag_id = cursor.fetchone()
+            cursor.execute(insert_mod_join, (id, tag_id))
+
+        for keyword in structure['keywords']:
+            cursor.execute(get_keyword_id, (keyword))
+            tag_id = cursor.fetchone()
+            if not tag_id:
+                cursor.execute(insert_keyword, (keyword))
+                cursor.execute(get_last_id)
+                tag_id = cursor.fetchone()
+            cursor.execute(insert_keyword_join, (id, tag_id))
         
-    connection.close()
+        for authors in structure['authors']:
+            cursor.execute(get_author_id, (authors))
+            tag_id = cursor.fetchone()
+            if not tag_id:
+                cursor.execute(insert_author, (authors))
+                cursor.execute(get_last_id)
+                tag_id = cursor.fetchone()
+            cursor.execute(insert_author_join, (id, tag_id))
 
-    return structure
 
+# Store structure in ES
+def index_structure(id, structure, user_id):
+    es.index(index = 'structures', id = id, 
+    body = {
+        'title': structure['name'],
+        # CHANGE TO FULL NAME LATER
+        'user': user_id,
+        'applications': structure['applications'],
+        'modifications': structure['modifications'],
+        'keywords': structure['keywords'],
+        'authors': structure['authors'],
+    })
 
 def is_data_url(file):
     formats = ['jpg', 'png', 'tiff', 'pdf', 'doc', 'docx', 'xls', 'xlsx']
