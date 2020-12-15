@@ -34,6 +34,13 @@
     padding-right: 10px;
 }
 
+#message {
+    font-weight: 500;
+    font-size: 18px;
+    margin-left: 15px;
+    margin-top: 15px;
+}
+
 :host ::ng-deep .mat-card-content {
     margin-bottom: 0!important;
 }

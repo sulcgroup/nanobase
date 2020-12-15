@@ -10,8 +10,13 @@ import { Structure, StructureCover } from '../models/structure.model';
 export class StructureService {
   constructor(private apiService: ApiService) { }
 
-  get_recent(count: number): Observable<Array<StructureCover>> {
+  // TODO: Add count functionality
+  getRecent(count: number): Observable<Array<StructureCover>> {
     return this.apiService.get('/recent_structures');
+  }
+
+  search(input: string): Observable<Array<StructureCover>> {
+    return this.apiService.get('/search/' + input);
   }
 
 }

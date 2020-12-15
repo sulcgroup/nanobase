@@ -13,38 +13,27 @@ import requests
 
 es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 
-query = {
-  "query": {
-    "match": {
-      "authors": {
-        "query": "kill jones",
-        "fuzziness": "AUTO"
-      }
-    }
-  }
-}
 
 # PRINT SPECIFIC ID
 # print(es.get(index='structures', id=3))
 
 # PRINT ALL
-# print(es.search(index='structures', body={"query": {"match_all" : {}}}))
-
+# print(es.search(index='structures', body={'query': {'match_all' : {}}}))
 
 
 insert_structure_query = (
     'REPLACE INTO Structures'
-    # So many columns :(
     '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `structureDescriptions`, `expProtocolDescriptions`, `expResultsDescriptions`, `simProtocolDescriptions`, `simResultsDescriptions`, `imageDescriptions`, `private`, `uploadDate`)'
 	'VALUES (%s, %s, %s, %s, %s, STR_TO_DATE(%s, "%%Y-%%c-%%e"), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 )
 insert_max_structure_id = ('INSERT INTO Structures () VALUES ()')
 get_max_structure_id = ('SELECT MAX(id) FROM Structures')
 recent_structures_query = (
-    'SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY Structures.uploadDate DESC LIMIT 5'
+    'SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY Structures.uploadDate DESC LIMIT 10'
 )
 get_last_id = ('SELECT LAST_INSERT_ID()')
 get_user_name = ('SELECT firstName, lastName FROM Users WHERE id = %s')
+get_by_id = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.id IN %(ids)s LIMIT 10')
 
 get_app_id = ('SELECT id FROM Applications WHERE application = %s')
 insert_app = ('INSERT INTO Applications (application) VALUES (%s)')
@@ -102,7 +91,7 @@ def upload_structure(structure, user_id):
     connection.close()
 
     index_structure(id, structure, first_name, last_name)
-    print(es.search(index='structures', body={"query": {"match_all" : {}}}))
+    print(es.search(index='structures', body={'query': {'match_all' : {}}}))
     return structure
 
 # Write all files into filesystem
@@ -126,14 +115,15 @@ def upload_files(id, structure):
                 file_descriptions[i] += f['description'] + '|'
             except TypeError:
                 continue
+            # Determine if it's not a text format
             if is_data_url(file_name):
-                file = open(file_path, "wb")
+                file = open(file_path, 'wb')
                 data_uri = f['contents']
-                print("FILE WRITING: ", file_name, data_uri[:15])
+                print('FILE WRITING: ', file_name, data_uri[:15])
                 data = request.urlopen(data_uri).read()
                 file.write(data)
             else:
-                file = open(file_path, "w")
+                file = open(file_path, 'w')
                 file.write(f['contents'])
             file.close()
     
@@ -155,7 +145,7 @@ def insert_structure(id, structure, user_id, file_names, file_descriptions, conn
         structure['displayImage'],
         file_descriptions[0][:-1], file_descriptions[1][:-1], file_descriptions[2][:-1], file_descriptions[3][:-1], file_descriptions[4][:-1], file_descriptions[5][:-1],
         1 if structure['isPrivate'] == 'true' else 0,
-        structure['uploadDate'] if structure['uploadDate'] else date.today().strftime("%Y-%m-%d"),
+        structure['uploadDate'] if structure['uploadDate'] else date.today().strftime('%Y-%m-%d'),
     )
     
     with connection.cursor() as cursor:
@@ -197,10 +187,8 @@ def insert_structure(id, structure, user_id, file_names, file_descriptions, conn
                 tag_id = cursor.fetchone()
             cursor.execute(insert_author_join, (id, tag_id))
 
-
 # Store structure in ES
 def index_structure(id, structure, first_name, last_name):
-    print('namename,', first_name, last_name)
     es.index(index = 'structures', id = id,
     body = {
         'title': structure['name'],
@@ -210,6 +198,48 @@ def index_structure(id, structure, first_name, last_name):
         'keywords': structure['keywords'],
         'authors': structure['authors'],
     })
+
+def search(input):
+    query = {
+        'query': {
+            'match': {
+                'title': {
+                    'query': input,
+                    'fuzziness': 'AUTO'
+                }
+            }
+        }
+    }
+
+    hits = es.search(index='structures', body=query)['hits']['hits']
+    ids = [hit['_id'] for hit in hits]
+
+    if not ids:
+        return {}
+
+    connection = database.pool.get_connection()
+    with connection.cursor() as cursor:
+        cursor.execute(get_by_id, ({'ids':tuple(ids)}))
+        structures = cursor.fetchall()
+    connection.close()
+
+    response = []
+
+    for structure in structures:
+        response.append({
+            'title': structure[0],
+            'uploadDate': structure[1],
+            'description': structure[2],
+            'displayImage': structure[3],
+            'id': structure[4],
+            'firstName': structure[5],
+            'lastName': structure[6]
+        })
+    
+    print(response)
+    
+    return jsonify(response)
+
 
 def is_data_url(file):
     formats = ['jpg', 'png', 'tiff', 'pdf', 'doc', 'docx', 'xls', 'xlsx']

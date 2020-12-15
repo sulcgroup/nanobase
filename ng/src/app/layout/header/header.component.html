@@ -8,11 +8,20 @@
     <div id="search-field-container">
         <mat-form-field [ngStyle]="{color:'#fff'}" id="search-field">
             <mat-label >Search structures</mat-label>
-            <input matInput type="text" [(ngModel)]="search">
-            <button mat-button *ngIf="search" matSuffix mat-icon-button aria-label="Clear" (click)="search=''">
+            <input matInput type="text" [(ngModel)]="input" (keyup.enter)="search()">
+            <button mat-button *ngIf="input" matSuffix mat-icon-button aria-label="Clear" (click)="input=''">
                 <mat-icon>close</mat-icon>
             </button>
         </mat-form-field>
+
+        <!-- <mat-form-field appearance="fill">
+            <mat-label>Choose an option</mat-label>
+            <mat-select>
+              <mat-option value="option1">Option 1</mat-option>
+              <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+              <mat-option value="option3">Option 3</mat-option>
+            </mat-select>
+        </mat-form-field> -->
     </div>
 
     <div id="sign-in-container">

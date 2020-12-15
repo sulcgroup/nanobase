@@ -1,9 +1,10 @@
 <div id="content-container">
     <div id="list-container">
+        <div id="message">{{message}}</div>
         <mat-card class="structure-container" *ngFor="let structure of structures">
             <mat-card-header>
                 <mat-card-title>{{structure.title}}</mat-card-title>
-                <mat-card-subtitle>{{structure.lastName}} | {{dateFormat(structure.uploadDate)}}</mat-card-subtitle>
+                <mat-card-subtitle>{{structure.lastName}} | {{formatDate(structure.uploadDate)}}</mat-card-subtitle>
             </mat-card-header>
             <img mat-card-image src="{{'images/' + structure.id + '/' + structure.displayImage}}" alt="Display Image" *ngIf="structure.displayImage">
 
@@ -21,9 +22,9 @@
                 </button>
             </mat-card-actions>
         </mat-card>
-        
+
     </div>
     <div id="extras-container">
-        extras
+        
     </div>
 </div>
