@@ -36,13 +36,12 @@ a {
     margin-left: 20px;
     margin-right: 20px;
     flex-basis: 500px;
+    position: relative;
+    bottom: 3px;
 }
 #category-container {
     position: relative;
-    top: 12px;
-    /* margin-top: 15px; */
-    margin-bottom: 0px;
-    padding-bottom: 0px;
+    bottom: 7px;
 }
 #sign-in-container {
     margin-left: auto;
@@ -76,6 +75,18 @@ a {
 ::ng-deep .mat-select-value {    
     color: white!important;
 }
+
+::ng-deep .mat-form-field-subscript-wrapper {
+    margin: 0!important;
+}
+
+/* ::ng-deep .ng-tns-c64-1 {
+    height: 30px!important;
+} */
+
+::ng-deep .mat-form-field{
+    margin-bottom: -1.25em!important;
+ }
 
 #header-title:hover, #sign-in:hover {
     color: rgba(255, 255, 255, 0.6);

@@ -8,15 +8,15 @@
 
 #sidebar {
     position: fixed;
-    top: 78px;
+    top: 63px;
     height: 100%;
-    width: calc(15% + 1px);
+    width: calc(15%);
     flex-shrink: 0;
 }
 
 #main  {
     margin-left: max(166px, calc(15% + 2px));
-    margin-top: 78px;
+    margin-top: 70px;
     width: 100%;
-    height: calc(100% - 78px);
+    height: calc(100% - 7px);
 }
