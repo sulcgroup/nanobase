@@ -15,8 +15,8 @@ export class StructureService {
     return this.apiService.get('/recent_structures');
   }
 
-  search(input: string): Observable<Array<StructureCover>> {
-    return this.apiService.get('/search/' + input);
+  search(input: string, category: string): Observable<Array<StructureCover>> {
+    return this.apiService.get(`/search/${input}/${category}`);
   }
 
 }

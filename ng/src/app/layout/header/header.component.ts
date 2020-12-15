@@ -9,6 +9,7 @@ import { User, UserService } from 'src/app/core';
 })
 export class HeaderComponent implements OnInit {
   input = '';
+  category = '';
   user: User;
 
   constructor(private router: Router, private userService: UserService) { }
@@ -20,8 +21,10 @@ export class HeaderComponent implements OnInit {
   }
 
   search(): void {
-    console.log(this.input)
-    this.router.navigateByUrl(`/?input=${this.input}`);
+    if (!this.category) {
+      this.category = 'title';
+    }
+    this.router.navigateByUrl(`/?input=${this.input}&category=${this.category}`);
   }
 
 }

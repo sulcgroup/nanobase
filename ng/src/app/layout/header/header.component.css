@@ -37,6 +37,13 @@ a {
     margin-right: 20px;
     flex-basis: 500px;
 }
+#category-container {
+    position: relative;
+    top: 12px;
+    /* margin-top: 15px; */
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
 #sign-in-container {
     margin-left: auto;
     display: flex;
@@ -51,6 +58,9 @@ a {
     width: 100%;
     color: rgba(255, 255, 255, 0.87);
 }
+#category-field {
+    color: rgba(255, 255, 255, 0.87);
+}
 #sign-in {
     margin-left: 10px;
     margin-right: 20px;
@@ -63,17 +73,23 @@ a {
     height: 60%;
 }
 
+::ng-deep .mat-select-value {    
+    color: white!important;
+}
+
 #header-title:hover, #sign-in:hover {
     color: rgba(255, 255, 255, 0.6);
 }
 
 /* Overrides Angular Material */
-.mat-input-element, .mat-form-field-autofill-control, .ng-pristine, .ng-valid, .cdk-text-field-autofill-monitored, .ng-touched
-{
+.mat-input-element, .mat-form-field-autofill-control, .ng-pristine, .ng-valid, .cdk-text-field-autofill-monitored, .ng-touched {
     font-size: 16px;
 }
 
-.mat-form-field-label, .ng-tns-c59-0, .mat-empty, .mat-form-field-empty, .ng-star-inserted 
-{
+.mat-form-field-label, .ng-tns-c59-0, .mat-empty, .mat-form-field-empty, .ng-star-inserted {
     color: rgba(255, 255, 255, 0.87);
+}
+
+.mat-select-value {
+    color: white!important;
 }

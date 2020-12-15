@@ -18,22 +18,24 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     let input = this.route.snapshot.queryParams.input;
-    input ? this.loadSearch(input) : this.loadRecent();
+    let category = this.route.snapshot.queryParams.category;
+    input ? this.loadSearch(input, category) : this.loadRecent();
 
     this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd) {
         const url = new URLSearchParams(val.url.slice(2));
         input = url.get('input');
-        input ? this.loadSearch(input) : this.loadRecent();
-
+        category = url.get('category');
+        console.log(category)
+        input ? this.loadSearch(input, category) : this.loadRecent();
       }
     });
 
   }
 
-  loadSearch(input: string): void {
+  loadSearch(input: string, category: string): void {
     this.message = '';
-    this.structService.search(input).subscribe(
+    this.structService.search(input, category).subscribe(
       data => {
         if (Object.keys(data).length === 0) {
           this.message = `No structures match the query "${input}".`;

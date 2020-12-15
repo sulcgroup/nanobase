@@ -13,15 +13,20 @@
                 <mat-icon>close</mat-icon>
             </button>
         </mat-form-field>
+    </div>
 
-        <!-- <mat-form-field appearance="fill">
-            <mat-label>Choose an option</mat-label>
-            <mat-select>
-              <mat-option value="option1">Option 1</mat-option>
-              <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
-              <mat-option value="option3">Option 3</mat-option>
+    <div id="category-container">
+        <mat-form-field appearance="outline" id="category-field">
+            <mat-label>Search by</mat-label>
+            <mat-select [(ngModel)]="category">
+                <mat-option class="category" value="title">Title</mat-option>
+                <mat-option class="category" value="user_name">User</mat-option>
+                <mat-option class="category" value="applications">Applications</mat-option>
+                <mat-option class="category" value="modifications">Modifications</mat-option>
+                <mat-option class="category" value="keywords">Keywords</mat-option>
+                <mat-option class="category" value="authors">Authors</mat-option>
             </mat-select>
-        </mat-form-field> -->
+        </mat-form-field>
     </div>
 
     <div id="sign-in-container">

@@ -45,9 +45,9 @@ def upload_structure():
 def get_recent_structures():
 	return structure.get_recent_structures()
 
-@app.route('/api/search/<input>', methods=['GET'])
-def search(input):
-	return structure.search(input)
+@app.route('/api/search/<input>/<category>', methods=['GET'])
+def search(input, category):
+	return structure.search(input, category)
 
 @app.route('/api/users', methods=['GET', 'POST'])
 def register():

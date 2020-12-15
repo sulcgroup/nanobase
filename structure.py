@@ -199,11 +199,12 @@ def index_structure(id, structure, first_name, last_name):
         'authors': structure['authors'],
     })
 
-def search(input):
+def search(input, category):
+    print('categoryyyy', category)
     query = {
         'query': {
             'match': {
-                'title': {
+                category: {
                     'query': input,
                     'fuzziness': 'AUTO'
                 }
