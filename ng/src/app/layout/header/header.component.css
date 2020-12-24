@@ -40,7 +40,6 @@ a {
     bottom: 1px;
 }
 #category-container {
-    /* flex-basis: 500px; */
     position: relative;
     bottom: 5px;
 }
@@ -59,6 +58,7 @@ a {
     color: rgba(255, 255, 255, 0.87);
 }
 #category-field {
+    width: 125px;
     color: rgba(255, 255, 255, 0.87);
 }
 #sign-in {

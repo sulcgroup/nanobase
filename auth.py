@@ -9,6 +9,8 @@ import random
 from nanobase_email.email_script import send_email
 from user import get_user_id
 from database import pool
+from utilities import get_base_url
+from uuid import uuid4
 
 get_verify_code_query = ('SELECT verifycode FROM Users WHERE id = %s')
 verify_user = ('UPDATE Users SET verified = 1 WHERE id = %s')
@@ -18,6 +20,12 @@ insert_user = (
 	'(`firstName`, `lastName`, `email`, `institution`, `password`, `creationDate`, `verifycode`)'
 	'VALUES (%s, %s, %s, %s, %s, %s, %s)'
 )
+set_reset_token = ('UPDATE Users SET resetToken = %s WHERE email = %s')
+set_reset_token_expiration = ('UPDATE Users SET resetTokenExpiration = %s WHERE email = %s')
+get_reset_token = ('SELECT id FROM Users WHERE resetToken = %s')
+get_reset_token_expiration = ("SELECT resetTokenExpiration FROM Users WHERE id = %s")
+reset_password = ("UPDATE Users SET password = %s WHERE id = %s")
+
 
 
 def verify(user_id, verify_code):
@@ -122,4 +130,63 @@ def login(credentials):
 
 	return 'Invalid username or password'
 
+def send_reset_token(email):
+	connection = pool.get_connection()
 
+	with connection.cursor() as cursor:
+		cursor.execute(get_user_query, (email))
+		user_data = cursor.fetchone()
+	
+	if not user_data:
+		connection.close()
+		return 'Email not found'
+	
+	firstName = user_data[1]
+	token = str(uuid4())
+	day = time() + 86400
+
+	with connection.cursor() as cursor:
+		cursor.execute(set_reset_token, (token, email))
+		cursor.execute(set_reset_token_expiration, (day, email))
+	
+	reset_link = get_base_url() + 'auth/reset?token={}'.format(token)
+	send_email('-t 1 -n {} -u {} -d {}'.format(firstName, reset_link, email).split(' '))
+
+	connection.close()
+	return 'Email sent!'
+
+def check_reset_token(token):
+	connection = pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(get_reset_token, (token))
+		user_id = cursor.fetchone()
+	
+	if not user_id:
+		connection.close()
+		return 'Token not found'
+	
+	with connection.cursor() as cursor:
+		cursor.execute(get_reset_token_expiration, (user_id))
+		expiration = cursor.fetchone()
+	connection.close()
+
+	return 'Token expired' if time() > expiration[0] else user_id[0]
+
+def resetPassword(password, user_id, token):
+	if check_reset_token(token) != int(user_id):
+		return 'Invalid token'
+	
+	connection = pool.get_connection()
+
+	user_data = (
+		bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()),
+		user_id
+	)
+
+	with connection.cursor() as cursor:
+		cursor.execute(reset_password, user_data)
+
+	connection.close()
+	return 'Password succesfully changed!'
+	

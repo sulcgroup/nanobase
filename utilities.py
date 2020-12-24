@@ -1,13 +1,19 @@
 from flask import session
 
-# Determine if we are in the server or the VM
+
 def get_home_path():
+    return '/var/www/nanobase/nanobase/' if is_prod() else '/vagrant/nanobase/'
+
+def get_base_url():
+    return 'https://oxdna.org/' if is_prod() else 'http://localhost:9000/'
+
+# Determine if we are in the server or the VM (true = server)
+def is_prod():
     try:
     	open('/var/www/nanobase/nanobase/nanobase_email/login.txt', 'r')
-    	path = '/var/www/nanobase/nanobase/'
+    	return True
     except FileNotFoundError:
-    	path = '/vagrant/nanobase/'
-    return path
+    	return False
     
 def get_session_id():
     try:

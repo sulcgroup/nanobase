@@ -1,0 +1,29 @@
+<div id="reset-container">
+    <mat-card id="password-card" *ngIf="checkCompleted && validated">
+        <mat-card-header id="card-header">
+            <mat-card-title id="reset-header">Reset your password</mat-card-title>
+        </mat-card-header>
+        <mat-card-subtitle id="header">{{header}}</mat-card-subtitle>
+        <mat-card-content>
+            <div class="reset-input">
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter new password</mat-label>
+                    <input matInput [formControl]="password" [type]="hidePassword ? 'password' : 'text'" autocomplete="new-password">
+                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="password.invalid">{{getPasswordError()}}</mat-error>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button id="submit-button" (click)='submit()' mat-raised-button color="primary" [disabled]="password.invalid || submitted">
+                Submit
+            </button>
+        </mat-card-actions>
+    </mat-card>
+
+    
+
+</div>
+

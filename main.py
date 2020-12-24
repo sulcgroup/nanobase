@@ -72,10 +72,23 @@ def setPassword():
 	old_pass = request.json['old_pass']
 	return {'response': user.setPassword(user_id, new_pass, old_pass)}
 
+@app.route('/api/users/forgot/<password>/<user_id>/<token>', methods=['GET'])
+def resetPassword(password, user_id, token):
+	return {'response': auth.resetPassword(password, user_id, token)}
+
 @app.route('/api/users/login', methods=['POST'])
 def login():
 	credentials = request.json['credentials']
 	return {'response': auth.login(credentials)}
+
+@app.route('/api/users/forgot', methods=['POST'])
+def send_reset_token():
+	email = request.json['email']
+	return {'response': auth.send_reset_token(email)}
+
+@app.route('/api/users/forgot/<token>', methods=['GET'])
+def check_reset_token(token):
+	return {'response': auth.check_reset_token(token)}
 
 @app.route('/api/logout')
 def logout():

@@ -12,10 +12,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { VerifyComponent } from './verify/verify.component';
 import { NoAuthGuard } from './no-auth.guard';
+import { ForgotComponent } from './forgot/forgot.component';
+import { ResetComponent } from './reset/reset.component';
 
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, VerifyComponent],
+  declarations: [LoginComponent, RegisterComponent, VerifyComponent, ForgotComponent, ResetComponent],
   imports: [
     CommonModule,
     AuthRoutingModule,

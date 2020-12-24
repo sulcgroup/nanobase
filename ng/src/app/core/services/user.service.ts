@@ -36,6 +36,10 @@ export class UserService {
     .pipe(map(data => data.response));
   }
 
+  resetPassword(password: string, userId: number, token: string): Observable<any> {
+    return this.apiService.get(`/users/forgot/${password}/${userId}/${token}`);
+  }
+
   attemptLogin(credentials: object): Observable<any> {
     return this.apiService.post('/users/login', {credentials})
     .pipe(map(data => {
@@ -50,8 +54,15 @@ export class UserService {
         }
         return data;
       }
-    }
-    ));
+    }));
+  }
+
+  sendResetToken(email: string): Observable<any> {
+    return this.apiService.post('/users/forgot', {email});
+  }
+
+  checkResetToken(token: string): Observable<any> {
+    return this.apiService.get(`/users/forgot/${token}`);
   }
 
   logout(): Observable<any> {
