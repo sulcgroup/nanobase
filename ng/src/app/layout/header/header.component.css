@@ -18,7 +18,7 @@ a {
     display: flex;
     justify-content: flex-start;
     border: 1px solid rgb(17, 0, 36);
-    background-color: rgb(46, 51, 56);
+    background-color: rgb(52, 58, 63);
     box-shadow: 0 3px 12px 4px rgba(28, 31, 34, 0.4);
 }
 /* Flex Children */
@@ -37,11 +37,12 @@ a {
     margin-right: 20px;
     flex-basis: 500px;
     position: relative;
-    bottom: 3px;
+    bottom: 1px;
 }
 #category-container {
+    /* flex-basis: 500px; */
     position: relative;
-    bottom: 7px;
+    bottom: 5px;
 }
 #sign-in-container {
     margin-left: auto;
