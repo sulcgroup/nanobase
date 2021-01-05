@@ -20,7 +20,7 @@ es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 # PRINT ALL
 # print(es.search(index='structures', body={'query': {'match_all' : {}}}))
 
-
+get_structure_query = ('SELECT Structures.*, Users.firstName, Users.lastName, Users.institution FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.id = %s')
 insert_structure_query = (
     'REPLACE INTO Structures'
     '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `structureDescriptions`, `expProtocolDescriptions`, `expResultsDescriptions`, `simProtocolDescriptions`, `simResultsDescriptions`, `imageDescriptions`, `private`, `uploadDate`)'
@@ -51,6 +51,62 @@ get_author_id = ('SELECT id FROM Authors WHERE author = %s')
 insert_author = ('INSERT INTO Authors (author) VALUES (%s)')
 insert_author_join = ('INSERT INTO AuthorsJoin (structureId, authorId) VALUES (%s, %s)')
 
+get_applications_query = ('SELECT application FROM Applications WHERE id IN (SELECT applicationId FROM ApplicationsJoin WHERE structureId = %s)')
+get_modifications_query = ('SELECT modification FROM Modifications WHERE id IN (SELECT modificationId FROM ModificationsJoin WHERE structureId = %s)')
+get_keywords_query = ('SELECT keyword FROM Keywords WHERE id IN (SELECT keywordId FROM KeywordsJoin WHERE structureId = %s)')
+get_authors_query = ('SELECT author FROM Authors WHERE id IN (SELECT authorId FROM AuthorsJoin WHERE structureId = %s)')
+
+def get_structure(id):
+    connection = database.pool.get_connection()
+    with connection.cursor() as cursor:
+        cursor.execute(get_structure_query, (id))
+        result = list(cursor.fetchone())
+    
+    if not result:
+        connection.close()
+        return 'Not found'
+    
+    # Get data from join tables
+    with connection.cursor() as cursor:
+        cursor.execute(get_applications_query, (id))
+        applications = [x[0] for x in cursor.fetchall()]
+        cursor.execute(get_modifications_query, (id))
+        modifications = [x[0] for x in cursor.fetchall()]
+        cursor.execute(get_keywords_query, (id))
+        keywords = [x[0] for x in cursor.fetchall()]
+        cursor.execute(get_authors_query, (id))
+        authors = [x[0] for x in cursor.fetchall()]
+
+    connection.close()
+
+    # Get file contents
+    files = []
+    file_names = result[10].split('|')
+    path = os.path.join('structures', id, 'structure/')
+    for file_name in file_names:
+        file = open(path + file_name, 'r')
+        files.append({
+            'name': file_name,
+            'contents': file.read()
+        })
+
+
+    structure = {
+        'id': id,
+        'title': result[2],
+        'type': result[3],
+        'size': result[5],
+        'private': result[23],
+        'uploadDate': result[24],
+        'user': { 'id': result[1], 'firstName': result[25], 'lastName': result[26], 'institution': result[26] },
+        'files': { 'structureFiles': result[10], 'expProtocolFiles': result[11], 'expResultsFiles': result[12], 'simProtocolFiles': result[13], 'simResultsFiles': result[14], 'imageFiles': result[15], 'displayImage': result[16] },
+        'descriptions': { 'description': result[4], 'structureDescriptions': result[17], 'expProtocolDescriptions': result[18], 'expResultsDescriptions': result[19], 'simProtocolDescriptions': result[20], 'simResultsDescriptions': result[21], 'imageDescriptions': result[22] },
+        'publication': { 'publishDate': result[6], 'citation': result[7], 'link': result[8], 'licensing': result[9], 'authors': authors },
+        'tags': { 'applications': applications, 'modifications': modifications, 'keywords': keywords },
+        'files_contents': files
+    }
+    
+    return structure
 
 def get_recent_structures():
     connection = database.pool.get_connection()
@@ -59,11 +115,8 @@ def get_recent_structures():
         results = cursor.fetchall()
     connection.close()
 
-    structures = []
     keys = ['title', 'uploadDate', 'description', 'displayImage', 'id', 'firstName', 'lastName']
-
-    for arr in results:
-        structures.append(dict(zip(keys, arr)))
+    structures = [dict(zip(keys, structure)) for structure in results]
 
     return jsonify(structures)
 
@@ -240,7 +293,6 @@ def search(input, category):
     print(response)
     
     return jsonify(response)
-
 
 def is_data_url(file):
     formats = ['jpg', 'png', 'tiff', 'pdf', 'doc', 'docx', 'xls', 'xlsx']

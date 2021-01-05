@@ -26,8 +26,6 @@ export class ApiService {
     return this.http.put(
       `${environment.api_url}${path}`,
       body,
-      // {responseType: 'text'}
-      // JSON.stringify(body)
     ).pipe(catchError(this.formatErrors));
   }
 
@@ -35,8 +33,6 @@ export class ApiService {
     return this.http.post(
       `${environment.api_url}${path}`,
       body,
-      // {responseType: 'text'}
-      // JSON.stringify(body)
     ).pipe(catchError(this.formatErrors));
   }
 

@@ -51,14 +51,14 @@ mat-radio-button {
     top: 3px;
 }
 
+.field-container {
+    margin-bottom: 0px!important;
+}
+
 h4 {
     margin-bottom: 5px;
 }
 
 .invisible {
     visibility: hidden!important;
-}
-
-.file-progress {
-    
 }

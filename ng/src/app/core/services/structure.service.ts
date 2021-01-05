@@ -19,4 +19,8 @@ export class StructureService {
     return this.apiService.get(`/search/${input}/${category}`);
   }
 
+  get(id: number): Observable<any> {
+    return this.apiService.get(`/structure/${id}`);
+  }
+
 }

@@ -5,7 +5,7 @@ import { StructureComponent } from './structure.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/', pathMatch: 'full' },
-  { path: ':sid', component: StructureComponent }
+  { path: ':id', component: StructureComponent }
 ];
 
 @NgModule({

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Structure, ApiService } from '../core';
+import { environment } from 'src/environments/environment';
+import { Structure, ApiService, StructureService } from '../core';
 
 @Component({
   selector: 'app-structure',
@@ -9,20 +10,36 @@ import { Structure, ApiService } from '../core';
   styleUrls: ['./structure.component.css']
 })
 export class StructureComponent implements OnInit {
-  sid: number;
+  id: number;
   structure: Structure;
 
-  constructor(private apiService: ApiService, private route: ActivatedRoute) { }
+  constructor(private structureService: StructureService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.sid = parseInt(params.get('sid'), 10);
-      const obs: Observable<any> = this.apiService.get('/structure/' + params.get('sid'));
-      obs.subscribe(data => this.structure = data);
+      this.id = parseInt(params.get('id'), 10);
+
+      this.structureService.get(this.id)
+      .subscribe(
+        data => {
+          console.log('data', data);
+
+          const fileStrings = data.response.files_contents;
+          const type = { type: 'text/plain' };
+          const files = fileStrings.map(file => new File([new Blob([file.contents], type)], file.name, type));
+          data.response.files_contents = files;
+
+          this.structure = data.response;
+        },
+        err => console.log('err', err)
+      );
     });
 
-    // const obs: Observable<any> = this.apiService.get('/structure/' , this.routeSnap.params.sid);
-    // obs.subscribe(data => console.log(data));
+  }
+
+  onLoadHandler(): void {
+    const frame = document.getElementById('oxview-frame') as HTMLFrameElement;
+    frame.contentWindow.postMessage({files: this.structure.files_contents}, 'http://localhost:8000');
   }
 
 }

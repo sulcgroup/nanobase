@@ -13,7 +13,7 @@ export interface StructureCover {
 
 // Structure displayed on the structure page
 export interface Structure {
-    sid: number;
+    id: number;
     user: User;
     title: string;
     type: string;
@@ -21,6 +21,7 @@ export interface Structure {
     modifications: Array<Tag>;
     keywords: Array<Tag>;
     description: string;
+    files_contents: Array<string>;
 
     authors: Array<Tag>;
     publishDate: Date;
@@ -39,7 +40,7 @@ export interface Structure {
 
 // Structure uploaded to database
 export interface StructureUpload {
-    sid: number;
+    id: number;
     user: User;
     title: string;
     type: string;

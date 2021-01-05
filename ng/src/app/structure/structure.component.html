@@ -1,4 +1,4 @@
-<div id="content-container">
+<!-- <div id="content-container">
     <div id="list-container">
         <mat-card class="structure-container">
             <mat-card-header>
@@ -14,7 +14,7 @@
                 </p>
             </mat-card-content>
             <mat-card-actions>
-                <button class="structure-button" mat-button color="primary" [routerLink]="['/structure', structure?.sid]">
+                <button class="structure-button" mat-button color="primary" [routerLink]="['/structure', structure?.id]">
                     <mat-icon color="primary">subject</mat-icon>
                     VIEW STRUCTURE
                 </button>
@@ -22,4 +22,9 @@
         </mat-card>
         
     </div>
-</div>
+</div> -->
+
+
+
+<iframe id="oxview-frame" name="oxview-frame" src="http://localhost:8000/" (load)="onLoadHandler()"></iframe>
+<!-- <iframe id="oxview-frame" name="oxview-frame" src="https://sulcgroup.github.io/oxdna-viewer/"></iframe> -->

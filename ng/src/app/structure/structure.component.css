@@ -15,3 +15,15 @@
 :host ::ng-deep .mat-card-content {
     margin-bottom: 0!important;
 }
+
+#oxview-frame {
+    margin-top: 15px;
+    margin-left: 15px;
+    height: 400px;
+    width: 50%;
+    border: 1.5px solid rgb(52, 58, 68);
+    border-radius: 4px;
+    box-shadow: 0 0 7px 2px rgb(190, 190, 190);
+    resize: both;
+    overflow: auto;
+}

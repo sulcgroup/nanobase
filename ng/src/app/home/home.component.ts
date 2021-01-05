@@ -26,7 +26,6 @@ export class HomeComponent implements OnInit {
         const url = new URLSearchParams(val.url.slice(2));
         input = url.get('input');
         category = url.get('category');
-        console.log(category)
         input ? this.loadSearch(input, category) : this.loadRecent();
       }
     });
