@@ -44,3 +44,9 @@
 :host ::ng-deep .mat-card-content {
     margin-bottom: 0!important;
 }
+
+.display-image {
+    border: 1px solid rgb(178, 183, 196);
+    border-left: 0px;
+    border-right: 0px;
+}

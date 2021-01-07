@@ -7,6 +7,10 @@ import { StructureComponent } from './structure.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
+
+
 
 
 @NgModule({
@@ -16,7 +20,9 @@ import { MatButtonModule } from '@angular/material/button';
     StructureRoutingModule,
     MatCardModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDividerModule,
+    MatChipsModule
   ]
 })
 export class StructureModule { }

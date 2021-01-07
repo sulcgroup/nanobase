@@ -12,6 +12,7 @@ import { Structure, ApiService, StructureService } from '../core';
 export class StructureComponent implements OnInit {
   id: number;
   structure: Structure;
+  months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec'];
 
   constructor(private structureService: StructureService, private route: ActivatedRoute) { }
 
@@ -23,7 +24,7 @@ export class StructureComponent implements OnInit {
       .subscribe(
         data => {
           console.log('data', data);
-
+          data.response.uploadDate = new Date(data.response.uploadDate);
           const fileStrings = data.response.files_contents;
           const type = { type: 'text/plain' };
           const files = fileStrings.map(file => new File([new Blob([file.contents], type)], file.name, type));
@@ -42,4 +43,9 @@ export class StructureComponent implements OnInit {
     frame.contentWindow.postMessage({files: this.structure.files_contents}, 'http://localhost:8000');
   }
 
+  formatDate(date: Date): string {
+    return this.months[date.getMonth()] + ` ${date.getDate()}, ${date.getFullYear()}`;
+  }
+
 }
+

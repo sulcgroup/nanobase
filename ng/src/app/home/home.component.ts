@@ -13,6 +13,14 @@ export class HomeComponent implements OnInit {
   structures: Array<StructureCover> = [];
   message: string;
   months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec'];
+  categories = {
+    title: 'title',
+    user_name: 'user',
+    applications: 'application',
+    modifications: 'modification',
+    keywords: 'keyword',
+    authors: 'author',
+  };
 
   constructor(private router: Router, private route: ActivatedRoute, private structService: StructureService) { }
 
@@ -43,7 +51,8 @@ export class HomeComponent implements OnInit {
         else {
           data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
           this.structures = data;
-          console.log('Loaded recent structures: ', this.structures);
+          this.message = `Showing structures with ${this.categories[category]} "${input}"...`;
+          console.log('Loaded searched structures: ', this.structures);
         }
       },
       err => console.log('err', err)

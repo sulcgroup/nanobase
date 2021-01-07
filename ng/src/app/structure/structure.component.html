@@ -1,3 +1,57 @@
+
+<div id="structure-container" *ngIf="structure">
+    <div id="header">
+        <h1 id="title">{{structure?.title}}</h1>
+        <span id='user-name'> posted by {{structure.user.firstName}} {{structure.user.lastName}} on {{formatDate(structure.uploadDate)}}</span>
+    </div>
+    <mat-divider id="header-divider"></mat-divider><br>
+
+    <div id="section-one">
+        <div id="iframe-container">
+            <iframe id="oxview-frame" name="oxview-frame" src="http://localhost:8000/" (load)="onLoadHandler()"></iframe>
+        </div>
+    
+        <div id="structure-info-container">
+            <p>{{structure.descriptions.description}}desc Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p><b>Structure type: </b>{{structure.type}}</p>
+            <p><b>Applications: </b>
+                <mat-chip-list class="chip-list">
+                    <mat-chip class="application chip" *ngFor="let application of structure.tags.applications">{{application}}</mat-chip>
+                </mat-chip-list>
+            </p>
+            <p><b>Modifications: </b>
+                <mat-chip-list class="chip-list">
+                    <mat-chip class="modification chip" *ngFor="let modification of structure.tags.modifications">{{modification}}</mat-chip>
+                </mat-chip-list>
+            </p>
+            <p><b>Keywords: </b>
+                <mat-chip-list class="chip-list">
+                    <mat-chip class="keyword chip" *ngFor="let keyword of structure.tags.keywords">{{keyword}}</mat-chip>
+                </mat-chip-list>
+            </p>
+        </div>
+    </div>
+    
+    <h1>Files</h1>
+
+    <h1>Publication Information</h1>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <iframe id="oxview-frame" name="oxview-frame" src="https://sulcgroup.github.io/oxdna-viewer/"></iframe> -->
+
+
 <!-- <div id="content-container">
     <div id="list-container">
         <mat-card class="structure-container">
@@ -23,8 +77,3 @@
         
     </div>
 </div> -->
-
-
-
-<iframe id="oxview-frame" name="oxview-frame" src="http://localhost:8000/" (load)="onLoadHandler()"></iframe>
-<!-- <iframe id="oxview-frame" name="oxview-frame" src="https://sulcgroup.github.io/oxdna-viewer/"></iframe> -->
