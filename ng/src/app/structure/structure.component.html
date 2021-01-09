@@ -5,6 +5,19 @@
         <span id='user-name'> posted by {{structure.user.firstName}} {{structure.user.lastName}} on {{formatDate(structure.uploadDate)}}</span>
     </div>
     <mat-divider id="header-divider"></mat-divider><br>
+        
+    <!-- Source: http://ivylab.space/carousel#usage -->
+    <!-- <carousel
+        [images]="images"
+        [height]="350"
+        [objectFit]="'contain'"
+        [cellWidth]="'100%'"
+        [arrowsOutside]="false"
+        [autoplay]="false"
+        [dots]="true"
+        [loop]="true"
+        [arrowsTheme]="'dark'">
+    </carousel> -->
 
     <div id="section-one">
         <div id="iframe-container">
@@ -31,49 +44,89 @@
             </p>
         </div>
     </div>
-    
-    <h1>Files</h1>
 
-    <h1>Publication Information</h1>
+    <h1>Images</h1>
+    <carousel
+        [height]="350"
+        [objectFit]="'contain'"
+        [cellWidth]="'100%'"
+        [arrowsOutside]="false"
+        [autoplay]="false"
+        [dots]="true"
+        [loop]="true"
+        [arrowsTheme]="'dark'">
+        <div class="carousel-cell">
+            <img src="{{'file/'+structure.id+'/'+structure.files.displayImage[0]}}">
+        </div>
+        <ng-container *ngFor="let image of structure.files.imageFiles">
+            <div class="carousel-cell" *ngIf="image != structure.files.displayImage[0].split('/')[1]">
+                <img src="{{'file/'+structure.id+'/images/'+image}}">
+            </div>
+        </ng-container>
+        <!-- <div class="carousel-cell" *ngFor="let image of structure.files.imageFiles">
+            <img src="{{'file/'+structure.id+'/images/'+image}}" *ngIf="image != structure.files.displayImage[0].split('/')[1]">
+        </div>
+        <div class="carousel-cell">
+            <img src="https://gsr.dev/material2-carousel/assets/demo.png">
+        </div> -->
+    </carousel>
+
+    <div id="file-section">
+        <h1>Files</h1>
+        <mat-tab-group dynamicHeight>
+            <mat-tab label="Structure">
+                <mat-list>
+                    <mat-list-item *ngFor="let file of structure.files.structureFiles, let i = index">
+                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/structure/'+file}}" download>download</a></mat-icon>
+                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/structure/'+file}}" download>{{file}}</a> &nbsp;<span class="file-description">{{structure.descriptions.structureDescriptions[i]}}</span></div> 
+                    </mat-list-item>
+                </mat-list>
+            </mat-tab>
+            <mat-tab label="Experiment Protocol" *ngIf="structure.files.expProtocolFiles[0] != ['']">
+                <mat-list>
+                    <mat-list-item *ngFor="let file of structure.files.expProtocolFiles, let i = index">
+                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/expProtocol/'+file}}" download>download</a></mat-icon>
+                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/expProtocol/'+file}}" download>{{file}}</a> &nbsp;<span class="file-description">{{structure.descriptions.expProtocolDescriptions[i]}}</span></div> 
+                    </mat-list-item>
+                </mat-list>
+            </mat-tab>
+            <mat-tab label="Experiment Results" *ngIf="structure.files.expResultsFiles[0] != ['']">
+                <mat-list>
+                    <mat-list-item *ngFor="let file of structure.files.expResultsFiles, let i = index">
+                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/expResults/'+file}}" download>download</a></mat-icon>
+                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/expResults/'+file}}" download>{{file}}</a> &nbsp;<span class="file-description">{{structure.descriptions.expResultsDescriptions[i]}}</span></div> 
+                    </mat-list-item>
+                </mat-list>
+            </mat-tab>
+            <mat-tab label="Simulation Protocol" *ngIf="structure.files.simProtocolFiles[0] != ['']">
+                <mat-list>
+                    <mat-list-item *ngFor="let file of structure.files.simProtocolFiles, let i = index">
+                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/simProtocol/'+file}}" download>download</a></mat-icon>
+                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/simProtocol/'+file}}" download>{{file}}</a> &nbsp;<span class="file-description">{{structure.descriptions.simProtocolDescriptions[i]}}</span></div> 
+                    </mat-list-item>
+                </mat-list>
+            </mat-tab>
+            <mat-tab label="Simulation Results" *ngIf="structure.files.simResultsFiles[0] != ['']">
+                <mat-list>
+                    <mat-list-item *ngFor="let file of structure.files.simResultsFiles, let i = index">
+                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/simResults/'+file}}" download>download</a></mat-icon>
+                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/simResults/'+file}}" download>{{file}}</a> &nbsp;<span class="file-description">{{structure.descriptions.simResultsDescriptions[i]}}</span></div> 
+                    </mat-list-item>
+                </mat-list>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+    
+    <div id="publication-section">
+        <h1>Publication Information</h1>
+        <p><b>Citation: </b>{{structure.publication.citation}}</p>
+        <p><b>Authors: </b>{{structure.publication.authors.join(', ')}}</p>
+        <p><b>Date published: </b>{{formatDate(structure.publication.publishDate)}}</p>
+        <p><b>Licensing information: </b>{{structure.publication.licensing}}</p>
+        <p>You may access the publication <a href="{{structure.publication.link}}" target="_blank">here</a></p>
+
+    </div>
 
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-<!-- <iframe id="oxview-frame" name="oxview-frame" src="https://sulcgroup.github.io/oxdna-viewer/"></iframe> -->
-
-
-<!-- <div id="content-container">
-    <div id="list-container">
-        <mat-card class="structure-container">
-            <mat-card-header>
-                <mat-card-title>{{structure?.title}}</mat-card-title>
-                <mat-card-subtitle>{{structure?.user.lastName}} | {{structure?.uploadDate}}</mat-card-subtitle>
-            </mat-card-header>
-            <img mat-card-image src="{{structure?.img}}" alt="Display Image" *ngIf="structure?.img">
-            <mat-card-content>
-                <p>
-                {{structure?.description}} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
-            </mat-card-content>
-            <mat-card-actions>
-                <button class="structure-button" mat-button color="primary" [routerLink]="['/structure', structure?.id]">
-                    <mat-icon color="primary">subject</mat-icon>
-                    VIEW STRUCTURE
-                </button>
-            </mat-card-actions>
-        </mat-card>
-        
-    </div>
-</div> -->

@@ -17,8 +17,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { HeaderComponent } from './layout/header/header.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +34,7 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
     MatIconModule,
     MatSelectModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

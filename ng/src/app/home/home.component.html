@@ -6,7 +6,7 @@
                 <mat-card-title>{{structure.title}}</mat-card-title>
                 <mat-card-subtitle>{{structure.lastName}} | {{formatDate(structure.uploadDate)}}</mat-card-subtitle>
             </mat-card-header>
-            <img class="display-image" mat-card-image src="{{'images/' + structure.id + '/' + structure.displayImage}}" alt="Display Image" *ngIf="structure.displayImage">
+            <img class="display-image" mat-card-image src="{{'file/' + structure.id + '/' + structure.displayImage}}" alt="Display Image" *ngIf="structure.displayImage">
 
             <mat-card-content>
                 <p>

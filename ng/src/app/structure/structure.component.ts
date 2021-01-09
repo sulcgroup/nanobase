@@ -13,6 +13,8 @@ export class StructureComponent implements OnInit {
   id: number;
   structure: Structure;
   months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec'];
+  images = [{path: 'https://th.bing.com/th/id/OIP.1YM53mG10H_U25iPjop83QHaEo?w=295&h=184&c=7&o=5&dpr=2&pid=1.7'}, {path: 'https://th.bing.com/th/id/OIP.GIq5_M59D1-QGif6yU4WYAHaFj?w=239&h=180&c=7&o=5&dpr=2&pid=1.7'},{path: 'https://gsr.dev/material2-carousel/assets/demo.png'}, {path: 'https://gsr.dev/material2-carousel/assets/demo.png'}, {path: 'https://gsr.dev/material2-carousel/assets/demo.png'}];
+  files = {};
 
   constructor(private structureService: StructureService, private route: ActivatedRoute) { }
 
@@ -23,14 +25,25 @@ export class StructureComponent implements OnInit {
       this.structureService.get(this.id)
       .subscribe(
         data => {
-          console.log('data', data);
+          // console.log('data', data);
           data.response.uploadDate = new Date(data.response.uploadDate);
+          data.response.publication.publishDate = new Date(data.response.publication.publishDate);
+
+          // Read file contents
           const fileStrings = data.response.files_contents;
           const type = { type: 'text/plain' };
           const files = fileStrings.map(file => new File([new Blob([file.contents], type)], file.name, type));
           data.response.files_contents = files;
 
+          for (let fileType in data.response.files) {
+            data.response.files[fileType] = data.response.files[fileType].split('|');
+          }
+          for (let fileType in data.response.descriptions) {
+            data.response.descriptions[fileType] = data.response.descriptions[fileType].split('|');
+          }
+
           this.structure = data.response;
+          console.log("Loaded structure: ", this.structure);
         },
         err => console.log('err', err)
       );

@@ -18,12 +18,12 @@ def home():
 def not_found_error(error):
     return make_response(open('ng/dist/ng/index.html').read())
 
-@app.route('/images/<id>/<file_type>/<image>')
-def get_image(id=None, file_type=None, image=None):
-	if os.path.isfile('structures/{}/{}/{}'.format(id, file_type, image)):
-		return send_file('structures/{}/{}/{}'.format(id, file_type, image))
+@app.route('/file/<id>/<file_type>/<file>')
+def get_file(id=None, file_type=None, file=None):
+	if os.path.isfile('structures/{}/{}/{}'.format(id, file_type, file)):
+		return send_file('structures/{}/{}/{}'.format(id, file_type, file))
 	else:
-		abort(404, description='Image not found')
+		abort(404, description='File not found')
 
 @app.route('/api/structure', methods=['POST'])
 def upload_structure():
@@ -39,6 +39,7 @@ def upload_structure():
 @app.route('/api/structure/<id>', methods=['GET'])
 def get_structure(id):
 	return {'response': structure.get_structure(id)}
+
 
 @app.route('/api/recent_structures', methods=['GET'])
 def get_recent_structures():
