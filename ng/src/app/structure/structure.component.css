@@ -85,6 +85,17 @@ carousel {
     color: rgb(103, 107, 114);
 }
 
+.image-description {
+    position: relative;
+    bottom: 60px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.75);
+    padding: 4px 8px;
+    font: 20px Sans-Serif;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 2px 4px 3px rgba(22, 22, 22, 0.25);
+}
+
 .file-download {
     text-decoration: none;
     color: inherit;

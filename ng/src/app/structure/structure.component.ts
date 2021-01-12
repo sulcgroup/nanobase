@@ -25,22 +25,16 @@ export class StructureComponent implements OnInit {
       this.structureService.get(this.id)
       .subscribe(
         data => {
-          // console.log('data', data);
+          console.log('data', data);
           data.response.uploadDate = new Date(data.response.uploadDate);
-          data.response.publication.publishDate = new Date(data.response.publication.publishDate);
+          data.response.publication.publishDate = data.response.publication.publishDate.split('-');
+
 
           // Read file contents
           const fileStrings = data.response.files_contents;
           const type = { type: 'text/plain' };
           const files = fileStrings.map(file => new File([new Blob([file.contents], type)], file.name, type));
           data.response.files_contents = files;
-
-          for (let fileType in data.response.files) {
-            data.response.files[fileType] = data.response.files[fileType].split('|');
-          }
-          for (let fileType in data.response.descriptions) {
-            data.response.descriptions[fileType] = data.response.descriptions[fileType].split('|');
-          }
 
           this.structure = data.response;
           console.log("Loaded structure: ", this.structure);
@@ -58,6 +52,10 @@ export class StructureComponent implements OnInit {
 
   formatDate(date: Date): string {
     return this.months[date.getMonth()] + ` ${date.getDate()}, ${date.getFullYear()}`;
+  }
+
+  formatPublishDate(date: Array<string>): string {
+    return date[1] === '00' ? date[0] : this.months[parseInt(date[1])] + ' ' + date[0];
   }
 
 }

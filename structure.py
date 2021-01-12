@@ -24,7 +24,7 @@ get_structure_query = ('SELECT Structures.*, Users.firstName, Users.lastName, Us
 insert_structure_query = (
     'REPLACE INTO Structures'
     '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `structureDescriptions`, `expProtocolDescriptions`, `expResultsDescriptions`, `simProtocolDescriptions`, `simResultsDescriptions`, `imageDescriptions`, `private`, `uploadDate`)'
-	'VALUES (%s, %s, %s, %s, %s, STR_TO_DATE(%s, "%%Y-%%c-%%e"), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+	'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 )
 insert_max_structure_id = ('INSERT INTO Structures () VALUES ()')
 get_max_structure_id = ('SELECT MAX(id) FROM Structures')
@@ -60,9 +60,9 @@ def get_structure(id):
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
         cursor.execute(get_structure_query, (id))
-        result = list(cursor.fetchone())
+        s = list(cursor.fetchone())
     
-    if not result:
+    if not s:
         connection.close()
         return 'Not found'
     
@@ -81,30 +81,81 @@ def get_structure(id):
 
     # Get file contents
     files = []
-    file_names = result[10].split('|')
+    structure_files = s[10].split('|')
     path = os.path.join('structures', id, 'structure/')
-    for file_name in file_names:
+    for file_name in structure_files:
         file = open(path + file_name, 'r')
         files.append({
             'name': file_name,
             'contents': file.read()
         })
 
+    # structure = {
+    #     'id': id,
+    #     'title': s[2],
+    #     'type': s[3],
+    #     'size': s[5],
+    #     'private': s[23],
+    #     'uploadDate': s[24],
+    #     'user': { 'id': s[1], 'firstName': s[25], 'lastName': s[26], 'institution': s[26] },
+    #     'files': { 'structureFiles': s[10], 'expProtocolFiles': s[11], 'expResultsFiles': s[12], 'simProtocolFiles': s[13], 'simResultsFiles': s[14], 'imageFiles': s[15], 'displayImage': s[16] },
+    #     'descriptions': { 'description': s[4], 'structureDescriptions': s[17], 'expProtocolDescriptions': s[18], 'expResultsDescriptions': s[19], 'simProtocolDescriptions': s[20], 'simResultsDescriptions': s[21], 'imageDescriptions': s[22] },
+    #     'publication': { 'publishDate': s[6], 'citation': s[7], 'link': s[8], 'licensing': s[9], 'authors': authors },
+    #     'tags': { 'applications': applications, 'modifications': modifications, 'keywords': keywords },
+    #     'files_contents': files
+    # }
 
     structure = {
         'id': id,
-        'title': result[2],
-        'type': result[3],
-        'size': result[5],
-        'private': result[23],
-        'uploadDate': result[24],
-        'user': { 'id': result[1], 'firstName': result[25], 'lastName': result[26], 'institution': result[26] },
-        'files': { 'structureFiles': result[10], 'expProtocolFiles': result[11], 'expResultsFiles': result[12], 'simProtocolFiles': result[13], 'simResultsFiles': result[14], 'imageFiles': result[15], 'displayImage': result[16] },
-        'descriptions': { 'description': result[4], 'structureDescriptions': result[17], 'expProtocolDescriptions': result[18], 'expResultsDescriptions': result[19], 'simProtocolDescriptions': result[20], 'simResultsDescriptions': result[21], 'imageDescriptions': result[22] },
-        'publication': { 'publishDate': result[6], 'citation': result[7], 'link': result[8], 'licensing': result[9], 'authors': authors },
+        'description': s[4],
+        'title': s[2],
+        'type': s[3],
+        'size': s[5],
+        'private': s[23],
+        'uploadDate': s[24],
+        'user': { 'id': s[1], 'firstName': s[25], 'lastName': s[26], 'institution': s[26] },
+        'files': { 'displayImage': s[16] },
+        'publication': { 'publishDate': s[6], 'citation': s[7], 'link': s[8], 'licensing': s[9], 'authors': authors },
         'tags': { 'applications': applications, 'modifications': modifications, 'keywords': keywords },
         'files_contents': files
     }
+
+    expProtocolFiles = s[11].split('|')
+    expResultsFiles = s[12].split('|')
+    simProtocolFiles = s[13].split('|')
+    simResultsFiles = s[14].split('|')
+    imageFiles = s[15].split('|')
+
+    structure['files']['structure'] = [{
+        'name': structure_files[i],
+        'description': s[17].split('|')[i]}
+        for i in range(len(structure_files))
+    ]
+    structure['files']['expProtocol'] = [{
+        'name': expProtocolFiles[i],
+        'description': s[18].split('|')[i]}
+        for i in range(len(expProtocolFiles))
+    ]
+    structure['files']['expResults'] = [{
+        'name': expResultsFiles[i],
+        'description': s[19].split('|')[i]}
+        for i in range(len(expResultsFiles))
+    ]
+    structure['files']['simProtocol'] = [{
+        'name': simProtocolFiles[i],
+        'description': s[20].split('|')[i]}
+        for i in range(len(simProtocolFiles))
+    ]
+    structure['files']['simResults'] = [{
+        'name': simResultsFiles[i],
+        'description': s[21].split('|')[i]}
+        for i in range(len(simResultsFiles))
+    ]
+    structure['files']['images'] = [{
+        'name': imageFiles[i],
+        'description': s[22].split('|')[i]}
+        for i in range(len(imageFiles))
+    ]
     
     return structure
 

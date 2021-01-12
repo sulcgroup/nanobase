@@ -31,7 +31,6 @@ def upload_structure():
 	if not user_id:
 		return 'You are not logged in'
 
-	sleep(1)
 	structure_data = request.json['structure']
 
 	return {'response': structure.upload_structure(structure_data, user_id)}

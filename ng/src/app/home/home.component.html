@@ -9,11 +9,7 @@
             <img class="display-image" mat-card-image src="{{'file/' + structure.id + '/' + structure.displayImage}}" alt="Display Image" *ngIf="structure.displayImage">
 
             <mat-card-content>
-                <p>
-                {{structure.description}} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
+                <p>{{structure.description}}</p>
             </mat-card-content>
             <mat-card-actions>
                 <button class="structure-button" mat-button color="primary" [routerLink]="['/structure', structure.id]">

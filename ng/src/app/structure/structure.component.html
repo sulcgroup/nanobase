@@ -2,44 +2,33 @@
 <div id="structure-container" *ngIf="structure">
     <div id="header">
         <h1 id="title">{{structure?.title}}</h1>
-        <span id='user-name'> posted by {{structure.user.firstName}} {{structure.user.lastName}} on {{formatDate(structure.uploadDate)}}</span>
+        <span id='user-name'> &nbsp;posted by {{structure.user.firstName}} {{structure.user.lastName}} on {{formatDate(structure.uploadDate)}}</span>
     </div>
     <mat-divider id="header-divider"></mat-divider><br>
-        
-    <!-- Source: http://ivylab.space/carousel#usage -->
-    <!-- <carousel
-        [images]="images"
-        [height]="350"
-        [objectFit]="'contain'"
-        [cellWidth]="'100%'"
-        [arrowsOutside]="false"
-        [autoplay]="false"
-        [dots]="true"
-        [loop]="true"
-        [arrowsTheme]="'dark'">
-    </carousel> -->
 
     <div id="section-one">
         <div id="iframe-container">
             <iframe id="oxview-frame" name="oxview-frame" src="http://localhost:8000/" (load)="onLoadHandler()"></iframe>
         </div>
-    
         <div id="structure-info-container">
-            <p>{{structure.descriptions.description}}desc Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>{{structure.description}}</p>
             <p><b>Structure type: </b>{{structure.type}}</p>
             <p><b>Applications: </b>
                 <mat-chip-list class="chip-list">
                     <mat-chip class="application chip" *ngFor="let application of structure.tags.applications">{{application}}</mat-chip>
+                    <mat-chip class="keyword chip" *ngIf="structure.tags.applications.length === 0">None</mat-chip>
                 </mat-chip-list>
             </p>
             <p><b>Modifications: </b>
                 <mat-chip-list class="chip-list">
                     <mat-chip class="modification chip" *ngFor="let modification of structure.tags.modifications">{{modification}}</mat-chip>
+                    <mat-chip class="keyword chip" *ngIf="structure.tags.modifications.length === 0">None</mat-chip>
                 </mat-chip-list>
             </p>
             <p><b>Keywords: </b>
                 <mat-chip-list class="chip-list">
                     <mat-chip class="keyword chip" *ngFor="let keyword of structure.tags.keywords">{{keyword}}</mat-chip>
+                    <mat-chip class="keyword chip" *ngIf="structure.tags.keywords.length === 0">None</mat-chip>
                 </mat-chip-list>
             </p>
         </div>
@@ -48,27 +37,20 @@
     <h1>Images</h1>
     <carousel
         [height]="350"
-        [objectFit]="'contain'"
+        [objectFit]="'cover'"
         [cellWidth]="'100%'"
         [arrowsOutside]="false"
         [autoplay]="false"
         [dots]="true"
         [loop]="true"
         [arrowsTheme]="'dark'">
-        <div class="carousel-cell">
-            <img src="{{'file/'+structure.id+'/'+structure.files.displayImage[0]}}">
-        </div>
-        <ng-container *ngFor="let image of structure.files.imageFiles">
-            <div class="carousel-cell" *ngIf="image != structure.files.displayImage[0].split('/')[1]">
-                <img src="{{'file/'+structure.id+'/images/'+image}}">
+
+        <ng-container *ngFor="let image of structure.files.images, let i = index">
+            <div class="carousel-cell">
+                <img src="{{'file/'+structure.id+'/images/'+image.name}}">
+                <div class="image-description">{{image.description}}</div>
             </div>
         </ng-container>
-        <!-- <div class="carousel-cell" *ngFor="let image of structure.files.imageFiles">
-            <img src="{{'file/'+structure.id+'/images/'+image}}" *ngIf="image != structure.files.displayImage[0].split('/')[1]">
-        </div>
-        <div class="carousel-cell">
-            <img src="https://gsr.dev/material2-carousel/assets/demo.png">
-        </div> -->
     </carousel>
 
     <div id="file-section">
@@ -76,41 +58,41 @@
         <mat-tab-group dynamicHeight>
             <mat-tab label="Structure">
                 <mat-list>
-                    <mat-list-item *ngFor="let file of structure.files.structureFiles, let i = index">
-                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/structure/'+file}}" download>download</a></mat-icon>
-                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/structure/'+file}}" download>{{file}}</a> &nbsp;<span class="file-description">{{structure.descriptions.structureDescriptions[i]}}</span></div> 
+                    <mat-list-item *ngFor="let file of structure.files.structure, let i = index">
+                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/structure/'+file.name}}" download>download</a></mat-icon>
+                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/structure/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
                     </mat-list-item>
                 </mat-list>
             </mat-tab>
-            <mat-tab label="Experiment Protocol" *ngIf="structure.files.expProtocolFiles[0] != ['']">
+            <mat-tab label="Experiment Protocol" *ngIf="structure.files.expProtocol[0].name != ['']">
                 <mat-list>
-                    <mat-list-item *ngFor="let file of structure.files.expProtocolFiles, let i = index">
-                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/expProtocol/'+file}}" download>download</a></mat-icon>
-                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/expProtocol/'+file}}" download>{{file}}</a> &nbsp;<span class="file-description">{{structure.descriptions.expProtocolDescriptions[i]}}</span></div> 
+                    <mat-list-item *ngFor="let file of structure.files.expProtocol, let i = index">
+                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/expProtocol/'+file.name}}" download>download</a></mat-icon>
+                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/expProtocol/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
                     </mat-list-item>
                 </mat-list>
             </mat-tab>
-            <mat-tab label="Experiment Results" *ngIf="structure.files.expResultsFiles[0] != ['']">
+            <mat-tab label="Experiment Results" *ngIf="structure.files.expResults[0].name != ['']">
                 <mat-list>
-                    <mat-list-item *ngFor="let file of structure.files.expResultsFiles, let i = index">
-                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/expResults/'+file}}" download>download</a></mat-icon>
-                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/expResults/'+file}}" download>{{file}}</a> &nbsp;<span class="file-description">{{structure.descriptions.expResultsDescriptions[i]}}</span></div> 
+                    <mat-list-item *ngFor="let file of structure.files.expResults, let i = index">
+                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/expResults/'+file.name}}" download>download</a></mat-icon>
+                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/expResults/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
                     </mat-list-item>
                 </mat-list>
             </mat-tab>
-            <mat-tab label="Simulation Protocol" *ngIf="structure.files.simProtocolFiles[0] != ['']">
+            <mat-tab label="Simulation Protocol" *ngIf="structure.files.simProtocol[0].name != ['']">
                 <mat-list>
-                    <mat-list-item *ngFor="let file of structure.files.simProtocolFiles, let i = index">
-                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/simProtocol/'+file}}" download>download</a></mat-icon>
-                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/simProtocol/'+file}}" download>{{file}}</a> &nbsp;<span class="file-description">{{structure.descriptions.simProtocolDescriptions[i]}}</span></div> 
+                    <mat-list-item *ngFor="let file of structure.files.simProtocol, let i = index">
+                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/simProtocol/'+file.name}}" download>download</a></mat-icon>
+                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/simProtocol/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
                     </mat-list-item>
                 </mat-list>
             </mat-tab>
-            <mat-tab label="Simulation Results" *ngIf="structure.files.simResultsFiles[0] != ['']">
+            <mat-tab label="Simulation Results" *ngIf="structure.files.simResults[0].name != ['']">
                 <mat-list>
-                    <mat-list-item *ngFor="let file of structure.files.simResultsFiles, let i = index">
-                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/simResults/'+file}}" download>download</a></mat-icon>
-                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/simResults/'+file}}" download>{{file}}</a> &nbsp;<span class="file-description">{{structure.descriptions.simResultsDescriptions[i]}}</span></div> 
+                    <mat-list-item *ngFor="let file of structure.files.simResults, let i = index">
+                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/simResults/'+file.name}}" download>download</a></mat-icon>
+                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/simResults/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
                     </mat-list-item>
                 </mat-list>
             </mat-tab>
@@ -121,12 +103,9 @@
         <h1>Publication Information</h1>
         <p><b>Citation: </b>{{structure.publication.citation}}</p>
         <p><b>Authors: </b>{{structure.publication.authors.join(', ')}}</p>
-        <p><b>Date published: </b>{{formatDate(structure.publication.publishDate)}}</p>
+        <p><b>Date published: </b>{{formatPublishDate(structure.publication.publishDate)}}</p>
         <p><b>Licensing information: </b>{{structure.publication.licensing}}</p>
         <p>You may access the publication <a href="{{structure.publication.link}}" target="_blank">here</a></p>
 
     </div>
-
 </div>
-
-

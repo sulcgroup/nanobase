@@ -1,3 +1,4 @@
+import { Diagnostic } from 'typescript';
 import { User } from './user.model';
 
 // Structure displayed on the home page
@@ -13,23 +14,15 @@ export interface StructureCover {
 
 // Structure displayed on the structure page
 export interface Structure {
-    descriptions: {
-        description: string;
-        expProtocolDescriptions: string;
-        expResultsDescriptions: string;
-        imageDescriptions: string;
-        simProtocolDescriptions: string;
-        simResultsDescriptions: string;
-        structureDescriptions: string;
-    };
+    description: string;
     files: {
-        displayImage: string;
-        expProtocolFiles: string;
-        expResultsFiles: string;
-        imageFiles: string;
-        simProtocolFiles: string;
-        simResultsFiles: string;
-        structureFiles: string;
+        displayImage: [string];
+        expProtocol: [{name: string, description: string}];
+        expResults: [{name: string, description: string}];
+        images: [{name: string, description: string}];
+        simProtocol: [{name: string, description: string}];
+        simResults: [{name: string, description: string}];
+        structure: [{name: string, description: string}];
     };
     files_contents: Array<File>;
     id: string;
