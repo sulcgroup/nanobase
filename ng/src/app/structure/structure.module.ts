@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { StructureRoutingModule } from './structure-routing.module';
 import { StructureComponent } from './structure.component';
@@ -12,8 +13,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
-
-
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { IvyCarouselModule } from 'angular-responsive-carousel';
 
@@ -32,6 +32,8 @@ import { IvyCarouselModule } from 'angular-responsive-carousel';
     MatTabsModule,
     MatBadgeModule,
     MatListModule,
+    MatSlideToggleModule,
+    FormsModule,
     IvyCarouselModule
   ]
 })

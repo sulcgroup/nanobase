@@ -39,6 +39,9 @@ def upload_structure():
 def get_structure(id):
 	return {'response': structure.get_structure(id)}
 
+@app.route('/api/structure/author/<id>', methods=['GET'])
+def check_author(id):
+	return {'response': True} if int(id) == get_session_id() else {'response': False}
 
 @app.route('/api/recent_structures', methods=['GET'])
 def get_recent_structures():

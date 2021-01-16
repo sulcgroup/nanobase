@@ -131,7 +131,7 @@ export class UploadComponent implements OnInit {
       else {
         structure.publishDate += '-00';
       }
-      structure.publishDate += '-01';
+      structure.publishDate += '-02';
     }
     delete structure.year;
     delete structure.month;

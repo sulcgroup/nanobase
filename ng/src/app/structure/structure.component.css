@@ -47,6 +47,15 @@
     opacity: 90%;
 }
 
+#slide-toggle {
+    font-size: 22px;
+    opacity: 90%;
+}
+
+/* #save-button {
+    padding-bottom: 20px!important;
+} */
+
 #oxview-frame {
     height: 450px;
     width: 97%;
@@ -64,6 +73,15 @@
 
 .chip {
     font-weight: normal;
+    cursor: pointer;
+}
+
+.public {
+    color: #00695C;
+}
+
+.editing {
+    color: hsl(262, 52%, 47%);
 }
 
 ::ng-deep .mat-chip-list .mat-chip-list-wrapper {

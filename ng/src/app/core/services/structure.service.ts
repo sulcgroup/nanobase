@@ -23,4 +23,8 @@ export class StructureService {
     return this.apiService.get(`/structure/${id}`);
   }
 
+  checkAuthor(id: number): Observable<any> {
+    return this.apiService.get(`/structure/author/${id}`);
+  }
+
 }

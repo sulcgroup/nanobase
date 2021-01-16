@@ -329,7 +329,6 @@ def search(input, category):
     connection.close()
 
     response = []
-
     for structure in structures:
         response.append({
             'title': structure[0],
@@ -340,8 +339,6 @@ def search(input, category):
             'firstName': structure[5],
             'lastName': structure[6]
         })
-    
-    print(response)
     
     return jsonify(response)
 

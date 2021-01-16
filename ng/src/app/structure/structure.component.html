@@ -2,7 +2,11 @@
 <div id="structure-container" *ngIf="structure">
     <div id="header">
         <h1 id="title">{{structure?.title}}</h1>
-        <span id='user-name'> &nbsp;posted by {{structure.user.firstName}} {{structure.user.lastName}} on {{formatDate(structure.uploadDate)}}</span>
+        <span id='user-name'> &nbsp;posted by {{isAuthor ? 'you' : structure.user.firstName+' '+structure.user.lastName}} on {{formatDate(structure.uploadDate)}}&emsp;</span>
+        <mat-slide-toggle *ngIf="isAuthor" color='primary' [(ngModel)]="isEditing">
+            <span id="slide-toggle" [ngClass]="isEditing ? 'editing' : 'public'">{{isEditing ? 'Editing View' : 'Public View'}}&ensp;</span>
+        </mat-slide-toggle>
+        <button id="save-button" *ngIf="isEditing" [disabled]="!hasBeenEdited" mat-raised-button color="primary">SAVE CHANGES</button>
     </div>
     <mat-divider id="header-divider"></mat-divider><br>
 
@@ -15,19 +19,19 @@
             <p><b>Structure type: </b>{{structure.type}}</p>
             <p><b>Applications: </b>
                 <mat-chip-list class="chip-list">
-                    <mat-chip class="application chip" *ngFor="let application of structure.tags.applications">{{application}}</mat-chip>
+                    <mat-chip class="application chip" (click)="routeTag(application, 'applications')" *ngFor="let application of structure.tags.applications">{{application}}</mat-chip>
                     <mat-chip class="keyword chip" *ngIf="structure.tags.applications.length === 0">None</mat-chip>
                 </mat-chip-list>
             </p>
             <p><b>Modifications: </b>
                 <mat-chip-list class="chip-list">
-                    <mat-chip class="modification chip" *ngFor="let modification of structure.tags.modifications">{{modification}}</mat-chip>
+                    <mat-chip class="modification chip" (click)="routeTag(modification, 'modifications')" *ngFor="let modification of structure.tags.modifications">{{modification}}</mat-chip>
                     <mat-chip class="keyword chip" *ngIf="structure.tags.modifications.length === 0">None</mat-chip>
                 </mat-chip-list>
             </p>
             <p><b>Keywords: </b>
                 <mat-chip-list class="chip-list">
-                    <mat-chip class="keyword chip" *ngFor="let keyword of structure.tags.keywords">{{keyword}}</mat-chip>
+                    <mat-chip class="keyword chip" (click)="routeTag(keyword, 'keywords')" *ngFor="let keyword of structure.tags.keywords">{{keyword}}</mat-chip>
                     <mat-chip class="keyword chip" *ngIf="structure.tags.keywords.length === 0">None</mat-chip>
                 </mat-chip-list>
             </p>
