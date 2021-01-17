@@ -52,6 +52,10 @@
     opacity: 90%;
 }
 
+.mat-icon {
+    display: inline!important;
+}
+
 /* #save-button {
     padding-bottom: 20px!important;
 } */
@@ -117,4 +121,8 @@ carousel {
 .file-download {
     text-decoration: none;
     color: inherit;
+}
+
+.clickable {
+    cursor: pointer;
 }

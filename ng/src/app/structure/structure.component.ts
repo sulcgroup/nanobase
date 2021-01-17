@@ -58,6 +58,10 @@ export class StructureComponent implements OnInit {
       );
   }
 
+  deleteFile(type: string, i: number): void {
+    this.structure.files[type].splice(i, 1);
+  }
+
   onLoadHandler(): void {
     const frame = document.getElementById('oxview-frame') as HTMLFrameElement;
     frame.contentWindow.postMessage({files: this.structure.files_contents}, 'http://localhost:8000');

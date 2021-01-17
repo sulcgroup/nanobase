@@ -63,6 +63,7 @@
             <mat-tab label="Structure">
                 <mat-list>
                     <mat-list-item *ngFor="let file of structure.files.structure, let i = index">
+                        <mat-icon (click)="deleteFile('structure', i)" class="editing clickable">close</mat-icon>
                         <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/structure/'+file.name}}" download>download</a></mat-icon>
                         <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/structure/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
                     </mat-list-item>
@@ -71,6 +72,7 @@
             <mat-tab label="Experiment Protocol" *ngIf="structure.files.expProtocol[0].name != ['']">
                 <mat-list>
                     <mat-list-item *ngFor="let file of structure.files.expProtocol, let i = index">
+                        <mat-icon (click)="deleteFile('expProtocol', i)" class="editing clickable">close</mat-icon>
                         <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/expProtocol/'+file.name}}" download>download</a></mat-icon>
                         <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/expProtocol/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
                     </mat-list-item>
@@ -79,6 +81,7 @@
             <mat-tab label="Experiment Results" *ngIf="structure.files.expResults[0].name != ['']">
                 <mat-list>
                     <mat-list-item *ngFor="let file of structure.files.expResults, let i = index">
+                        <mat-icon (click)="deleteFile('expResults', i)" class="editing clickable">close</mat-icon>
                         <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/expResults/'+file.name}}" download>download</a></mat-icon>
                         <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/expResults/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
                     </mat-list-item>
@@ -87,6 +90,7 @@
             <mat-tab label="Simulation Protocol" *ngIf="structure.files.simProtocol[0].name != ['']">
                 <mat-list>
                     <mat-list-item *ngFor="let file of structure.files.simProtocol, let i = index">
+                        <mat-icon (click)="deleteFile('simProtocol', i)" class="editing clickable">close</mat-icon>
                         <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/simProtocol/'+file.name}}" download>download</a></mat-icon>
                         <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/simProtocol/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
                     </mat-list-item>
@@ -95,6 +99,7 @@
             <mat-tab label="Simulation Results" *ngIf="structure.files.simResults[0].name != ['']">
                 <mat-list>
                     <mat-list-item *ngFor="let file of structure.files.simResults, let i = index">
+                        <mat-icon (click)="deleteFile('simResults', i)" class="editing clickable">close</mat-icon>
                         <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/simResults/'+file.name}}" download>download</a></mat-icon>
                         <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/simResults/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
                     </mat-list-item>
