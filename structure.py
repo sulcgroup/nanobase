@@ -13,7 +13,6 @@ import requests
 
 es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 
-
 # PRINT SPECIFIC ID
 # print(es.get(index='structures', id=3))
 
@@ -90,21 +89,6 @@ def get_structure(id):
             'contents': file.read()
         })
 
-    # structure = {
-    #     'id': id,
-    #     'title': s[2],
-    #     'type': s[3],
-    #     'size': s[5],
-    #     'private': s[23],
-    #     'uploadDate': s[24],
-    #     'user': { 'id': s[1], 'firstName': s[25], 'lastName': s[26], 'institution': s[26] },
-    #     'files': { 'structureFiles': s[10], 'expProtocolFiles': s[11], 'expResultsFiles': s[12], 'simProtocolFiles': s[13], 'simResultsFiles': s[14], 'imageFiles': s[15], 'displayImage': s[16] },
-    #     'descriptions': { 'description': s[4], 'structureDescriptions': s[17], 'expProtocolDescriptions': s[18], 'expResultsDescriptions': s[19], 'simProtocolDescriptions': s[20], 'simResultsDescriptions': s[21], 'imageDescriptions': s[22] },
-    #     'publication': { 'publishDate': s[6], 'citation': s[7], 'link': s[8], 'licensing': s[9], 'authors': authors },
-    #     'tags': { 'applications': applications, 'modifications': modifications, 'keywords': keywords },
-    #     'files_contents': files
-    # }
-
     structure = {
         'id': id,
         'description': s[4],
@@ -130,32 +114,32 @@ def get_structure(id):
         'name': structure_files[i],
         'description': s[17].split('|')[i]}
         for i in range(len(structure_files))
-    ]
+    ] if structure_files[0] != '' else []
     structure['files']['expProtocol'] = [{
         'name': expProtocolFiles[i],
         'description': s[18].split('|')[i]}
         for i in range(len(expProtocolFiles))
-    ]
+    ] if expProtocolFiles[0] != '' else []
     structure['files']['expResults'] = [{
         'name': expResultsFiles[i],
         'description': s[19].split('|')[i]}
         for i in range(len(expResultsFiles))
-    ]
+    ] if expResultsFiles[0] != '' else []
     structure['files']['simProtocol'] = [{
         'name': simProtocolFiles[i],
         'description': s[20].split('|')[i]}
         for i in range(len(simProtocolFiles))
-    ]
+    ] if simProtocolFiles[0] != '' else []
     structure['files']['simResults'] = [{
         'name': simResultsFiles[i],
         'description': s[21].split('|')[i]}
         for i in range(len(simResultsFiles))
-    ]
+    ] if simResultsFiles[0] != '' else []
     structure['files']['images'] = [{
         'name': imageFiles[i],
         'description': s[22].split('|')[i]}
         for i in range(len(imageFiles))
-    ]
+    ] if imageFiles[0] != '' else []
     
     return structure
 
@@ -195,7 +179,6 @@ def upload_structure(structure, user_id):
     connection.close()
 
     index_structure(id, structure, first_name, last_name)
-    print(es.search(index='structures', body={'query': {'match_all' : {}}}))
     return structure
 
 # Write all files into filesystem
@@ -208,8 +191,7 @@ def upload_files(id, structure):
     file_descriptions = [''] * len(file_types)
     for i, file_type in enumerate(file_types):
         file_dir = os.path.join(struct_path, file_type)
-        if structure[file_type][0]['file']:
-            os.mkdir(file_dir)
+        os.mkdir(file_dir)
 
         for f in structure[file_type]:
             try:
@@ -219,17 +201,7 @@ def upload_files(id, structure):
                 file_descriptions[i] += f['description'] + '|'
             except TypeError:
                 continue
-            # Determine if it's not a text format
-            if is_data_url(file_name):
-                file = open(file_path, 'wb')
-                data_uri = f['contents']
-                print('FILE WRITING: ', file_name, data_uri[:15])
-                data = request.urlopen(data_uri).read()
-                file.write(data)
-            else:
-                file = open(file_path, 'w')
-                file.write(f['contents'])
-            file.close()
+            write_file(file_name, f['contents'], file_path + '/' + file_name)
     
     return file_names, file_descriptions
 
@@ -241,7 +213,7 @@ def insert_structure(id, structure, user_id, file_names, file_descriptions, conn
         structure['name'],
         structure['type'],
         structure['description'],
-        structure['publishDate'] if structure['publishDate'] else '0000-0-0',
+        structure['publishDate'] if structure['publishDate'] else 'NULL',
         structure['citation'],
         structure['link'] ,
         structure['licensing'],
@@ -303,8 +275,65 @@ def index_structure(id, structure, first_name, last_name):
         'authors': structure['authors'],
     })
 
+def edit_structure(new_struct):
+    displayImage = new_struct['files'].pop('displayImage', None)
+    file_names = []
+    file_descriptions = []
+    for file_type in new_struct['files']:
+        file_names.append('|'.join([file['name'] for file in new_struct['files'][file_type]]))
+        file_descriptions.append('|'.join([file['description'] for file in new_struct['files'][file_type]]))
+
+    structure_data = (
+        new_struct['id'],
+        int(new_struct['user']['id']),
+        new_struct['title'],
+        new_struct['type'],
+        new_struct['description'],
+        '-'.join(new_struct['publication']['publishDate']),
+        new_struct['publication']['citation'],
+        new_struct['publication']['link'] ,
+        new_struct['publication']['licensing'],
+        file_names[5], file_names[0], file_names[1], file_names[3], file_names[4], file_names[2],
+        displayImage,
+        file_descriptions[5], file_descriptions[0], file_descriptions[1], file_descriptions[3], file_descriptions[4], file_descriptions[2],
+        new_struct['private'],
+        new_struct['uploadDate'],
+    )
+        
+    connection = database.pool.get_connection()
+    with connection.cursor() as cursor:
+        cursor.execute(insert_structure_query, (structure_data))
+    connection.close()
+
+    edit_files(new_struct['files'], str(new_struct['id']))
+    return 'OK'
+
+def edit_files(new_files, id):
+    for file_type in new_files:
+        # Remove deleted files
+        path = 'structures/' + id + '/' + file_type
+        old_files = os.listdir(path)
+        for file in old_files:
+            if file not in [new_file['name'] for new_file in new_files[file_type]]:
+                os.remove(path + '/' + file)
+
+        # Write new filse
+        for file in new_files[file_type]:
+            if 'contents' in file:
+                write_file(file['name'], file['contents'], path + '/' + file['name'])
+
+def write_file(name, contents, path):
+    if is_data_url(name):
+        file = open(path, 'wb')
+        data_uri = contents
+        data = request.urlopen(data_uri).read()
+        file.write(data)
+    else:
+        file = open(path, 'w')
+        file.write(contents)
+    file.close()
+
 def search(input, category):
-    print('categoryyyy', category)
     query = {
         'query': {
             'match': {
@@ -316,9 +345,9 @@ def search(input, category):
         }
     }
 
+    # Find structures that match the query
     hits = es.search(index='structures', body=query)['hits']['hits']
     ids = [hit['_id'] for hit in hits]
-
     if not ids:
         return {}
 

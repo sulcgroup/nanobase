@@ -30,9 +30,7 @@ def upload_structure():
 	user_id = get_session_id()
 	if not user_id:
 		return 'You are not logged in'
-
 	structure_data = request.json['structure']
-
 	return {'response': structure.upload_structure(structure_data, user_id)}
 
 @app.route('/api/structure/<id>', methods=['GET'])
@@ -41,7 +39,15 @@ def get_structure(id):
 
 @app.route('/api/structure/author/<id>', methods=['GET'])
 def check_author(id):
-	return {'response': True} if int(id) == get_session_id() else {'response': False}
+	response = int(id) == get_session_id()
+	return {'response': response}
+
+@app.route('/api/structure/edit', methods=['POST'])
+def edit_structure():
+	struct = request.json['structure']
+	if struct['user']['id'] != get_session_id():
+		return {'response': 'Action not allowed'}
+	return {'response': structure.edit_structure(struct)}
 
 @app.route('/api/recent_structures', methods=['GET'])
 def get_recent_structures():

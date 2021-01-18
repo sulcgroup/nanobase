@@ -29,8 +29,7 @@ export class UploadComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private formService: FormService,
-    private structService: StructureService,
+    public formService: FormService,
     private userService: UserService,
     private apiService: ApiService
   ) { }
@@ -89,8 +88,7 @@ export class UploadComponent implements OnInit {
 
   submit(): void {
     const structure: StructureUpload = this.processForm();
-    console.log(structure);
-
+    // console.log('Uploading structure...', structure);
     this.loadBar = true;
     this.disableForm();
 
@@ -107,7 +105,6 @@ export class UploadComponent implements OnInit {
         this.enableForm();
       }
     );
-
   }
 
   processForm(): StructureUpload {
@@ -140,26 +137,20 @@ export class UploadComponent implements OnInit {
   }
 
   uploadFile(fileInput: FileInput, type: string, index: number): void {
-    console.log(fileInput);
     const fileReader: FileReader = new FileReader();
     const file: File = fileInput.files[0];
-    this.isDataURLFile(file.name) ? fileReader.readAsDataURL(file) : fileReader.readAsText(file);
+    this.formService.isDataURLFile(file.name) ? fileReader.readAsDataURL(file) : fileReader.readAsText(file);
 
     fileReader.onloadend = () => {
-      // const description = this.fileGroup.controls[type].value[index].description;
       this.fileGroup.controls[type].value[index].contents = fileReader.result;
-      // Prevents a bug that deletes the description
-      // this.fileGroup.controls[type].value[index].description = description;
-      // console.log(description)
-      console.log(this.fileGroup.value)
     };
   }
 
-  updateDescription(description: string, type: string, index: number): void {
-    console.log(this.fileGroup.controls[type].value[index].contents)
-    this.fileGroup.controls[type].value[index].description = description;
-    console.log(this.fileGroup.controls[type].value[index].contents)
-  }
+  // updateDescription(description: string, type: string, index: number): void {
+  //   console.log(this.fileGroup.controls[type].value[index].contents)
+  //   this.fileGroup.controls[type].value[index].description = description;
+  //   console.log(this.fileGroup.controls[type].value[index].contents)
+  // }
 
   fieldArray(type: string, group: number): FormArray {
     switch (group) {
@@ -180,23 +171,6 @@ export class UploadComponent implements OnInit {
 
   removeField(type: string, group: number, i: number): void {
     this.fieldArray(type, group).removeAt(i);
-  }
-
-  // Returns true if we should read the file as a data URL, rather than text
-  isDataURLFile(fileName?: string): boolean {
-    if (fileName === undefined || fileName === null) {
-      return;
-    }
-    const imgFormats = ['.jpg', '.png', '.tiff', '.pdf', '.doc', '.docx', '.xls', '.xlsx'];
-    return imgFormats.some(suffix => fileName.endsWith(suffix));
-  }
-
-  isImageFile(fileName?: string): boolean {
-    if (fileName === undefined || fileName === null) {
-      return;
-    }
-    const imgFormats = ['.jpg', '.png', '.tiff'];
-    return imgFormats.some(suffix => fileName.endsWith(suffix));
   }
 
   disableForm(): void {

@@ -3,10 +3,10 @@
     <div id="header">
         <h1 id="title">{{structure?.title}}</h1>
         <span id='user-name'> &nbsp;posted by {{isAuthor ? 'you' : structure.user.firstName+' '+structure.user.lastName}} on {{formatDate(structure.uploadDate)}}&emsp;</span>
-        <mat-slide-toggle *ngIf="isAuthor" color='primary' [(ngModel)]="isEditing">
+        <mat-slide-toggle #editToggle (click)="toggleEditing(isEditing)" *ngIf="isAuthor" color='primary' [checked]="isEditing" [(ngModel)]="isEditing">
             <span id="slide-toggle" [ngClass]="isEditing ? 'editing' : 'public'">{{isEditing ? 'Editing View' : 'Public View'}}&ensp;</span>
         </mat-slide-toggle>
-        <button id="save-button" *ngIf="isEditing" [disabled]="!hasBeenEdited" mat-raised-button color="primary">SAVE CHANGES</button>
+        <button id="save-button" (click)="save()" *ngIf="isEditing" [disabled]="!hasBeenEdited" mat-raised-button color="primary">SAVE CHANGES</button>
     </div>
     <mat-divider id="header-divider"></mat-divider><br>
 
@@ -48,7 +48,6 @@
         [dots]="true"
         [loop]="true"
         [arrowsTheme]="'dark'">
-
         <ng-container *ngFor="let image of structure.files.images, let i = index">
             <div class="carousel-cell">
                 <img src="{{'file/'+structure.id+'/images/'+image.name}}">
@@ -63,48 +62,103 @@
             <mat-tab label="Structure">
                 <mat-list>
                     <mat-list-item *ngFor="let file of structure.files.structure, let i = index">
-                        <mat-icon (click)="deleteFile('structure', i)" class="editing clickable">close</mat-icon>
+                        <mat-icon *ngIf="isEditing" (click)="deleteFile('structure', i)" class="editing clickable">delete</mat-icon>
                         <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/structure/'+file.name}}" download>download</a></mat-icon>
-                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/structure/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
+                        <div mat-line>
+                            <a class='file-download' href="{{'file/'+structure.id+'/structure/'+file.name}}" download>{{file.name}}</a>&nbsp;
+                            <span *ngIf="!isEditing" class="file-description">{{file.description}}</span>
+                            <mat-form-field color="accent" *ngIf="isEditing" class="description-field"><mat-label></mat-label>
+                                <input (change)="edited()" class="file-description" matInput [(ngModel)]="structure.files.structure[i].description" [placeholder]="'Description for '+file.name">
+                            </mat-form-field>
+                        </div>
                     </mat-list-item>
+                    <mat-form-field *ngIf="isEditing">
+                        <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'structure')" placeholder="Add a structure file"></ngx-mat-file-input>
+                        <button color='primary' mat-icon-button matSuffix><mat-icon>folder</mat-icon></button>
+                    </mat-form-field>
                 </mat-list>
             </mat-tab>
-            <mat-tab label="Experiment Protocol" *ngIf="structure.files.expProtocol[0].name != ['']">
+
+            <mat-tab label="Experiment Protocol">
                 <mat-list>
                     <mat-list-item *ngFor="let file of structure.files.expProtocol, let i = index">
-                        <mat-icon (click)="deleteFile('expProtocol', i)" class="editing clickable">close</mat-icon>
+                        <mat-icon *ngIf="isEditing" (click)="deleteFile('expProtocol', i)" class="editing clickable">delete</mat-icon>
                         <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/expProtocol/'+file.name}}" download>download</a></mat-icon>
-                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/expProtocol/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
+                        <div mat-line>
+                            <a class='file-download' href="{{'file/'+structure.id+'/expProtocol/'+file.name}}" download>{{file.name}}</a>&nbsp;
+                            <span *ngIf="!isEditing" class="file-description">{{file.description}}</span>
+                            <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
+                                <input matInput [(ngModel)]="structure.files.expProtocol[i].description" [placeholder]="'Description for '+file.name">
+                            </mat-form-field>
+                        </div>
                     </mat-list-item>
+                    <mat-form-field *ngIf="isEditing">
+                        <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'expProtocol')" placeholder="Add an Experiment Protocol file"></ngx-mat-file-input>
+                        <button color='primary' mat-icon-button matSuffix><mat-icon>folder</mat-icon></button>
+                    </mat-form-field>
                 </mat-list>
             </mat-tab>
-            <mat-tab label="Experiment Results" *ngIf="structure.files.expResults[0].name != ['']">
+
+            <mat-tab label="Experiment Results">
                 <mat-list>
                     <mat-list-item *ngFor="let file of structure.files.expResults, let i = index">
-                        <mat-icon (click)="deleteFile('expResults', i)" class="editing clickable">close</mat-icon>
+                        <mat-icon *ngIf="isEditing" (click)="deleteFile('expResults', i)" class="editing clickable">delete</mat-icon>
                         <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/expResults/'+file.name}}" download>download</a></mat-icon>
-                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/expResults/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
+                        <div mat-line>
+                            <a class='file-download' href="{{'file/'+structure.id+'/expResults/'+file.name}}" download>{{file.name}}</a>&nbsp;
+                            <span *ngIf="!isEditing" class="file-description">{{file.description}}</span>
+                            <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
+                                <input matInput [(ngModel)]="structure.files.expResults[i].description" [placeholder]="'Description for '+file.name">
+                            </mat-form-field>
+                        </div>
                     </mat-list-item>
+                    <mat-form-field *ngIf="isEditing">
+                        <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'expResults')" placeholder="Add an Experiment Results file"></ngx-mat-file-input>
+                        <button color='primary' mat-icon-button matSuffix><mat-icon>folder</mat-icon></button>
+                    </mat-form-field>
                 </mat-list>
             </mat-tab>
-            <mat-tab label="Simulation Protocol" *ngIf="structure.files.simProtocol[0].name != ['']">
+
+            <mat-tab label="Simulation Protocol">
                 <mat-list>
                     <mat-list-item *ngFor="let file of structure.files.simProtocol, let i = index">
-                        <mat-icon (click)="deleteFile('simProtocol', i)" class="editing clickable">close</mat-icon>
+                        <mat-icon *ngIf="isEditing" (click)="deleteFile('simProtocol', i)" class="editing clickable">delete</mat-icon>
                         <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/simProtocol/'+file.name}}" download>download</a></mat-icon>
-                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/simProtocol/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
+                        <div mat-line>
+                            <a class='file-download' href="{{'file/'+structure.id+'/simProtocol/'+file.name}}" download>{{file.name}}</a>&nbsp;
+                            <span *ngIf="!isEditing" class="file-description">{{file.description}}</span>
+                            <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
+                                <input matInput [(ngModel)]="structure.files.simProtocol[i].description" [placeholder]="'Description for '+file.name">
+                            </mat-form-field>
+                        </div>
                     </mat-list-item>
+                    <mat-form-field *ngIf="isEditing">
+                        <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'simProtocol')" placeholder="Add a Simulation Protocol file"></ngx-mat-file-input>
+                        <button color='primary' mat-icon-button matSuffix><mat-icon>folder</mat-icon></button>
+                    </mat-form-field>
                 </mat-list>
             </mat-tab>
-            <mat-tab label="Simulation Results" *ngIf="structure.files.simResults[0].name != ['']">
+
+            <mat-tab label="Simulation Results">
                 <mat-list>
                     <mat-list-item *ngFor="let file of structure.files.simResults, let i = index">
-                        <mat-icon (click)="deleteFile('simResults', i)" class="editing clickable">close</mat-icon>
+                        <mat-icon *ngIf="isEditing" (click)="deleteFile('simResults', i)" class="editing clickable">delete</mat-icon>
                         <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/simResults/'+file.name}}" download>download</a></mat-icon>
-                        <div mat-line><a class='file-download' href="{{'file/'+structure.id+'/simResults/'+file.name}}" download>{{file.name}}</a> &nbsp;<span class="file-description">{{file.description}}</span></div> 
+                        <div mat-line>
+                            <a class='file-download' href="{{'file/'+structure.id+'/simResults/'+file.name}}" download>{{file.name}}</a>&nbsp;
+                            <span *ngIf="!isEditing" class="file-description">{{file.description}}</span>
+                            <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
+                                <input matInput [(ngModel)]="structure.files.simResults[i].description" [placeholder]="'Description for '+file.name">
+                            </mat-form-field>
+                        </div>
                     </mat-list-item>
+                    <mat-form-field *ngIf="isEditing">
+                        <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'simResults')" placeholder="Add a Simulation Results file"></ngx-mat-file-input>
+                        <button color='primary' mat-icon-button matSuffix><mat-icon>folder</mat-icon></button>
+                    </mat-form-field>
                 </mat-list>
             </mat-tab>
+
         </mat-tab-group>
     </div>
     
@@ -115,6 +169,5 @@
         <p><b>Date published: </b>{{formatPublishDate(structure.publication.publishDate)}}</p>
         <p><b>Licensing information: </b>{{structure.publication.licensing}}</p>
         <p>You may access the publication <a href="{{structure.publication.link}}" target="_blank">here</a></p>
-
     </div>
 </div>

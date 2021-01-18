@@ -118,6 +118,10 @@ carousel {
     text-shadow: 2px 4px 3px rgba(22, 22, 22, 0.25);
 }
 
+.description-field {
+    width: 50%;
+}
+
 .file-download {
     text-decoration: none;
     color: inherit;

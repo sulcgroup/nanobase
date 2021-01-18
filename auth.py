@@ -26,8 +26,6 @@ get_reset_token = ('SELECT id FROM Users WHERE resetToken = %s')
 get_reset_token_expiration = ("SELECT resetTokenExpiration FROM Users WHERE id = %s")
 reset_password = ("UPDATE Users SET password = %s WHERE id = %s")
 
-
-
 def verify(user_id, verify_code):
 	connection = pool.get_connection()
 
@@ -189,4 +187,3 @@ def resetPassword(password, user_id, token):
 
 	connection.close()
 	return 'Password succesfully changed!'
-	

@@ -27,4 +27,8 @@ export class StructureService {
     return this.apiService.get(`/structure/author/${id}`);
   }
 
+  edit(structure: Structure): Observable<any> {
+    return this.apiService.post(`/structure/edit`, {structure});
+  }
+
 }

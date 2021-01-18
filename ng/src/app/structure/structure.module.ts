@@ -14,6 +14,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
 
 import { IvyCarouselModule } from 'angular-responsive-carousel';
 
@@ -34,6 +38,9 @@ import { IvyCarouselModule } from 'angular-responsive-carousel';
     MatListModule,
     MatSlideToggleModule,
     FormsModule,
+    MaterialFileInputModule,
+    MatFormFieldModule,
+    MatInputModule,
     IvyCarouselModule
   ]
 })
