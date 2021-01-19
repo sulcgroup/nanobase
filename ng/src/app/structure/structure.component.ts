@@ -104,7 +104,7 @@ export class StructureComponent implements OnInit {
   onLoadHandler(): void {
     const frame = document.getElementById('oxview-frame') as HTMLFrameElement;
     // tslint:disable-next-line: deprecation
-    frame.contentWindow.postMessage({files: this.structure.files_contents}, 'http://localhost:8000');
+    frame.contentWindow.postMessage({files: this.structure.files_contents}, 'https://sulcgroup.github.io/oxdna-viewer/');
   }
 
   routeTag(input: string, category: string): void {
