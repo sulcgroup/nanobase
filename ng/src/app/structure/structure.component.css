@@ -18,20 +18,17 @@
     height: 100%;
     margin: 10px auto;
     margin-bottom: 25px;
-    /* background-color: wheat; */
 }
 #iframe-container {
     margin: auto;
     width: 100%;
     height: 100%;
-    /* background-color: aquamarine; */
 }
 #structure-info-container {
     flex-basis: 60%;
     margin: 0 auto;
     width: 100%;
     height: 100%;
-    /* background-color: lightpink; */
 }
 
 #publication-section, #file-section {
@@ -56,10 +53,6 @@
     display: inline!important;
 }
 
-/* #save-button {
-    padding-bottom: 20px!important;
-} */
-
 #oxview-frame {
     height: 450px;
     width: 97%;
@@ -81,7 +74,7 @@
 }
 
 .public {
-    color: #00695C;
+    color: rgb(0, 105, 92);
 }
 
 .editing {

@@ -18,9 +18,25 @@
                 </button>
             </mat-card-actions>
         </mat-card>
-
     </div>
     <div id="extras-container">
-        
+        <div class="box">
+            <div class="box-title">Recent applications</div>
+            <mat-chip-list>
+                <mat-chip class="application chip" (click)="routeTag(application, 'applications')" *ngFor="let application of tags?.applications">{{application}}</mat-chip>
+            </mat-chip-list>
+        </div>
+        <div class="box">
+            <div class="box-title">Recent modifications</div>
+            <mat-chip-list>
+                <mat-chip class="modification chip" (click)="routeTag(modification, 'modifications')" *ngFor="let modification of tags?.modifications">{{modification}}</mat-chip>
+            </mat-chip-list>
+        </div>
+        <div class="box">
+            <div class="box-title">Recent keywords</div>
+            <mat-chip-list>
+                <mat-chip class="keyword chip" (click)="routeTag(keyword, 'keywords')" *ngFor="let keyword of tags?.keywords">{{keyword}}</mat-chip>
+            </mat-chip-list>
+        </div>
     </div>
 </div>

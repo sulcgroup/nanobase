@@ -9,9 +9,21 @@ import { StructureService, StructureCover } from 'src/app/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  numStructures: 15;
+  numStructures = 15;
+  numTags = 10;
   structures: Array<StructureCover> = [];
   message: string;
+  tags: {
+    applications: Array<string>,
+    modifications: Array<string>,
+    keywords: Array<string>
+  };
+  arr = ['app1', 'app2', 'app3', 'app4', 'app5', 'app6', 'app7', 'app8', 'app9', 'app10'];
+  // tags = {
+  //   applications: ['app1', 'app2', 'app3', 'app4', 'app5', 'app6', 'app7', 'app8', 'app9', 'app10'],
+  //   modifications: ['mod1', 'mod2', 'mod3', 'mod4', 'mod5', 'mod6', 'mod7', 'mod8', 'mod9', 'mod10'],
+  //   keywords: ['key1', 'key2', 'key3', 'key4', 'key5', 'key6', 'key7', 'key8', 'key9', 'key10']
+  // };
   months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec'];
   categories = {
     title: 'title',
@@ -28,6 +40,7 @@ export class HomeComponent implements OnInit {
     let input = this.route.snapshot.queryParams.input;
     let category = this.route.snapshot.queryParams.category;
     input ? this.loadSearch(input, category) : this.loadRecent();
+    this.loadRecentTags();
 
     this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd) {
@@ -37,7 +50,6 @@ export class HomeComponent implements OnInit {
         input ? this.loadSearch(input, category) : this.loadRecent();
       }
     });
-
   }
 
   loadSearch(input: string, category: string): void {
@@ -69,6 +81,20 @@ export class HomeComponent implements OnInit {
       },
       err => console.log('err', err)
     );
+  }
+
+  loadRecentTags(): void {
+    this.structService.getRecentTags(this.numTags).subscribe(
+      data => {
+        console.log('data', data);
+        this.tags = data;
+      },
+      err => console.log('err', err)
+    );
+  }
+
+  routeTag(input: string, category: string): void {
+    this.router.navigateByUrl(`/?input=${input}&category=${category}`);
   }
 
   formatDate(date: Date): string {

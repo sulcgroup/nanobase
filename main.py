@@ -49,9 +49,13 @@ def edit_structure():
 		return {'response': 'Action not allowed'}
 	return {'response': structure.edit_structure(struct)}
 
-@app.route('/api/recent_structures', methods=['GET'])
-def get_recent_structures():
-	return structure.get_recent_structures()
+@app.route('/api/structure/recent/<count>', methods=['GET'])
+def get_recent_structures(count):
+	return structure.get_recent_structures(int(count))
+
+@app.route('/api/tags/recent/<count>', methods=['GET'])
+def get_recent_tags(count):
+	return structure.get_recent_tags(int(count))
 
 @app.route('/api/search/<input>/<category>', methods=['GET'])
 def search(input, category):

@@ -12,7 +12,11 @@ export class StructureService {
 
   // TODO: Add count functionality
   getRecent(count: number): Observable<Array<StructureCover>> {
-    return this.apiService.get('/recent_structures');
+    return this.apiService.get(`/structure/recent/${count}`);
+  }
+
+  getRecentTags(count: number): Observable<any> {
+    return this.apiService.get(`/tags/recent/${count}`);
   }
 
   search(input: string, category: string): Observable<Array<StructureCover>> {

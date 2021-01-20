@@ -27,9 +27,17 @@ insert_structure_query = (
 )
 insert_max_structure_id = ('INSERT INTO Structures () VALUES ()')
 get_max_structure_id = ('SELECT MAX(id) FROM Structures')
-recent_structures_query = (
-    'SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY Structures.uploadDate DESC LIMIT 10'
-)
+recent_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY Structures.uploadDate DESC LIMIT %s')
+
+recent_applications_query = ('SELECT application FROM Applications WHERE application in (SELECT application Id FROM (SELECT ApplicationsJoin.applicationId, S.uploadDate FROM (SELECT Structures.id, Structures.uploadDate FROM Structures) as S INNER JOIN ApplicationsJoin ON S.id = ApplicationsJoin.structureId ORDER BY uploadDate DESC LIMIT %s) as A)')
+recent_modifications_query = ('SELECT modification FROM Modifications WHERE modification in (SELECT modification Id FROM (SELECT ModificationsJoin.modificationId, S.uploadDate FROM (SELECT Structures.id, Structures.uploadDate FROM Structures) as S INNER JOIN ModificationsJoin ON S.id = ModificationsJoin.structureId ORDER BY uploadDate DESC LIMIT %s) as A)')
+recent_keywords_query = ('SELECT keyword FROM Keywords WHERE keyword in (SELECT keyword Id FROM (SELECT KeywordsJoin.keywordId, S.uploadDate FROM (SELECT Structures.id, Structures.uploadDate FROM Structures) as S INNER JOIN KeywordsJoin ON S.id = KeywordsJoin.structureId ORDER BY uploadDate DESC LIMIT %s) as A)')
+
+get_applications_query = ('SELECT application FROM Applications WHERE id IN (SELECT applicationId FROM ApplicationsJoin WHERE structureId = %s)')
+get_modifications_query = ('SELECT modification FROM Modifications WHERE id IN (SELECT modificationId FROM ModificationsJoin WHERE structureId = %s)')
+get_keywords_query = ('SELECT keyword FROM Keywords WHERE id IN (SELECT keywordId FROM KeywordsJoin WHERE structureId = %s)')
+get_authors_query = ('SELECT author FROM Authors WHERE id IN (SELECT authorId FROM AuthorsJoin WHERE structureId = %s)')
+
 get_last_id = ('SELECT LAST_INSERT_ID()')
 get_user_name = ('SELECT firstName, lastName FROM Users WHERE id = %s')
 get_by_id = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.id IN %(ids)s LIMIT 10')
@@ -49,11 +57,6 @@ insert_keyword_join = ('INSERT INTO KeywordsJoin (structureId, keywordId) VALUES
 get_author_id = ('SELECT id FROM Authors WHERE author = %s')
 insert_author = ('INSERT INTO Authors (author) VALUES (%s)')
 insert_author_join = ('INSERT INTO AuthorsJoin (structureId, authorId) VALUES (%s, %s)')
-
-get_applications_query = ('SELECT application FROM Applications WHERE id IN (SELECT applicationId FROM ApplicationsJoin WHERE structureId = %s)')
-get_modifications_query = ('SELECT modification FROM Modifications WHERE id IN (SELECT modificationId FROM ModificationsJoin WHERE structureId = %s)')
-get_keywords_query = ('SELECT keyword FROM Keywords WHERE id IN (SELECT keywordId FROM KeywordsJoin WHERE structureId = %s)')
-get_authors_query = ('SELECT author FROM Authors WHERE id IN (SELECT authorId FROM AuthorsJoin WHERE structureId = %s)')
 
 def get_structure(id):
     connection = database.pool.get_connection()
@@ -143,10 +146,10 @@ def get_structure(id):
     
     return structure
 
-def get_recent_structures():
+def get_recent_structures(count):
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
-        cursor.execute(recent_structures_query)
+        cursor.execute(recent_structures_query, (count))
         results = cursor.fetchall()
     connection.close()
 
@@ -154,6 +157,19 @@ def get_recent_structures():
     structures = [dict(zip(keys, structure)) for structure in results]
 
     return jsonify(structures)
+
+def get_recent_tags(count):
+    connection = database.pool.get_connection()
+    with connection.cursor() as cursor:
+        cursor.execute(recent_applications_query, (count))
+        applications = [app[0] for app in cursor.fetchall()]
+        cursor.execute(recent_modifications_query, (count))
+        modifications = [mod[0] for mod in cursor.fetchall()]
+        cursor.execute(recent_keywords_query, (count))
+        keywords = [key[0] for key in cursor.fetchall()]
+    connection.close()
+
+    return {'applications': applications, 'modifications': modifications, 'keywords': keywords}
 
 def upload_structure(structure, user_id):
     print('Uploading: ', structure)
