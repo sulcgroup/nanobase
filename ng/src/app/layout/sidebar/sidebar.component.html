@@ -1,17 +1,17 @@
 <div id="sidebar-container">
-    <a mat-button routerLink="/" color="primary">
+    <a mat-button (click)="scrollTop()" routerLink="/" color="primary">
         <mat-icon class="sidebar-icon">home</mat-icon>
          Homepage
     </a>
-    <a mat-button routerLink="{{isAuthenticated ? '/upload' : '/auth/login'}}" color="primary">
+    <a mat-button (click)="scrollTop()" routerLink="{{isAuthenticated ? '/upload' : '/auth/login'}}" color="primary">
         <mat-icon class="sidebar-icon">publish</mat-icon>
          Upload Structure
     </a>
-    <a mat-button routerLink="{{isAuthenticated ? '/profile' : '/auth/login'}}" color="primary">
+    <a mat-button (click)="scrollTop()" routerLink="{{isAuthenticated ? '/profile' : '/auth/login'}}" color="primary">
         <mat-icon class="sidebar-icon">person</mat-icon>
          Profile
     </a>
-    <a mat-button routerLink="/about" color="primary">
+    <a mat-button (click)="scrollTop()" routerLink="/about" color="primary">
         <mat-icon class="sidebar-icon">description</mat-icon>
          About
     </a>
