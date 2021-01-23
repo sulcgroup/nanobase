@@ -61,6 +61,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadSearch(input: string, category: string): void {
+    this.oldHeight = Infinity;
     this.message = '';
     this.structService.search(input, category).subscribe(
       data => {
@@ -91,6 +92,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadRecent(count: number): void {
+    this.oldHeight = 0;
     this.message = '';
     this.structService.getRecent(count).subscribe(
       data => {
