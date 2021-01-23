@@ -53,6 +53,10 @@ def edit_structure():
 def get_recent_structures(count):
 	return structure.get_recent_structures(int(count))
 
+@app.route('/api/structure/random/<count>', methods=['GET'])
+def get_random_structures(count):
+	return structure.get_random_structures(int(count))
+
 @app.route('/api/tags/recent/<count>', methods=['GET'])
 def get_recent_tags(count):
 	return structure.get_recent_tags(int(count))

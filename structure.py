@@ -28,6 +28,7 @@ insert_structure_query = (
 insert_max_structure_id = ('INSERT INTO Structures () VALUES ()')
 get_max_structure_id = ('SELECT MAX(id) FROM Structures')
 recent_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY Structures.uploadDate DESC LIMIT %s')
+random_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY RAND() LIMIT %s')
 
 recent_applications_query = ('SELECT application FROM Applications WHERE application in (SELECT application Id FROM (SELECT ApplicationsJoin.applicationId, S.uploadDate FROM (SELECT Structures.id, Structures.uploadDate FROM Structures) as S INNER JOIN ApplicationsJoin ON S.id = ApplicationsJoin.structureId ORDER BY uploadDate DESC LIMIT %s) as A)')
 recent_modifications_query = ('SELECT modification FROM Modifications WHERE modification in (SELECT modification Id FROM (SELECT ModificationsJoin.modificationId, S.uploadDate FROM (SELECT Structures.id, Structures.uploadDate FROM Structures) as S INNER JOIN ModificationsJoin ON S.id = ModificationsJoin.structureId ORDER BY uploadDate DESC LIMIT %s) as A)')
@@ -150,6 +151,18 @@ def get_recent_structures(count):
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
         cursor.execute(recent_structures_query, (count))
+        results = cursor.fetchall()
+    connection.close()
+
+    keys = ['title', 'uploadDate', 'description', 'displayImage', 'id', 'firstName', 'lastName']
+    structures = [dict(zip(keys, structure)) for structure in results]
+
+    return jsonify(structures)
+
+def get_random_structures(count):
+    connection = database.pool.get_connection()
+    with connection.cursor() as cursor:
+        cursor.execute(random_structures_query, (count))
         results = cursor.fetchall()
     connection.close()
 

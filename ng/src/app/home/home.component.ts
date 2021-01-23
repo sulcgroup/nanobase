@@ -9,21 +9,14 @@ import { StructureService, StructureCover } from 'src/app/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  numStructures = 15;
-  numTags = 10;
   structures: Array<StructureCover> = [];
+  oldHeight = 0;
   message: string;
   tags: {
     applications: Array<string>,
     modifications: Array<string>,
     keywords: Array<string>
   };
-  arr = ['app1', 'app2', 'app3', 'app4', 'app5', 'app6', 'app7', 'app8', 'app9', 'app10'];
-  // tags = {
-  //   applications: ['app1', 'app2', 'app3', 'app4', 'app5', 'app6', 'app7', 'app8', 'app9', 'app10'],
-  //   modifications: ['mod1', 'mod2', 'mod3', 'mod4', 'mod5', 'mod6', 'mod7', 'mod8', 'mod9', 'mod10'],
-  //   keywords: ['key1', 'key2', 'key3', 'key4', 'key5', 'key6', 'key7', 'key8', 'key9', 'key10']
-  // };
   months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec'];
   categories = {
     title: 'title',
@@ -39,15 +32,30 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     let input = this.route.snapshot.queryParams.input;
     let category = this.route.snapshot.queryParams.category;
-    input ? this.loadSearch(input, category) : this.loadRecent();
-    this.loadRecentTags();
+    input ? this.loadSearch(input, category) : this.loadRecent(15);
+    this.loadRecentTags(10);
+    this.infiniteScroll();
 
     this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd) {
         const url = new URLSearchParams(val.url.slice(2));
         input = url.get('input');
         category = url.get('category');
-        input ? this.loadSearch(input, category) : this.loadRecent();
+        input ? this.loadSearch(input, category) : this.loadRecent(15);
+      }
+    });
+  }
+
+  infiniteScroll(): void {
+    document.addEventListener('scroll', e => {
+      const body = document.body;
+      const html = document.documentElement;
+      const currentHeight = window.scrollY + window.innerHeight;
+      const totalHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight);
+
+      if (currentHeight + 300 >= totalHeight && this.oldHeight + 300 < totalHeight) {
+        this.oldHeight = currentHeight;
+        this.loadRandom(5);
       }
     });
   }
@@ -71,9 +79,20 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  loadRecent(): void {
+  loadRandom(count: number): void {
+    this.structService.getRandom(count).subscribe(
+      data => {
+        data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
+        this.structures.push(...data);
+        console.log(`Loaded ${count} more structures: `, data);
+      },
+      err => console.log('err', err)
+    );
+  }
+
+  loadRecent(count: number): void {
     this.message = '';
-    this.structService.getRecent(this.numStructures).subscribe(
+    this.structService.getRecent(count).subscribe(
       data => {
         data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
         this.structures = data;
@@ -83,8 +102,8 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  loadRecentTags(): void {
-    this.structService.getRecentTags(this.numTags).subscribe(
+  loadRecentTags(count: number): void {
+    this.structService.getRecentTags(count).subscribe(
       data => {
         console.log('data', data);
         this.tags = data;

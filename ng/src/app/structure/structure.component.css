@@ -123,3 +123,18 @@ carousel {
 .clickable {
     cursor: pointer;
 }
+
+.application {
+    background-color: rgba(136, 1, 160, 0.8);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.modification {
+    background-color: rgba(93, 241, 158, 0.8);
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.keyword {
+    background-color: rgba(255, 208, 50, 0.8);
+    color: rgba(0, 0, 0, 0.9);
+}

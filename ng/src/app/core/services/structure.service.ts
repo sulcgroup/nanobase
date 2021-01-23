@@ -15,6 +15,10 @@ export class StructureService {
     return this.apiService.get(`/structure/recent/${count}`);
   }
 
+  getRandom(count: number): Observable<Array<StructureCover>> {
+    return this.apiService.get(`/structure/random/${count}`);
+  }
+
   getRecentTags(count: number): Observable<any> {
     return this.apiService.get(`/tags/recent/${count}`);
   }
