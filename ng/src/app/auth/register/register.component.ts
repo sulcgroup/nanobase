@@ -57,7 +57,6 @@ export class RegisterComponent implements OnInit {
     this.userService.register(userData)
     .subscribe(
       data => {
-        console.log('data', data)
         if (Object.keys(data).length === 0) {
           this.router.navigateByUrl('/auth/verify');
         }

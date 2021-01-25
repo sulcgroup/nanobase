@@ -106,10 +106,7 @@ export class HomeComponent implements OnInit {
 
   loadRecentTags(count: number): void {
     this.structService.getRecentTags(count).subscribe(
-      data => {
-        console.log('data', data);
-        this.tags = data;
-      },
+      data => this.tags = data,
       err => console.log('err', err)
     );
   }

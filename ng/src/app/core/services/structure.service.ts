@@ -23,6 +23,10 @@ export class StructureService {
     return this.apiService.get(`/tags/recent/${count}`);
   }
 
+  getAutofill(count: number): Observable<any> {
+    return this.apiService.get(`/tags/autofill/${count}`);
+  }
+
   search(input: string, category: string): Observable<Array<StructureCover>> {
     return this.apiService.get(`/search/${input}/${category}`);
   }

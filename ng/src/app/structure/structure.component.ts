@@ -43,7 +43,6 @@ export class StructureComponent implements OnInit {
   getStructure(): void {
     this.structureService.get(this.id).subscribe(
       data => {
-        // console.log('data', data);
         data.response.uploadDate = new Date(data.response.uploadDate);
         data.response.publication.publishDate = data.response.publication.publishDate.split('-');
 

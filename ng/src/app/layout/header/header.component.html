@@ -8,7 +8,12 @@
     <div id="search-field-container">
         <mat-form-field [ngStyle]="{color:'#fff'}" id="search-field">
             <mat-label >Search structures</mat-label>
-            <input matInput type="text" [(ngModel)]="input" (keyup.enter)="search()">
+            <input matInput id="myInput" type="text" [formControl]="input" [matAutocomplete]="auto" (keyup.enter)="search()">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions[category ? category : 'title'] | async" [value]="option">
+                    {{option}}
+                </mat-option>
+            </mat-autocomplete>
             <button mat-button *ngIf="input" matSuffix mat-icon-button aria-label="Clear" (click)="input=''">
                 <mat-icon>close</mat-icon>
             </button>

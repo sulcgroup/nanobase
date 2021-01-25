@@ -8,6 +8,28 @@ a {
     color: rgba(255, 255, 255, 0.87);
 }
 
+.mat-option {
+    background-color: rgb(51, 51, 51);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.mat-option:hover {
+    background-color: rgb(57, 57, 57);
+}
+
+::ng-deep .cdk-overlay-pane, .mat-autocomplete-panel, .mat-autocomplete, .mat-option , .mat-autocomplete-panel
+{ overflow: overlay; }
+
+::ng-deep #cdk-overlay-0 { overflow: overlay; }
+
+::-webkit-scrollbar-track-piece:start {
+    background-color: black;
+}
+
+::-webkit-scrollbar-track-piece:end {
+    background-color: black;
+}
+
 /* Flex Parent */
 .header-container {
     z-index: 10;
@@ -81,9 +103,6 @@ a {
     margin: 0!important;
 }
 
-/* ::ng-deep .ng-tns-c64-1 {
-    height: 30px!important;
-} */
 
 ::ng-deep .mat-form-field{
     margin-bottom: -1.25em!important;

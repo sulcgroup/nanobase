@@ -61,6 +61,11 @@ def get_random_structures(count):
 def get_recent_tags(count):
 	return structure.get_recent_tags(int(count))
 
+@app.route('/api/tags/autofill/<count>', methods=['GET'])
+def get_autofill(count):
+	return structure.get_autofill(int(count))
+	
+
 @app.route('/api/search/<input>/<category>', methods=['GET'])
 def search(input, category):
 	return structure.search(input, category)

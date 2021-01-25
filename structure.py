@@ -30,9 +30,12 @@ get_max_structure_id = ('SELECT MAX(id) FROM Structures')
 recent_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY Structures.uploadDate DESC LIMIT %s')
 random_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY RAND() LIMIT %s')
 
-recent_applications_query = ('SELECT application FROM Applications WHERE application in (SELECT application Id FROM (SELECT ApplicationsJoin.applicationId, S.uploadDate FROM (SELECT Structures.id, Structures.uploadDate FROM Structures) as S INNER JOIN ApplicationsJoin ON S.id = ApplicationsJoin.structureId ORDER BY uploadDate DESC LIMIT %s) as A)')
-recent_modifications_query = ('SELECT modification FROM Modifications WHERE modification in (SELECT modification Id FROM (SELECT ModificationsJoin.modificationId, S.uploadDate FROM (SELECT Structures.id, Structures.uploadDate FROM Structures) as S INNER JOIN ModificationsJoin ON S.id = ModificationsJoin.structureId ORDER BY uploadDate DESC LIMIT %s) as A)')
-recent_keywords_query = ('SELECT keyword FROM Keywords WHERE keyword in (SELECT keyword Id FROM (SELECT KeywordsJoin.keywordId, S.uploadDate FROM (SELECT Structures.id, Structures.uploadDate FROM Structures) as S INNER JOIN KeywordsJoin ON S.id = KeywordsJoin.structureId ORDER BY uploadDate DESC LIMIT %s) as A)')
+recent_titles_query = ('SELECT DISTINCT title FROM Structures ORDER BY uploadDate DESC LIMIT %s')
+recent_username_query = ('SELECT DISTINCT Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY Structures.uploadDate LIMIT %s')
+recent_applications_query = ('SELECT DISTINCT application FROM Applications WHERE application in (SELECT application Id FROM (SELECT ApplicationsJoin.applicationId, S.uploadDate FROM (SELECT Structures.id, Structures.uploadDate FROM Structures) as S INNER JOIN ApplicationsJoin ON S.id = ApplicationsJoin.structureId ORDER BY uploadDate DESC LIMIT %s) as A)')
+recent_modifications_query = ('SELECT DISTINCT modification FROM Modifications WHERE modification in (SELECT modification Id FROM (SELECT ModificationsJoin.modificationId, S.uploadDate FROM (SELECT Structures.id, Structures.uploadDate FROM Structures) as S INNER JOIN ModificationsJoin ON S.id = ModificationsJoin.structureId ORDER BY uploadDate DESC LIMIT %s) as A)')
+recent_keywords_query = ('SELECT DISTINCT keyword FROM Keywords WHERE keyword in (SELECT keyword Id FROM (SELECT KeywordsJoin.keywordId, S.uploadDate FROM (SELECT Structures.id, Structures.uploadDate FROM Structures) as S INNER JOIN KeywordsJoin ON S.id = KeywordsJoin.structureId ORDER BY uploadDate DESC LIMIT %s) as A)')
+recent_authors_query = ('SELECT DISTINCT author FROM Authors WHERE author in (SELECT author Id FROM (SELECT AuthorsJoin.authorId, S.uploadDate FROM (SELECT Structures.id, Structures.uploadDate FROM Structures) as S INNER JOIN AuthorsJoin ON S.id = AuthorsJoin.structureId ORDER BY uploadDate DESC LIMIT %s) as A)')
 
 get_applications_query = ('SELECT application FROM Applications WHERE id IN (SELECT applicationId FROM ApplicationsJoin WHERE structureId = %s)')
 get_modifications_query = ('SELECT modification FROM Modifications WHERE id IN (SELECT modificationId FROM ModificationsJoin WHERE structureId = %s)')
@@ -183,6 +186,32 @@ def get_recent_tags(count):
     connection.close()
 
     return {'applications': applications, 'modifications': modifications, 'keywords': keywords}
+
+def get_autofill(count):
+    connection = database.pool.get_connection()
+    with connection.cursor() as cursor:
+        cursor.execute(recent_applications_query, (count))
+        applications = [app[0] for app in cursor.fetchall()]
+        cursor.execute(recent_modifications_query, (count))
+        modifications = [mod[0] for mod in cursor.fetchall()]
+        cursor.execute(recent_keywords_query, (count))
+        keywords = [key[0] for key in cursor.fetchall()]
+        cursor.execute(recent_authors_query, (count))
+        authors = [author[0] for author in cursor.fetchall()]
+        cursor.execute(recent_titles_query, (count))
+        titles = [title[0] for title in cursor.fetchall() if title[0] != '' and title[0] != None]
+        cursor.execute(recent_username_query, (count))
+        names = [names[0] for names in cursor.fetchall()]
+    connection.close()
+
+    return {
+        'title': titles,
+        'user_name': names,
+        'applications': applications,
+        'modifications': modifications,
+        'keywords': keywords,
+        'authors': authors
+    }
 
 def upload_structure(structure, user_id):
     print('Uploading: ', structure)

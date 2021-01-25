@@ -1,5 +1,5 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { HeaderComponent } from './layout/header/header.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
@@ -28,6 +29,7 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
     BrowserAnimationsModule,
     MatInputModule,
     FormsModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatSliderModule,
     MatFormFieldModule,
@@ -35,6 +37,7 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
     MatSelectModule,
     AppRoutingModule,
     HttpClientModule,
+    MatAutocompleteModule
   ],
   providers: [],
   bootstrap: [AppComponent],
