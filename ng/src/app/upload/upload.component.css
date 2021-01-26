@@ -62,3 +62,32 @@ h4 {
 .invisible {
     visibility: hidden!important;
 }
+
+.applications-auto.mat-option {
+    background-color: rgb(104, 0, 122)!important;
+    color: rgba(255, 255, 255, 0.9)!important;
+}
+.applications-auto.mat-option:hover, .applications-auto.mat-option.mat-active {
+    background-color: rgb(118, 28, 134)!important;
+    color: rgba(255, 255, 255, 0.9)!important;
+}
+
+.modifications-auto.mat-option {
+    background-color: rgb(202, 250, 223)!important;
+    color: rgba(0, 0, 0, 0.9)!important;
+}
+.modifications-auto.mat-option:hover, .modifications-auto.mat-option.mat-active {
+    background-color:rgb(175, 233, 200)!important;
+    color: rgba(0, 0, 0, 0.9)!important;
+}
+
+.keywords-auto.mat-option {
+    background-color:rgb(255, 247, 177)!important;
+    color: rgba(0, 0, 0, 0.9)!important;
+}
+.keywords-auto.mat-option:hover, .keywords-auto.mat-option.mat-active {
+    background-color:rgb(240, 231, 155)!important;
+    color: rgba(0, 0, 0, 0.9)!important;
+}
+
+

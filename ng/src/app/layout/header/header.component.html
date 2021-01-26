@@ -14,7 +14,7 @@
                     {{option}}
                 </mat-option>
             </mat-autocomplete>
-            <button mat-button *ngIf="input" matSuffix mat-icon-button aria-label="Clear" (click)="input=''">
+            <button mat-button *ngIf="input.value && input.value != ''" matSuffix mat-icon-button aria-label="Clear" (click)="input.setValue('')">
                 <mat-icon>close</mat-icon>
             </button>
         </mat-form-field>

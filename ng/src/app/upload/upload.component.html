@@ -23,12 +23,15 @@
       <div formArrayName="applications">
         <mat-form-field class="field-container hashtag-field" *ngFor="let application of fieldArray('applications', 1).controls; let i=index" [formGroupName]="i">
           <mat-label *ngIf="i===0">Application(s)</mat-label>
-          <input matInput formControlName="value"
+          <input matInput formControlName="value" [matAutocomplete]="auto"
           [matTooltip]="i===0 ? 'e.g. cancer therapy, nanoelectronics, protein scaffolding, crystallography' : ''" matTooltipClass="tooltip" matTooltipPosition="above">
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option class="applications-auto" *ngFor="let option of filteredOptions.applications[i] | async" [value]="option">{{option}}</mat-option>
+          </mat-autocomplete>
           <button *ngIf="i>0" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('applications', 1, i)">
             <mat-icon>close</mat-icon>
           </button>
-        </mat-form-field>
+        </mat-form-field>                  
         <br>
         <button class="field-button" (mouseup)="addField('applications', 1)" mat-stroked-button>Add field</button>
       </div>
@@ -36,8 +39,11 @@
       <div formArrayName="modifications">
         <mat-form-field class="field-container hashtag-field" *ngFor="let modification of fieldArray('modifications', 1).controls; let i=index" [formGroupName]="i">
           <mat-label *ngIf="i===0">Modification(s)</mat-label>
-          <input matInput formControlName="value"
+          <input matInput formControlName="value" [matAutocomplete]="auto"
           [matTooltip]="i===0 ? 'e.g. AuNP, fluorophore, silica coating, dye, linkers, modified nucleotides' : ''" matTooltipClass="tooltip" matTooltipPosition="above">
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option class="modifications-auto" *ngFor="let option of filteredOptions.modifications[i] | async" [value]="option">{{option}}</mat-option>
+          </mat-autocomplete>
           <button *ngIf="i>0" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('modifications', 1, i)">
             <mat-icon>close</mat-icon>
           </button>
@@ -49,8 +55,11 @@
       <div formArrayName="keywords">
         <mat-form-field class="field-container hashtag-field" *ngFor="let keyword of fieldArray('keywords', 1).controls; let i=index" [formGroupName]="i">
           <mat-label *ngIf="i===0">Keywords</mat-label>
-          <input matInput formControlName="value"
+          <input matInput formControlName="value" [matAutocomplete]="auto"
           [matTooltip]="i===0 ? 'e.g. oxDNA, tile, synthetic biology, molecular factory, NAMD simulation' : ''" matTooltipClass="tooltip" matTooltipPosition="above">
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option class="keywords-auto" *ngFor="let option of filteredOptions.keywords[i] | async" [value]="option">{{option}}</mat-option>
+          </mat-autocomplete>
           <button *ngIf="i>0" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('keywords', 1, i)">
             <mat-icon>close</mat-icon>
           </button>

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { FileInput } from 'ngx-material-file-input';
+import { map, startWith } from 'rxjs/operators';
 import { FormService, ApiService, StructureUpload, UserService, StructureService, User } from '../core';
 
 const required = ['', Validators.required];
@@ -27,11 +28,24 @@ export class UploadComponent implements OnInit {
   fileGroup: FormGroup;
   miscGroup: FormGroup;
 
+  categories = ['applications', 'modifications', 'keywords'];
+  options = {
+    applications: [],
+    modifications: [],
+    keywords: [],
+  };
+  filteredOptions = {
+    applications: [[]],
+    modifications: [[]],
+    keywords: [[]]
+  };
+
   constructor(
     private fb: FormBuilder,
     public formService: FormService,
     private userService: UserService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private structService: StructureService
   ) { }
 
   ngOnInit(): void {
@@ -41,9 +55,9 @@ export class UploadComponent implements OnInit {
     this.structureGroup = this.fb.group({
       name: required,
       type: required,
-      applications: this.fb.array([this.fb.group({ value: required })]),
-      modifications: this.fb.array([this.fb.group({ value: required })]),
-      keywords: this.fb.array([this.fb.group({ value: required })]),
+      applications: this.fb.array([this.fb.group({ value: required, filteredOptions: [] })]),
+      modifications: this.fb.array([this.fb.group({ value: required, filteredOptions: [] })]),
+      keywords: this.fb.array([this.fb.group({ value: required, filteredOptions: [] })]),
       description: ['', Validators.compose([Validators.required, Validators.maxLength(300)])],
     });
 
@@ -84,6 +98,28 @@ export class UploadComponent implements OnInit {
       this.publicationGroup.get('link').updateValueAndValidity();
       this.publicationGroup.get('licensing').updateValueAndValidity();
     });
+
+    this.getAutofill(100);
+  }
+
+  getAutofill(count: number): void {
+    this.structService.getRecentTags(count).subscribe(
+      data => this.options = data,
+      err => console.log('err', err)
+    );
+    // tslint:disable: no-string-literal
+    for (const type of this.categories) {
+      this.filteredOptions[type][0] =
+      this.structureGroup.get(type)['controls'][0]['controls'].value.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, type))
+      );
+    }
+  }
+
+  private _filter(value: any, category: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.options[category].filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
 
   submit(): void {
@@ -146,12 +182,6 @@ export class UploadComponent implements OnInit {
     };
   }
 
-  // updateDescription(description: string, type: string, index: number): void {
-  //   console.log(this.fileGroup.controls[type].value[index].contents)
-  //   this.fileGroup.controls[type].value[index].description = description;
-  //   console.log(this.fileGroup.controls[type].value[index].contents)
-  // }
-
   fieldArray(type: string, group: number): FormArray {
     switch (group) {
       case 1: return this.structureGroup.get(type) as FormArray;
@@ -164,13 +194,29 @@ export class UploadComponent implements OnInit {
   addField(type: string, group: number): void {
     const limit = (type === 'authors') ? 20 : 10;
     if (this.fieldArray(type, group).value.length < limit) {
-      const newField = (group === 3) ? this.fb.group(fileForm) : this.fb.group({ value: required });
-      this.fieldArray(type, group).push(newField);
+      console.log(type, this.categories, type in this.categories);
+      if (this.categories.includes(type)) {
+        this.fieldArray(type, group).push(this.fb.group({ value: required }));
+        const i = this.filteredOptions[type].length;
+        this.filteredOptions[type].push([]);
+        this.filteredOptions[type][i] =
+        this.structureGroup.get(type)['controls'][i]['controls'].value.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value, type))
+        );
+      }
+      else {
+        const newField = (group === 3) ? this.fb.group(fileForm) : this.fb.group({ value: required });
+        this.fieldArray(type, group).push(newField);
+      }
     }
   }
 
   removeField(type: string, group: number, i: number): void {
     this.fieldArray(type, group).removeAt(i);
+    if (this.categories.includes(type)) {
+      this.filteredOptions[type].splice(i, 1);
+    }
   }
 
   disableForm(): void {

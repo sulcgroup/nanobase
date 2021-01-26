@@ -20,7 +20,7 @@ import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [UploadComponent],
@@ -42,7 +42,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MaterialFileInputModule,
     MatRadioModule,
     MatCheckboxModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatAutocompleteModule
   ],
   providers: [
     MatDatepickerModule,

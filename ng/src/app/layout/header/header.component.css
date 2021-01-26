@@ -9,12 +9,12 @@ a {
 }
 
 .mat-option {
-    background-color: rgb(51, 51, 51);
-    color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(51, 51, 51)!important;
+    color: rgba(255, 255, 255, 0.9)!important;
 }
 
-.mat-option:hover {
-    background-color: rgb(57, 57, 57);
+.mat-option:hover, .mat-option.mat-active {
+    background-color: rgb(61, 61, 61)!important;
 }
 
 ::ng-deep .cdk-overlay-pane, .mat-autocomplete-panel, .mat-autocomplete, .mat-option , .mat-autocomplete-panel

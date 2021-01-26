@@ -10,7 +10,6 @@ import { Structure, StructureCover } from '../models/structure.model';
 export class StructureService {
   constructor(private apiService: ApiService) { }
 
-  // TODO: Add count functionality
   getRecent(count: number): Observable<Array<StructureCover>> {
     return this.apiService.get(`/structure/recent/${count}`);
   }
