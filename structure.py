@@ -214,7 +214,7 @@ def get_autofill(count):
     }
 
 def upload_structure(structure, user_id):
-    print('Uploading: ', structure)
+    # print('Uploading: ', structure)
     # Convert dicts to arrays
     applications, modifications, keywords, authors = [], [], [], []
     structure['applications'] = [d['value'] for d in structure['applications'] if d['value'] != '']
@@ -259,7 +259,7 @@ def upload_files(id, structure):
                 file_descriptions[i] += f['description'] + '|'
             except TypeError:
                 continue
-            write_file(file_name, f['contents'], file_path + '/' + file_name)
+            write_file(file_name, f['contents'], file_path)
     
     return file_names, file_descriptions
 
