@@ -1,0 +1,6 @@
+START_DAEMON=true /etc/default/elasticsearch
+ES_USER=elasticsearch /etc/default/elasticsearch
+ES_GROUP=elasticsearch /etc/default/elasticsearch
+START_DAEMON=true /etc/default/elasticsearch
+ES_USER=elasticsearch /etc/default/elasticsearch
+ES_GROUP=elasticsearch /etc/default/elasticsearch

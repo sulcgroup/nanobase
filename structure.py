@@ -237,7 +237,7 @@ def upload_structure(structure, user_id):
     connection.close()
 
     index_structure(id, structure, first_name, last_name)
-    return structure
+    return id
 
 # Write all files into filesystem
 def upload_files(id, structure):
@@ -278,7 +278,7 @@ def insert_structure(id, structure, user_id, file_names, file_descriptions, conn
         file_names[0][:-1], file_names[1][:-1], file_names[2][:-1], file_names[3][:-1], file_names[4][:-1], file_names[5][:-1],
         structure['displayImage'],
         file_descriptions[0][:-1], file_descriptions[1][:-1], file_descriptions[2][:-1], file_descriptions[3][:-1], file_descriptions[4][:-1], file_descriptions[5][:-1],
-        1 if structure['isPrivate'] == 'true' else 0,
+        1 if structure['isPrivate'] == True else 0,
         structure['uploadDate'] if structure['uploadDate'] else date.today().strftime('%Y-%m-%d'),
     )
     
@@ -331,6 +331,7 @@ def index_structure(id, structure, first_name, last_name):
         'modifications': structure['modifications'],
         'keywords': structure['keywords'],
         'authors': structure['authors'],
+        'private': 1 if structure['isPrivate'] == True else 0
     })
 
 def edit_structure(new_struct):
@@ -394,12 +395,19 @@ def write_file(name, contents, path):
 def search(input, category):
     query = {
         'query': {
-            'match': {
-                category: {
-                    'query': input,
-                    'fuzziness': 'AUTO'
-                }
-            }
+            'bool': {
+                'must': [
+                    {'match': {
+                        'private': 0
+                    }},
+                    {'match': {
+                        category: {
+                            'query': input,
+                            'fuzziness': 'AUTO'
+                        }
+                    }}
+                ],
+            },
         }
     }
 

@@ -305,12 +305,12 @@
     <form [formGroup]="miscGroup">
       <br>
       <ng-template matStepLabel>Upload</ng-template>
-      <mat-checkbox formControlName="isPrivate" [value]="true" color="accent"
-      matTooltip="If unchecked, only people with a link will be able to view your structure" matTooltipClass="tooltip" matTooltipPosition="right">
-        Upload as public structure
+      <mat-checkbox formControlName="isPrivate" [value]="false" color="accent"
+      matTooltip="If checked, only those with a link will be able to view your structure" matTooltipClass="tooltip" matTooltipPosition="right">
+        Upload as private structure
       </mat-checkbox><br><br>
 
-      <mat-checkbox formControlName="isDelayed" [value]="true" color="accent">
+      <mat-checkbox *ngIf="miscGroup.controls['isPrivate'].value" formControlName="isDelayed" [value]="true" color="accent">
         Make public at a later date
       </mat-checkbox><br><br>
 

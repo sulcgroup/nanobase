@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { FileInput } from 'ngx-material-file-input';
 import { map, startWith } from 'rxjs/operators';
 import { FormService, ApiService, StructureUpload, UserService, StructureService, User } from '../core';
@@ -43,6 +44,7 @@ export class UploadComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public formService: FormService,
+    private router: Router,
     private userService: UserService,
     private apiService: ApiService,
     private structService: StructureService
@@ -86,7 +88,7 @@ export class UploadComponent implements OnInit {
     });
 
     this.miscGroup = this.fb.group({
-      isPrivate: this.fb.control(true),
+      isPrivate: this.fb.control(false),
       isDelayed: this.fb.control(false),
       uploadDate: this.fb.control('')
     });
@@ -124,7 +126,7 @@ export class UploadComponent implements OnInit {
 
   submit(): void {
     const structure: StructureUpload = this.processForm();
-    // console.log('Uploading structure...', structure);
+    console.log('Uploading structure...', structure);
     this.loadBar = true;
     this.disableForm();
 
@@ -134,6 +136,7 @@ export class UploadComponent implements OnInit {
         console.log('UPLOAD SUCCESS', data);
         this.loadBar = false;
         this.enableForm();
+        this.router.navigateByUrl(`/structure/${data.id}`);
       },
       err => {
         console.log('UPLOAD ERROR', err);
