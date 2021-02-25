@@ -82,6 +82,17 @@
     border-bottom: 1px solid rgb(91, 91, 92);
 }
 
+.invisible {
+    visibility: hidden!important;
+}
+
+#progress-bar {
+    position: fixed!important;
+    z-index: 100!important;
+    bottom: 92.1%!important;
+    right: 1px!important;
+}
+
 .chip {
     font-weight: normal;
     cursor: pointer;

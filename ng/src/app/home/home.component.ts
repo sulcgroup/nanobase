@@ -9,6 +9,8 @@ import { StructureService, StructureCover } from 'src/app/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  loadBar = true;
+  loadBarMode = 'query';
   structures: Array<StructureCover> = [];
   oldHeight = 0;
   message: string;
@@ -105,8 +107,12 @@ export class HomeComponent implements OnInit {
         data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
         this.structures = data;
         console.log('Loaded recent structures: ', this.structures);
+        this.loadBar = false;
       },
-      err => console.log('err', err)
+      err => {
+        console.log('err', err);
+        this.loadBar = false;
+      }
     );
   }
 
