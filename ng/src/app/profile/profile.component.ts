@@ -20,6 +20,12 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void { }
 
+  viewStructures(): void {
+    this.userService.getUserId().subscribe(id => {
+      this.router.navigateByUrl(`/?input=${id}&category=user_id`);
+    });
+  }
+
   logout(): void {
     this.userService.logout().subscribe(
       data => data.response === 'OK' ? this.router.navigateByUrl('/') : console.log(data),

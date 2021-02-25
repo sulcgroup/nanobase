@@ -21,10 +21,11 @@ export class HomeComponent implements OnInit {
   categories = {
     title: 'title',
     user_name: 'user',
+    user_id: 'user_id',
     applications: 'application',
     modifications: 'modification',
     keywords: 'keyword',
-    authors: 'author',
+    authors: 'author'
   };
 
   constructor(private router: Router, private route: ActivatedRoute, private structService: StructureService) { }
@@ -72,7 +73,12 @@ export class HomeComponent implements OnInit {
         else {
           data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
           this.structures = data;
-          this.message = `Showing structures with ${this.categories[category]} "${input}"...`;
+          if (this.categories[category] === 'user_id') {
+            this.message = 'Showing your structures...';
+          }
+          else {
+            this.message = `Showing structures with ${this.categories[category]} "${input}"...`;
+          }
           console.log('Loaded searched structures: ', this.structures);
         }
       },

@@ -20,6 +20,7 @@ es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 # print(es.search(index='structures', body={'query': {'match_all' : {}}}))
 
 get_structure_query = ('SELECT Structures.*, Users.firstName, Users.lastName, Users.institution FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.id = %s')
+get_structures_by_user = ('SELECT id FROM Structures WHERE userId = %s')
 insert_structure_query = (
     'REPLACE INTO Structures'
     '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `structureDescriptions`, `expProtocolDescriptions`, `expResultsDescriptions`, `simProtocolDescriptions`, `simResultsDescriptions`, `imageDescriptions`, `private`, `uploadDate`)'
@@ -392,7 +393,33 @@ def write_file(name, contents, path):
         file.write(contents)
     file.close()
 
+def search_by_user(user_id):
+    connection = database.pool.get_connection()
+    with connection.cursor() as cursor:
+        cursor.execute(get_structures_by_user, (user_id))
+        ids = cursor.fetchall()
+        cursor.execute(get_by_id, ({'ids': tuple(ids)}))
+        structures = cursor.fetchall()
+    connection.close()
+
+    response = []
+    for structure in structures:
+        response.append({
+            'title': structure[0],
+            'uploadDate': structure[1],
+            'description': structure[2],
+            'displayImage': structure[3],
+            'id': structure[4],
+            'firstName': structure[5],
+            'lastName': structure[6]
+        })
+    
+    return jsonify(response)
+
 def search(input, category):
+    if category == 'user_id':
+        return search_by_user(input)
+
     query = {
         'query': {
             'bool': {
@@ -419,7 +446,7 @@ def search(input, category):
 
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
-        cursor.execute(get_by_id, ({'ids':tuple(ids)}))
+        cursor.execute(get_by_id, ({'ids': tuple(ids)}))
         structures = cursor.fetchall()
     connection.close()
 

@@ -31,6 +31,10 @@ export class UserService {
     return this.currentUserSubject.value;
   }
 
+  getUserId(): Observable<any> {
+    return this.apiService.get(`/users/id`);
+  }
+
   updatePassword(oldPass: string, newPass: string): Observable<any> {
     return this.apiService.put('/users/password', { old_pass: oldPass, new_pass: newPass})
     .pipe(map(data => data.response));

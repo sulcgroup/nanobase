@@ -21,6 +21,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @NgModule({
   declarations: [UploadComponent],
@@ -45,8 +46,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatProgressBarModule,
     MatAutocompleteModule
   ],
-  providers: [
-    MatDatepickerModule,
-  ]
+  providers: [MatDatepickerModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class UploadModule { }

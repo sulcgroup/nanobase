@@ -65,7 +65,6 @@ def get_recent_tags(count):
 def get_autofill(count):
 	return structure.get_autofill(int(count))
 	
-
 @app.route('/api/search/<input>/<category>', methods=['GET'])
 def search(input, category):
 	return structure.search(input, category)
@@ -79,6 +78,10 @@ def register():
 	if request.method == 'POST':
 		user_data = request.json['user']
 		return {'response':auth.register_user(user_data)}
+
+@app.route('/api/users/id', methods=['GET'])
+def get_user_id():
+	return str(get_session_id())
 
 @app.route('/api/users/verify', methods=['PUT'])
 def verify():

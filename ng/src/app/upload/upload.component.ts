@@ -136,7 +136,7 @@ export class UploadComponent implements OnInit {
         console.log('UPLOAD SUCCESS', data);
         this.loadBar = false;
         this.enableForm();
-        this.router.navigateByUrl(`/structure/${data.id}`);
+        this.router.navigateByUrl(`/structure/${data.response}`);
       },
       err => {
         console.log('UPLOAD ERROR', err);
