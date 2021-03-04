@@ -11,7 +11,7 @@ try:
     open('/var/www/nanobase/nanobase/nanobase_email/login.txt', 'r')
     path = '/var/www/nanobase/nanobase/nanobase_email/'
 except FileNotFoundError:
-    path = '/vagrant/nanobase/nanobase_email/'
+    path = '/opt/nanobase/nanobase_email/'
 
 try:
 	credentials = open(path + 'login.txt', 'r').read().split(', ')
