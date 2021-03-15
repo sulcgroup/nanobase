@@ -8,10 +8,10 @@ credentials=''
 
 # Determine if we are in the server or the vm
 try:
-    open('/var/www/nanobase/nanobase/nanobase_email/login.txt', 'r')
-    path = '/var/www/nanobase/nanobase/nanobase_email/'
-except FileNotFoundError:
+    open('/opt/nanobase/nanobase_email/login.txt', 'r')
     path = '/opt/nanobase/nanobase_email/'
+except FileNotFoundError:
+    path = '/vagrant/nanobase/nanobase_email/'
 
 try:
 	credentials = open(path + 'login.txt', 'r').read().split(', ')
