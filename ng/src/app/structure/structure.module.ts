@@ -17,7 +17,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { IvyCarouselModule } from 'angular-responsive-carousel';
 
@@ -36,11 +37,13 @@ import { IvyCarouselModule } from 'angular-responsive-carousel';
     MatTabsModule,
     MatBadgeModule,
     MatListModule,
+    MatSelectModule,
     MatSlideToggleModule,
     FormsModule,
     MaterialFileInputModule,
     MatFormFieldModule,
     MatInputModule,
+    MatProgressBarModule,
     IvyCarouselModule
   ]
 })

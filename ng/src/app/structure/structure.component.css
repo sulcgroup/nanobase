@@ -10,6 +10,13 @@
     display: inline;
 }
 
+.progress-bar {
+    position: absolute!important;
+    bottom: 92.1%!important;
+    left: 180px!important;
+    z-index: 0!important;
+}
+
 #section-one {
     display: flex;
     flex-direction: row;
@@ -53,6 +60,10 @@
     display: inline!important;
 }
 
+.invisible {
+    visibility: hidden!important;
+}
+
 #oxview-frame {
     height: 450px;
     width: 97%;
@@ -61,6 +72,14 @@
     box-shadow: 0 0 7px 2px rgb(190, 190, 190);
     resize: both;
     overflow: auto;
+}
+
+::ng-deep .tag-input {
+    padding-bottom: 2px!important;
+    border-bottom: 1px solid rgb(44, 44, 44);
+    display: inline!important;
+    flex: none!important;
+    width: 125px!important;
 }
 
 #header-divider {
@@ -85,6 +104,30 @@
     margin-top: 0px;
     margin-bottom: 5px;
 }
+
+
+/* ::ng-deep .ng-tns-c64-8 {
+    padding: 1px 10px 0 10px!important;
+} */
+
+.field-container {
+    width: 175px;
+    position: relative;
+    top: 5px;
+}
+
+.ng-tns-c86-9 {
+    color: black!important;
+}
+::ng-deep .ng-tns-c86-10 {
+    color: black!important;
+}
+::ng-deep .mat-select {
+    color: black!important;
+}
+/* .ng-star-inserted {
+    color:black!important;
+} */
 
 carousel {
     z-index: 0;
@@ -138,3 +181,4 @@ carousel {
     background-color: rgba(255, 208, 50, 0.8);
     color: rgba(0, 0, 0, 0.9);
 }
+

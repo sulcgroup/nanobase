@@ -3,6 +3,8 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FileInput } from 'ngx-material-file-input';
 import { Structure, StructureService, User, FormService } from '../core';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'app-structure',
@@ -18,6 +20,11 @@ export class StructureComponent implements OnInit {
   isAuthor: boolean;
   isEditing = false;
   hasBeenEdited = false;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  loadBar = true;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   confirmMessage = 'Your unsaved changes will be lost. Are you sure you want to switch to public view?';
 
   constructor(private structureService: StructureService,
@@ -89,9 +96,16 @@ export class StructureComponent implements OnInit {
   }
 
   save(): void {
+    this.loadBar = true;
     this.structureService.edit(this.structure).subscribe(
-      data => console.log('Saved structure: ', data),
-      err => console.log('err', err)
+      data => {
+        this.loadBar = false;
+        console.log('Saved structure: ', data);
+      },
+      err => {
+        this.loadBar = false;
+        console.log('err', err);
+      }
     );
     this.hasBeenEdited = false;
   }
@@ -108,6 +122,25 @@ export class StructureComponent implements OnInit {
 
   routeTag(input: string, category: string): void {
     this.router.navigateByUrl(`/?input=${input}&category=${category}`);
+  }
+
+  removeTag(index: number, type: string): void {
+    this.hasBeenEdited = true;
+    this.structure.tags[type].splice(index, 1);
+  }
+
+  addTag(event: MatChipInputEvent, type: string): void {
+    this.hasBeenEdited = true;
+    const input = event.input;
+    const value = event.value;
+
+    if ((value || '').trim()) {
+      this.structure.tags[type].push(value.trim());
+    }
+
+    if (input) {
+      input.value = '';
+    }
   }
 
   formatDate(date: Date): string {

@@ -50,14 +50,17 @@ get_by_id = ('SELECT Structures.title, Structures.uploadDate, Structures.descrip
 get_app_id = ('SELECT id FROM Applications WHERE application = %s')
 insert_app = ('INSERT INTO Applications (application) VALUES (%s)')
 insert_app_join = ('INSERT INTO ApplicationsJoin (structureId, applicationId) VALUES (%s, %s)')
+delete_app = ('DELETE Applications, ApplicationsJoin FROM Applications INNER JOIN ApplicationsJoin on Applications.id = ApplicationsJoin.applicationId WHERE Applications.application = %s')
 
 get_mod_id = ('SELECT id FROM Modifications WHERE modification = %s')
 insert_mod = ('INSERT INTO Modifications (modification) VALUES (%s)')
 insert_mod_join = ('INSERT INTO ModificationsJoin (structureId, modificationId) VALUES (%s, %s)')
+delete_mod = ('DELETE Modifications, ModificationsJoin FROM Modifications INNER JOIN ModificationsJoin on Modifications.id = ModificationsJoin.modificationId WHERE Modifications.modification = %s')
 
 get_keyword_id = ('SELECT id FROM Keywords WHERE keyword = %s')
 insert_keyword = ('INSERT INTO Keywords (keyword) VALUES (%s)')
 insert_keyword_join = ('INSERT INTO KeywordsJoin (structureId, keywordId) VALUES (%s, %s)')
+delete_keyword = ('DELETE Keywords, KeywordsJoin FROM Keywords INNER JOIN KeywordsJoin on Keywords.id = KeywordsJoin.keywordId WHERE Keywords.keyword = %s')
 
 get_author_id = ('SELECT id FROM Authors WHERE author = %s')
 insert_author = ('INSERT INTO Authors (author) VALUES (%s)')
@@ -363,9 +366,60 @@ def edit_structure(new_struct):
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
         cursor.execute(insert_structure_query, (structure_data))
-    connection.close()
+    
 
     edit_files(new_struct['files'], str(new_struct['id']))
+
+    with connection.cursor() as cursor:
+        cursor.execute(get_applications_query, (new_struct['id']))
+        applications = [x[0] for x in cursor.fetchall()]
+        cursor.execute(get_modifications_query, (new_struct['id']))
+        modifications = [x[0] for x in cursor.fetchall()]
+        cursor.execute(get_keywords_query, (new_struct['id']))
+        keywords = [x[0] for x in cursor.fetchall()]
+    
+        for application in applications:
+            print(new_struct['tags'])
+            if application not in new_struct['tags']['applications']:
+                cursor.execute(delete_app, (application))
+        for application in new_struct['tags']['applications']:
+            if application not in applications:
+                cursor.execute(get_app_id, (application))
+                tag_id = cursor.fetchone()
+                if not tag_id:
+                    cursor.execute(insert_app, (application))
+                    cursor.execute(get_last_id)
+                    tag_id = cursor.fetchone()
+                cursor.execute(insert_app_join, (new_struct['id'], tag_id))
+        
+        for modification in modifications:
+            if modification not in new_struct['tags']['modifications']:
+                cursor.execute(delete_mod, (modification))
+        for modification in new_struct['tags']['modifications']:
+            if modification not in modifications:
+                cursor.execute(get_mod_id, (modification))
+                tag_id = cursor.fetchone()
+                if not tag_id:
+                    cursor.execute(insert_mod, (modification))
+                    cursor.execute(get_last_id)
+                    tag_id = cursor.fetchone()
+                cursor.execute(insert_mod_join, (new_struct['id'], tag_id))
+        
+        for keyword in keywords:
+            if keyword not in new_struct['tags']['keywords']:
+                cursor.execute(delete_keyword, (keyword))
+        for keyword in new_struct['tags']['keywords']:
+            if keyword not in keywords:
+                cursor.execute(get_keyword_id, (keyword))
+                tag_id = cursor.fetchone()
+                if not tag_id:
+                    cursor.execute(insert_keyword, (keyword))
+                    cursor.execute(get_last_id)
+                    tag_id = cursor.fetchone()
+                cursor.execute(insert_keyword_join, (new_struct['id'], tag_id))
+
+
+    connection.close()
     return 'OK'
 
 def edit_files(new_files, id):

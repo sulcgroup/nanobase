@@ -1,4 +1,5 @@
 
+<!-- <mat-progress-bar class='progress-bar' [ngClass]="{'invisible': !loadBar}" mode="indeterminate"></mat-progress-bar> -->
 <div id="structure-container" *ngIf="structure">
     <div id="header">
         <h1 id="title">{{structure?.title}}</h1>
@@ -15,24 +16,75 @@
             <iframe id="oxview-frame" name="oxview-frame" src="https://sulcgroup.github.io/oxdna-viewer/" (load)="onLoadHandler()"></iframe>
         </div>
         <div id="structure-info-container">
-            <p>{{structure.description}}</p>
-            <p><b>Structure type: </b>{{structure.type}}</p>
+            <p>
+                <b>Description: </b>
+                <span *ngIf="!isEditing">{{structure.description}}</span>
+                <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
+                    <input (change)="edited()" matInput [(ngModel)]="structure.description" [placeholder]="'Description for ' + structure.title">
+                </mat-form-field>
+            </p>
+            <p><b>Structure type: </b>
+                <span *ngIf="!isEditing">{{structure.type}}</span>
+                <mat-form-field *ngIf="isEditing" class="field-container" appearance="fill">
+                    <mat-label>Molecule Type</mat-label>
+                    <mat-select [(value)]="structure.type" (selectionChange)="edited()">
+                      <mat-option value="DNA">DNA</mat-option>
+                      <mat-option value="RNA">RNA</mat-option>
+                      <mat-option value="DNA/RNA">DNA/RNA hybrid</mat-option>
+                      <mat-option value="Nucleic acid/protein hybrid">Nucleic acid/protein hybrid</mat-option>
+                      <mat-option value="Other">other</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </p>
             <p><b>Applications: </b>
-                <mat-chip-list class="chip-list">
+                <mat-chip-list *ngIf="!isEditing" class="chip-list">
                     <mat-chip class="application chip" (click)="routeTag(application, 'applications')" *ngFor="let application of structure.tags.applications">{{application}}</mat-chip>
-                    <mat-chip class="keyword chip" *ngIf="structure.tags.applications.length === 0">None</mat-chip>
+                    <mat-chip class="application chip" *ngIf="structure.tags.applications.length === 0">None</mat-chip>
+                </mat-chip-list>
+                <mat-chip-list *ngIf="isEditing" #applicationList class="chip-list">
+                    <mat-chip [removable]="removable" (removed)="removeTag(i, 'applications')" class="application chip" *ngFor="let application of structure.tags.applications;let i=index">{{application}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <mat-chip class="application chip" *ngIf="structure.tags.applications.length === 0">None</mat-chip>
+                    <input matInput class="tag-input" placeholder="New application..."
+                        [matChipInputFor]="applicationList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="addTag($event, 'applications')">
                 </mat-chip-list>
             </p>
             <p><b>Modifications: </b>
-                <mat-chip-list class="chip-list">
+                <mat-chip-list *ngIf="!isEditing" class="chip-list">
                     <mat-chip class="modification chip" (click)="routeTag(modification, 'modifications')" *ngFor="let modification of structure.tags.modifications">{{modification}}</mat-chip>
-                    <mat-chip class="keyword chip" *ngIf="structure.tags.modifications.length === 0">None</mat-chip>
+                    <mat-chip class="modification chip" *ngIf="structure.tags.modifications.length === 0">None</mat-chip>
+                </mat-chip-list>
+                <mat-chip-list *ngIf="isEditing" #modificationList class="chip-list">
+                    <mat-chip [removable]="removable" (removed)="removeTag(i, 'modifications')" class="modification chip" *ngFor="let modification of structure.tags.modifications;let i=index">{{modification}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <mat-chip class="modification chip" *ngIf="structure.tags.modifications.length === 0">None</mat-chip>
+                    <input matInput class="tag-input" placeholder="New modification..."
+                        [matChipInputFor]="modificationList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="addTag($event, 'modifications')">
                 </mat-chip-list>
             </p>
             <p><b>Keywords: </b>
-                <mat-chip-list class="chip-list">
+                <mat-chip-list *ngIf="!isEditing" class="chip-list">
                     <mat-chip class="keyword chip" (click)="routeTag(keyword, 'keywords')" *ngFor="let keyword of structure.tags.keywords">{{keyword}}</mat-chip>
                     <mat-chip class="keyword chip" *ngIf="structure.tags.keywords.length === 0">None</mat-chip>
+                </mat-chip-list>
+                <mat-chip-list *ngIf="isEditing" #keywordList class="chip-list">
+                    <mat-chip [removable]="removable" (removed)="removeTag(i, 'keywords')" class="keyword chip" *ngFor="let keyword of structure.tags.keywords;let i=index">{{keyword}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <mat-chip class="keyword chip" *ngIf="structure.tags.keywords.length === 0">None</mat-chip>
+                    <input matInput class="tag-input" placeholder="New keyword..."
+                        [matChipInputFor]="keywordList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="addTag($event, 'keywords')">
                 </mat-chip-list>
             </p>
         </div>
@@ -88,7 +140,7 @@
                             <a class='file-download' href="{{'file/'+structure.id+'/expProtocol/'+file.name}}" download>{{file.name}}</a>&nbsp;
                             <span *ngIf="!isEditing" class="file-description">{{file.description}}</span>
                             <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
-                                <input matInput [(ngModel)]="structure.files.expProtocol[i].description" [placeholder]="'Description for '+file.name">
+                                <input matInput (change)="edited()" [(ngModel)]="structure.files.expProtocol[i].description" [placeholder]="'Description for '+file.name">
                             </mat-form-field>
                         </div>
                     </mat-list-item>
@@ -108,7 +160,7 @@
                             <a class='file-download' href="{{'file/'+structure.id+'/expResults/'+file.name}}" download>{{file.name}}</a>&nbsp;
                             <span *ngIf="!isEditing" class="file-description">{{file.description}}</span>
                             <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
-                                <input matInput [(ngModel)]="structure.files.expResults[i].description" [placeholder]="'Description for '+file.name">
+                                <input matInput (change)="edited()" [(ngModel)]="structure.files.expResults[i].description" [placeholder]="'Description for '+file.name">
                             </mat-form-field>
                         </div>
                     </mat-list-item>
@@ -128,7 +180,7 @@
                             <a class='file-download' href="{{'file/'+structure.id+'/simProtocol/'+file.name}}" download>{{file.name}}</a>&nbsp;
                             <span *ngIf="!isEditing" class="file-description">{{file.description}}</span>
                             <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
-                                <input matInput [(ngModel)]="structure.files.simProtocol[i].description" [placeholder]="'Description for '+file.name">
+                                <input matInput (change)="edited()" [(ngModel)]="structure.files.simProtocol[i].description" [placeholder]="'Description for '+file.name">
                             </mat-form-field>
                         </div>
                     </mat-list-item>
@@ -148,7 +200,7 @@
                             <a class='file-download' href="{{'file/'+structure.id+'/simResults/'+file.name}}" download>{{file.name}}</a>&nbsp;
                             <span *ngIf="!isEditing" class="file-description">{{file.description}}</span>
                             <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
-                                <input matInput [(ngModel)]="structure.files.simResults[i].description" [placeholder]="'Description for '+file.name">
+                                <input matInput (change)="edited()" [(ngModel)]="structure.files.simResults[i].description" [placeholder]="'Description for '+file.name">
                             </mat-form-field>
                         </div>
                     </mat-list-item>

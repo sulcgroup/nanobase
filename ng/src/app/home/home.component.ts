@@ -83,8 +83,12 @@ export class HomeComponent implements OnInit {
           }
           console.log('Loaded searched structures: ', this.structures);
         }
+        this.loadBar = false;
       },
-      err => console.log('err', err)
+      err => {
+        console.log('err', err);
+        this.loadBar = false;
+      }
     );
   }
 
@@ -94,8 +98,12 @@ export class HomeComponent implements OnInit {
         data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
         this.structures.push(...data);
         console.log(`Loaded ${count} more structures: `, data);
+        this.loadBar = false;
       },
-      err => console.log('err', err)
+      err => {
+        console.log('err', err);
+        this.loadBar = false;
+      }
     );
   }
 
