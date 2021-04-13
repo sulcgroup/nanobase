@@ -143,6 +143,10 @@ carousel {
     color: rgb(103, 107, 114);
 }
 
+img {
+    border-radius: 20px!important;
+}
+
 .image-description {
     position: relative;
     bottom: 60px;

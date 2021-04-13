@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+*.log
+.vscode
+.DS_Store
+nohup.out
+nanobase_email/login.txt 

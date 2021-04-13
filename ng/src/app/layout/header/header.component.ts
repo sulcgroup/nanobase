@@ -41,12 +41,6 @@ export class HeaderComponent implements OnInit {
     );
     this.currentURL = window.location.href;
 
-    this.router.events.subscribe(val => {
-      if (val instanceof NavigationEnd) {
-        this.input.setValue('');
-      }
-    });
-
     this.structService.getAutofill(100).subscribe(
       data => this.options = data,
       err => console.log('err', err)

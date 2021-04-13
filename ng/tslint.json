@@ -10,9 +10,6 @@
     "array-type": false,
     "arrow-return-shorthand": true,
     "curly": true,
-    "deprecation": {
-      "severity": "warning"
-    },
     "component-class-suffix": true,
     "contextual-lifecycle": true,
     "directive-class-suffix": true,
