@@ -1,0 +1,30 @@
+<mat-card id="login-container">
+    <mat-card-header id="card-header">
+        <mat-card-title id="login-header">Sign in</mat-card-title>
+        <mat-card-subtitle><a routerLink="/auth/register">Register an account</a></mat-card-subtitle>
+        <mat-card-subtitle><a routerLink="/auth/forgot">Forgot your password?</a></mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="login-input">
+            <mat-form-field appearance="outline">
+              <mat-label>Enter your email</mat-label>
+              <input matInput placeholder="email@example.com" [formControl]="email" autocomplete="new-password">
+              <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Enter your password</mat-label>
+                <input (keydown.enter)="submitForm()" matInput [formControl]="password" [type]="hide ? 'password' : 'text'" autocomplete="new-password">
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="password.invalid">{{getPasswordError()}}</mat-error>
+            </mat-form-field>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <button id="submit-button" class="structure-button" (click)="submitForm()" [disabled]="!(email.valid && password.valid)" mat-raised-button color="primary">
+            Submit
+        </button>
+        <p id="error">{{ error }}</p>
+    </mat-card-actions>
+</mat-card>

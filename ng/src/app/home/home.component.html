@@ -1,0 +1,43 @@
+<mat-progress-bar id="progress-bar" [ngClass]="{'invisible': !loadBar}" mode="{{loadBarMode}}"></mat-progress-bar>
+<div id="content-container">
+    <div id="list-container">
+        <div id="message">{{message}}</div>
+        <mat-card class="structure-container" *ngFor="let structure of structures">
+            <mat-card-header>
+                <mat-card-title>{{structure.title}}</mat-card-title>
+                <mat-card-subtitle>{{structure.lastName}} | {{formatDate(structure.uploadDate)}}</mat-card-subtitle>
+            </mat-card-header>
+            <img class="display-image" mat-card-image src="{{'file/' + structure.id + '/' + structure.displayImage}}" alt="Display Image" *ngIf="structure.displayImage">
+
+            <mat-card-content>
+                <p>{{structure.description}}</p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button class="structure-button" mat-button color="primary" [routerLink]="['/structure', structure.id]">
+                    <mat-icon color="primary">subject</mat-icon>
+                    VIEW STRUCTURE
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    <div id="extras-container">
+        <div class="box">
+            <div class="box-title">Recent applications</div>
+            <mat-chip-list>
+                <mat-chip class="application chip" (click)="routeTag(application, 'applications')" *ngFor="let application of tags?.applications">{{application}}</mat-chip>
+            </mat-chip-list>
+        </div>
+        <div class="box">
+            <div class="box-title">Recent modifications</div>
+            <mat-chip-list>
+                <mat-chip class="modification chip" (click)="routeTag(modification, 'modifications')" *ngFor="let modification of tags?.modifications">{{modification}}</mat-chip>
+            </mat-chip-list>
+        </div>
+        <div class="box">
+            <div class="box-title">Recent keywords</div>
+            <mat-chip-list>
+                <mat-chip class="keyword chip" (click)="routeTag(keyword, 'keywords')" *ngFor="let keyword of tags?.keywords">{{keyword}}</mat-chip>
+            </mat-chip-list>
+        </div>
+    </div>
+</div>

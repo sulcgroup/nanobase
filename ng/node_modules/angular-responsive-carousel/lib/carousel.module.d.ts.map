@@ -1,0 +1,1 @@
+{"version":3,"file":"carousel.module.d.ts","sources":["carousel.module.d.ts"],"names":[],"mappings":";;;AAAA;;;AACA","sourcesContent":["export declare class IvyCarouselModule {\r\n}\r\n"]}

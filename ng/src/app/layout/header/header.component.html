@@ -1,0 +1,42 @@
+<div class="header-container">
+    <div id="header-title-container">
+        <a id="header-title" href="/">
+            Nanobase
+        </a>
+    </div>
+    
+    <div id="search-field-container">
+        <mat-form-field [ngStyle]="{color:'#fff'}" id="search-field">
+            <mat-label >Search structures</mat-label>
+            <input matInput id="myInput" type="text" [formControl]="input" [matAutocomplete]="auto" (keyup.enter)="search()">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions[category ? category : 'title'] | async" [value]="option">
+                    {{option}}
+                </mat-option>
+            </mat-autocomplete>
+            <button mat-button *ngIf="input.value && input.value != ''" matSuffix mat-icon-button aria-label="Clear" (click)="input.setValue('')">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+
+    <div id="category-container">
+        <mat-form-field appearance="standard" floatLabel="never" id="category-field">
+            <mat-label>Search by</mat-label>
+            <mat-select [(ngModel)]="category">
+                <mat-option class="category" value="title">Title</mat-option>
+                <mat-option class="category" value="user_name">User</mat-option>
+                <mat-option class="category" value="applications">Application</mat-option>
+                <mat-option class="category" value="modifications">Modification</mat-option>
+                <mat-option class="category" value="keywords">Keyword</mat-option>
+                <mat-option class="category" value="authors">Author</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div id="sign-in-container">
+        <button id="sign-in" mat-raised-button routerLink="{{user.firstName ? '/profile' : '/auth/login'}}">
+            {{user.firstName ? user.firstName : 'Sign in'}}
+        </button>
+    </div>
+</div>

@@ -1,0 +1,93 @@
+.form-container {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.field-container {
+    width: 200px;
+}
+
+.dropdown-field {
+    margin-top: 15px;
+}
+
+.hashtag-field, .stepper-button {
+    margin-right: 15px;
+}
+
+.description-field, .citation-field, .licensing-field {
+    width: 400px;
+}
+
+.tooltip {
+    font-size: 14px;
+}
+
+.field-button {
+    margin-bottom: 25px;
+    margin-right: 10px;
+}
+
+.multiple-field {
+    margin-right: 10px;
+}
+
+.file-description {
+    width: 25%;
+    min-width: 200px;
+    margin-right: 10px;
+}
+
+.year-field {
+    margin-right: 16px;
+    width: 192px;
+}
+
+.month-field {
+    width: 192px;
+}
+
+mat-radio-button {
+    position: relative;
+    top: 3px;
+}
+
+.field-container {
+    margin-bottom: 0px!important;
+}
+
+h4 {
+    margin-bottom: 5px;
+}
+
+.invisible {
+    visibility: hidden!important;
+}
+
+.applications-auto.mat-option {
+    background-color: rgb(104, 0, 122)!important;
+    color: rgba(255, 255, 255, 0.9)!important;
+}
+.applications-auto.mat-option:hover, .applications-auto.mat-option.mat-active {
+    background-color: rgb(118, 28, 134)!important;
+    color: rgba(255, 255, 255, 0.9)!important;
+}
+
+.modifications-auto.mat-option {
+    background-color: rgb(202, 250, 223)!important;
+    color: rgba(0, 0, 0, 0.9)!important;
+}
+.modifications-auto.mat-option:hover, .modifications-auto.mat-option.mat-active {
+    background-color:rgb(175, 233, 200)!important;
+    color: rgba(0, 0, 0, 0.9)!important;
+}
+
+.keywords-auto.mat-option {
+    background-color:rgb(255, 247, 177)!important;
+    color: rgba(0, 0, 0, 0.9)!important;
+}
+.keywords-auto.mat-option:hover, .keywords-auto.mat-option.mat-active {
+    background-color:rgb(240, 231, 155)!important;
+    color: rgba(0, 0, 0, 0.9)!important;
+}
+
+
