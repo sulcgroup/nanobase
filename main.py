@@ -11,7 +11,6 @@ import database
 app = Flask(__name__, static_folder='ng/dist/ng', static_url_path='')
 app.secret_key = b'_6#y2L"F4Q8z\n\xec]/'
 
-print('Hello world!', file=sys.stderr)
 
 @app.route('/')
 def home():

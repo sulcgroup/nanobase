@@ -4,6 +4,7 @@ from datetime import date, datetime, timedelta
 from time import time
 import bcrypt
 import os
+import sys
 import binascii
 import random
 from nanobase_email.email_script import send_email
@@ -121,7 +122,9 @@ def login(credentials):
 				'institution': institution,
 				'email': email
 			}
+			# print('asdf', session['user_id'], user, file=sys.stderr)
 			session['user_id'] = user_id
+			print('qwer', session['user_id'], file=sys.stderr)
 			return user
 		else:
 			return 'Please check your email to verify your account'
