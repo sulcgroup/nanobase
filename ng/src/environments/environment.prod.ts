@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  api_url: 'http://nanobase.org/api'
+  api_url: 'https://nanobase.org/api'
 };
