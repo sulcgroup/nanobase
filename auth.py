@@ -4,6 +4,7 @@ from datetime import date, datetime, timedelta
 from time import time
 import bcrypt
 import os
+import sys
 import binascii
 import random
 from nanobase_email.email_script import send_email
