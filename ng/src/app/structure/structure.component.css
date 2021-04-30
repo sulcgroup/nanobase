@@ -46,9 +46,9 @@
     margin-bottom: 50px;
 }
 
-#user-name {
+.username {
     font-size: 22px;
-    opacity: 90%;
+    color: rgba(0, 0, 0, 0.9);
 }
 
 #slide-toggle {

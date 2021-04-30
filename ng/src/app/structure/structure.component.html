@@ -2,8 +2,8 @@
 <!-- <mat-progress-bar class='progress-bar' [ngClass]="{'invisible': !loadBar}" mode="indeterminate"></mat-progress-bar> -->
 <div id="structure-container" *ngIf="structure">
     <div id="header">
-        <h1 id="title">{{structure?.title}}</h1>
-        <span id='user-name'> &nbsp;posted by {{isAuthor ? 'you' : structure.user.firstName+' '+structure.user.lastName}} on {{formatDate(structure.uploadDate)}}&emsp;</span>
+        <div id="title">{{structure?.title}}</div>
+        <span class="username"> &nbsp;posted by {{isAuthor ? 'you' : structure.user.firstName+' '+structure.user.lastName}} on {{formatDate(structure.uploadDate)}}&emsp;</span>
         <mat-slide-toggle #editToggle (click)="toggleEditing(isEditing)" *ngIf="isAuthor" color='primary' [checked]="isEditing" [(ngModel)]="isEditing">
             <span id="slide-toggle" [ngClass]="isEditing ? 'editing' : 'public'">{{isEditing ? 'Editing View' : 'Public View'}}&ensp;</span>
         </mat-slide-toggle>
