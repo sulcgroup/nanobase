@@ -52,9 +52,9 @@ def check_admin():
 @app.route('/api/structure/edit', methods=['POST'])
 def edit_structure():
 	struct = request.json['structure']
-	if struct['user']['id'] != get_session_id():
-		return {'response': 'Action not allowed'}
-	return {'response': structure.edit_structure(struct)}
+	id = get_session_id()
+	authenticated = struct['user']['id'] == id or auth.check_admin(id)
+	return {'response': structure.edit_structure(struct) if authenticated else 'Action not allowed'}
 
 @app.route('/api/structure/recent/<count>', methods=['GET'])
 def get_recent_structures(count):
