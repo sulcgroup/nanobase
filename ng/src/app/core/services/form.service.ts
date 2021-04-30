@@ -40,7 +40,7 @@ export class FormService {
     if (fileName === undefined || fileName === null) {
       return;
     }
-    const imgFormats = ['.jpg', '.png', '.tiff'];
+    const imgFormats = ['.jpg', '.png'];
     return imgFormats.some(suffix => fileName.endsWith(suffix));
   }
 
