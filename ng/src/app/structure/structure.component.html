@@ -2,7 +2,10 @@
 <!-- <mat-progress-bar class='progress-bar' [ngClass]="{'invisible': !loadBar}" mode="indeterminate"></mat-progress-bar> -->
 <div id="structure-container" *ngIf="structure">
     <div id="header">
-        <div id="title">{{structure?.title}}</div>
+        <div *ngIf="!isEditing" id="title">{{structure?.title}}</div>
+        <mat-form-field *ngIf="isEditing" id="title-field"><mat-label></mat-label>
+            <input appAutowidth (change)="edited()" matInput [(ngModel)]="structure.title" [placeholder]="'Structure title'">
+        </mat-form-field>
         <span class="username"> &nbsp;posted by {{isAuthor ? 'you' : structure.user.firstName+' '+structure.user.lastName}} on {{formatDate(structure.uploadDate)}}&emsp;</span>
         <mat-slide-toggle #editToggle (click)="toggleEditing(isEditing)" *ngIf="isAuthor" color='primary' [checked]="isEditing" [(ngModel)]="isEditing">
             <span id="slide-toggle" [ngClass]="isEditing ? 'editing' : 'public'">{{isEditing ? 'Editing View' : 'Public View'}}&ensp;</span>
@@ -103,7 +106,7 @@
         <ng-container *ngFor="let image of structure.files.images, let i = index">
             <div class="carousel-cell">
                 <img src="{{'file/'+structure.id+'/images/'+image.name}}">
-                <div class="image-description">{{image.description}}</div>
+                <div *ngIf="image.description" class="image-description">{{image.description}}</div>
             </div>
         </ng-container>
     </carousel>
@@ -221,5 +224,11 @@
         <p><b>Date published: </b>{{formatPublishDate(structure.publication.publishDate)}}</p>
         <p><b>Licensing information: </b>{{structure.publication.licensing}}</p>
         <p>You may access the publication <a href="{{structure.publication.link}}" target="_blank">here</a></p>
+    </div>
+    <div>
+        <label for="name">Name (4 to 8 characters):</label>
+
+                <input appAutowidth type="text" id="name" name="name" required
+                    minlength="4" maxlength="8" size="10">
     </div>
 </div>

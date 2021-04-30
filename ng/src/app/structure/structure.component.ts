@@ -75,7 +75,7 @@ export class StructureComponent implements OnInit {
         }
         else {
           this.structureService.checkAdmin().subscribe(
-            data2 => {console.log('asfasdfa',data2.response);this.isAuthor = data2.response},
+            data2 => this.isAuthor = data2.response,
             err2 => console.log('err2', err2)
           );
         }
