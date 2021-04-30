@@ -44,6 +44,11 @@ def check_author(id):
 	response = int(id) == get_session_id()
 	return {'response': response}
 
+@app.route('/api/isAdmin', methods=['GET'])
+def check_admin():
+	id = get_session_id()
+	return {'response': auth.check_admin(id) if id else False}
+
 @app.route('/api/structure/edit', methods=['POST'])
 def edit_structure():
 	struct = request.json['structure']

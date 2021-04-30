@@ -24,8 +24,9 @@ insert_user = (
 set_reset_token = ('UPDATE Users SET resetToken = %s WHERE email = %s')
 set_reset_token_expiration = ('UPDATE Users SET resetTokenExpiration = %s WHERE email = %s')
 get_reset_token = ('SELECT id FROM Users WHERE resetToken = %s')
-get_reset_token_expiration = ("SELECT resetTokenExpiration FROM Users WHERE id = %s")
-reset_password = ("UPDATE Users SET password = %s WHERE id = %s")
+get_reset_token_expiration = ('SELECT resetTokenExpiration FROM Users WHERE id = %s')
+reset_password = ('UPDATE Users SET password = %s WHERE id = %s')
+check_admin_query = ('SELECT administrator FROM Users WHERE id = %s')
 
 def verify(user_id, verify_code):
 	connection = pool.get_connection()
@@ -188,3 +189,13 @@ def resetPassword(password, user_id, token):
 
 	connection.close()
 	return 'Password succesfully changed!'
+
+def check_admin(id):
+	connection = pool.get_connection()
+
+	with connection.cursor() as cursor:
+		cursor.execute(check_admin_query, id)
+		is_admin = cursor.fetchone()[0]
+	connection.close()
+
+	return is_admin == 1

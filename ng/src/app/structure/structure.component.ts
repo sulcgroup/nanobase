@@ -68,11 +68,20 @@ export class StructureComponent implements OnInit {
   }
 
   checkAuthor(id: number): void {
-    this.structureService.checkAuthor(id)
-      .subscribe(
-        data => this.isAuthor = data.response,
-        err => console.log('err', err)
-      );
+    this.structureService.checkAuthor(id).subscribe(
+      data => {
+        if (data.response) {
+          this.isAuthor = true;
+        }
+        else {
+          this.structureService.checkAdmin().subscribe(
+            data2 => {console.log('asfasdfa',data2.response);this.isAuthor = data2.response},
+            err2 => console.log('err2', err2)
+          );
+        }
+      },
+      err => console.log('err', err)
+    );
   }
 
   deleteFile(type: string, i: number): void {
