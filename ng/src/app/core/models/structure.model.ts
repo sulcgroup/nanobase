@@ -32,7 +32,7 @@ export interface Structure {
         citation: string;
         licensing: string;
         link: string;
-        publishDate: string;
+        publishDate: any;
     };
     size: number;
     tags: {

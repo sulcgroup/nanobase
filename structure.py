@@ -347,7 +347,7 @@ def edit_structure(new_struct):
     for file_type in new_struct['files']:
         file_names.append('|'.join([file['name'] for file in new_struct['files'][file_type]]))
         file_descriptions.append('|'.join([file['description'] for file in new_struct['files'][file_type]]))
-
+    
     structure_data = (
         id,
         int(new_struct['user']['id']),

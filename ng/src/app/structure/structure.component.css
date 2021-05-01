@@ -55,6 +55,21 @@
     margin-left: 20px!important;
 }
 
+::ng-deep .year {
+    width: 192px!important;
+    margin-left: 5px!important;
+}
+
+::ng-deep .month {
+    width: 192px!important;
+    margin-left: 20px!important;
+}
+
+::ng-deep .citation {
+    width: 500px!important;
+    margin-left: 5px!important;
+}
+
 #publication-section {
     margin-bottom: 50px;
 }

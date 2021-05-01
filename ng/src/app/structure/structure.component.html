@@ -245,7 +245,7 @@
         <p>
             <b>Citation: </b>
             <span *ngIf="!isEditing">{{structure.publication.citation ? structure.publication.citation : 'N/A'}}</span>
-            <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
+            <mat-form-field *ngIf="isEditing" class="citation"><mat-label></mat-label>
                 <input (change)="edited()" matInput [(ngModel)]="structure.publication.citation" placeholder="Publication citation">
             </mat-form-field>
         </p>
@@ -266,7 +266,18 @@
             </mat-chip-list>
         </p>
 
-        <p><b>Date published: </b>{{structure.publication.publishDate[0] === '0000' ? 'N/A' : formatPublishDate(structure.publication.publishDate)}}</p>
+        <p>
+            <b>Date published: </b>
+            <span *ngIf="!isEditing">{{structure.publication.publishDate[0] === '0000' ? 'N/A' : formatPublishDate(structure.publication.publishDate)}}</span>
+            <mat-form-field *ngIf="isEditing" class="year"><mat-label>Publication Year [YYYY]</mat-label>
+                <input (change)="edited()" matInput [(ngModel)]="structure.publication.publishDate[0]">
+            </mat-form-field>
+            <mat-form-field *ngIf="isEditing" class="month"><mat-label>Month [MM]</mat-label>
+                <input (change)="edited()" matInput [(ngModel)]="structure.publication.publishDate[1]">
+            </mat-form-field>
+        </p>
+
+
         <p><b>Licensing information: </b>{{structure.publication.licensing ? structure.publication.licensing : 'N/A'}}</p>
         <p *ngIf="structure.publication.link">You may access the publication <a href="{{structure.publication.link}}" target="_blank">here</a></p>
     </div>

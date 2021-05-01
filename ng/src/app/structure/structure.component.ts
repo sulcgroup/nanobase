@@ -15,7 +15,7 @@ export class StructureComponent implements OnInit {
   @ViewChild('slideToggle') editToggle: MatSlideToggle;
   id: number;
   structure: Structure;
-  months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec'];
+  months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
   files = {};
   isAuthor: boolean;
   isEditing = false;
@@ -52,6 +52,8 @@ export class StructureComponent implements OnInit {
       data => {
         data.response.uploadDate = new Date(data.response.uploadDate);
         data.response.publication.publishDate = data.response.publication.publishDate.split('-');
+        // const date = new Date(data.response.publication.publishDate);
+        console.log("ASDF", data.response.publication.publishDate)
 
         // Read file contents
         const fileStrings = data.response.files_contents;
@@ -59,6 +61,11 @@ export class StructureComponent implements OnInit {
         const files = fileStrings.map(file => new File([new Blob([file.contents], type)], file.name, type));
         data.response.files_contents = files;
         this.structure = data.response;
+        // this.structure.publication.publishDate = ['', ''];
+        // this.structure.publication.publishDate[0] = date.getFullYear();
+        // this.structure.publication.publishDate[1] = date.getMonth();
+        // this.structure.publication.publishDate[2] = '01';
+
         console.log('Loaded structure: ', this.structure);
 
         this.checkAuthor(this.structure.user.id);
@@ -106,6 +113,7 @@ export class StructureComponent implements OnInit {
 
   save(): void {
     this.loadBar = true;
+    this.processDate();
     this.structureService.edit(this.structure).subscribe(
       data => {
         this.loadBar = false;
@@ -117,6 +125,20 @@ export class StructureComponent implements OnInit {
       }
     );
     this.hasBeenEdited = false;
+  }
+
+  processDate(): void {
+    const year = this.structure.publication.publishDate[0];
+    const month = this.structure.publication.publishDate[1];
+    if (month.length === 1) {
+      this.structure.publication.publishDate[1] = '0' + month;
+    }
+    if (!month) {
+      this.structure.publication.publishDate[1] = '00';
+    }
+    if (!year) {
+      this.structure.publication.publishDate[1] = '0000';
+    }
   }
 
   edited(): void {
@@ -168,7 +190,7 @@ export class StructureComponent implements OnInit {
 
   formatPublishDate(date: Array<string>): string {
     if (date.length > 1) {
-      return (date[1] === '00') ? date[0] : this.months[parseInt(date[1], 10)] + ' ' + date[0];
+      return (date[1] === '00') ? date[0] : this.months[parseInt(date[1], 10) - 1] + ' ' + date[0];
     }
     else {
       return this.formatDate(new Date(date[0]));
