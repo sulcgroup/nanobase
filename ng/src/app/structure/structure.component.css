@@ -79,9 +79,9 @@
     color: rgba(0, 0, 0, 0.9);
 }
 
-#slide-toggle {
+.slide-toggle {
     font-size: 22px;
-    opacity: 90%;
+    color: rgba(0, 0, 0, 0.9);
 }
 
 .mat-icon {
