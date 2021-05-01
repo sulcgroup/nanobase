@@ -6,7 +6,7 @@
 
       <mat-form-field class="field-container">
         <mat-label>Structure Name</mat-label>
-        <input matInput formControlName="name">
+        <input maxlength="128" matInput formControlName="name">
       </mat-form-field><br>
 
       <mat-form-field class="field-container dropdown-field" appearance="fill">
@@ -23,7 +23,7 @@
       <div formArrayName="applications">
         <mat-form-field class="field-container hashtag-field" *ngFor="let application of fieldArray('applications', 1).controls; let i=index" [formGroupName]="i">
           <mat-label *ngIf="i===0">Application(s)</mat-label>
-          <input matInput formControlName="value" [matAutocomplete]="auto"
+          <input maxlength="32" matInput formControlName="value" [matAutocomplete]="auto"
           [matTooltip]="i===0 ? 'e.g. cancer therapy, nanoelectronics, protein scaffolding, crystallography' : ''" matTooltipClass="tooltip" matTooltipPosition="above">
           <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
             <mat-option class="applications-auto" *ngFor="let option of filteredOptions.applications[i] | async" [value]="option">{{option}}</mat-option>
@@ -39,7 +39,7 @@
       <div formArrayName="modifications">
         <mat-form-field class="field-container hashtag-field" *ngFor="let modification of fieldArray('modifications', 1).controls; let i=index" [formGroupName]="i">
           <mat-label *ngIf="i===0">Modification(s)</mat-label>
-          <input matInput formControlName="value" [matAutocomplete]="auto"
+          <input maxlength="32" matInput formControlName="value" [matAutocomplete]="auto"
           [matTooltip]="i===0 ? 'e.g. AuNP, fluorophore, silica coating, dye, linkers, modified nucleotides' : ''" matTooltipClass="tooltip" matTooltipPosition="above">
           <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
             <mat-option class="modifications-auto" *ngFor="let option of filteredOptions.modifications[i] | async" [value]="option">{{option}}</mat-option>
@@ -55,7 +55,7 @@
       <div formArrayName="keywords">
         <mat-form-field class="field-container hashtag-field" *ngFor="let keyword of fieldArray('keywords', 1).controls; let i=index" [formGroupName]="i">
           <mat-label *ngIf="i===0">Keywords</mat-label>
-          <input matInput formControlName="value" [matAutocomplete]="auto"
+          <input maxlength="32" matInput formControlName="value" [matAutocomplete]="auto"
           [matTooltip]="i===0 ? 'e.g. oxDNA, tile, synthetic biology, molecular factory, NAMD simulation' : ''" matTooltipClass="tooltip" matTooltipPosition="above">
           <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
             <mat-option class="keywords-auto" *ngFor="let option of filteredOptions.keywords[i] | async" [value]="option">{{option}}</mat-option>
@@ -69,8 +69,8 @@
       </div>
 
       <mat-form-field class="field-container description-field">
-        <mat-label>Description (300 characters max)</mat-label>
-        <textarea matInput formControlName="description"></textarea>
+        <mat-label>Description (1000 characters max)</mat-label>
+        <textarea maxlength="1000" matInput formControlName="description"></textarea>
       </mat-form-field>
 
       <br><button class="stepper-button" mat-flat-button matStepperNext color="primary">Next</button>
@@ -105,7 +105,7 @@
           <mat-label *ngSwitchCase="17">18th author</mat-label>
           <mat-label *ngSwitchCase="18">19th author</mat-label>
           <mat-label *ngSwitchCase="19">20th author</mat-label>
-          <input matInput formControlName="value" placeholder="Jane Doe">
+          <input maxlength="64" matInput formControlName="value" placeholder="Jane Doe">
           <button *ngIf="i>0" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('authors', 2, i)">
             <mat-icon>close</mat-icon>
           </button>
@@ -116,27 +116,27 @@
 
       <mat-form-field class="field-container year-field">
         <mat-label>Publication Year [YYYY]</mat-label>
-        <input matInput formControlName="year">
+        <input maxlength="4" matInput formControlName="year">
       </mat-form-field>
 
       <mat-form-field class="field-container month-field">
         <mat-label>Month [MM] (optional)</mat-label>
-        <input matInput formControlName="month">
+        <input maxlength="2" matInput formControlName="month">
       </mat-form-field><br>
 
       <mat-form-field class="field-container citation-field">
         <mat-label>Citation</mat-label>
-        <textarea matInput formControlName="citation" ></textarea>
+        <textarea maxlength="256" matInput formControlName="citation" ></textarea>
       </mat-form-field><br>
 
       <mat-form-field class="field-container citation-field">
         <mat-label>Link</mat-label>
-        <textarea matInput formControlName="link" ></textarea>
+        <textarea maxlength="256" matInput formControlName="link" ></textarea>
       </mat-form-field><br>
 
       <mat-form-field class="field-container licensing-field">
         <mat-label>Licensing Information</mat-label>
-        <textarea matInput formControlName="licensing" 
+        <textarea maxlength="256" matInput formControlName="licensing" 
         matTooltip="e.g. any relevant patents" matTooltipClass="tooltip" matTooltipPosition="above"></textarea>
       </mat-form-field><br>
 
@@ -170,7 +170,7 @@
           </mat-form-field>
           <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('structure')?.value[i].file?._fileNames">
             <mat-label>File Description</mat-label>
-            <input matInput (change)="fileGroup.controls['structure'].value[i].description = $event.target.value">
+            <input maxlength="512" matInput (change)="fileGroup.controls['structure'].value[i].description = $event.target.value">
           </mat-form-field><br>
         </div>
         <button class="field-button" (mouseup)="addField('structure', 3)" mat-stroked-button>Add file</button>
@@ -191,7 +191,7 @@
           </mat-form-field>
           <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('expProtocol')?.value[i].file?._fileNames">
             <mat-label>File Description</mat-label>
-            <input matInput (change)="fileGroup.controls['expProtocol'].value[i].description = $event.target.value">
+            <input maxlength="256" matInput (change)="fileGroup.controls['expProtocol'].value[i].description = $event.target.value">
           </mat-form-field>
         </div>
         <button class="field-button" (mouseup)="addField('expProtocol', 3)" mat-stroked-button>Add file</button>
@@ -212,7 +212,7 @@
           </mat-form-field>
           <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('expResults')?.value[i].file?._fileNames">
             <mat-label>File Description</mat-label>
-            <input matInput (change)="fileGroup.controls['expResults'].value[i].description = $event.target.value">
+            <input maxlength="256" matInput (change)="fileGroup.controls['expResults'].value[i].description = $event.target.value">
           </mat-form-field>
           <mat-radio-button [value]="'expResults/'+fileGroup.get('expResults')?.value[i].file?._fileNames" *ngIf="formService.isImageFile(fileGroup.get('expResults')?.value[i].file?._fileNames)" color="accent">
             Primary image
@@ -236,7 +236,7 @@
           </mat-form-field>
           <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('simProtocol')?.value[i].file?._fileNames">
             <mat-label>File Description</mat-label>
-            <input matInput (change)="fileGroup.controls['simProtocol'].value[i].description = $event.target.value">
+            <input maxlength="256" matInput (change)="fileGroup.controls['simProtocol'].value[i].description = $event.target.value">
           </mat-form-field><br>
         </div>
         <button class="field-button" (mouseup)="addField('simProtocol', 3)" mat-stroked-button>Add file</button>
@@ -257,7 +257,7 @@
           </mat-form-field>
           <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('simResults')?.value[i].file?._fileNames">
             <mat-label>File Description</mat-label>
-            <input matInput (change)="fileGroup.controls['simResults'].value[i].description = $event.target.value">
+            <input maxlength="256" matInput (change)="fileGroup.controls['simResults'].value[i].description = $event.target.value">
           </mat-form-field>
           <mat-radio-button [value]="'simResults/'+fileGroup.get('simResults')?.value[i].file?._fileNames" *ngIf="formService.isImageFile(fileGroup.get('simResults')?.value[i].file?._fileNames)" color="accent">
             Primary image
@@ -282,7 +282,7 @@
           </mat-form-field>
           <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('images')?.value[i].file?._fileNames">
             <mat-label>File Description</mat-label>
-            <input matInput (change)="fileGroup.controls['images'].value[i].description = $event.target.value">
+            <input maxlength="256" matInput (change)="fileGroup.controls['images'].value[i].description = $event.target.value">
           </mat-form-field>
           <mat-radio-button [value]="'images/'+fileGroup.get('images')?.value[i].file?._fileNames" *ngIf="formService.isImageFile(fileGroup.get('images')?.value[i].file?._fileNames)" color="accent">
             Primary image

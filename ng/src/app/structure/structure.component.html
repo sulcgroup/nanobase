@@ -216,7 +216,7 @@
                 </mat-list>
             </mat-tab>
 
-            <mat-tab label="Other Images">
+            <mat-tab label="Images">
                 <mat-list>
                     <mat-list-item *ngFor="let file of structure.files.images, let i = index">
                         <mat-icon *ngIf="isEditing" (click)="deleteFile('images', i)" class="editing clickable">delete</mat-icon>
