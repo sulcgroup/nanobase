@@ -92,8 +92,9 @@
             </p>
         </div>
     </div>
+    <br>
 
-    <h1>Images</h1>
+    <h1 id="image-header">Images</h1>
     <carousel
         [height]="350"
         [objectFit]="'cover'"
@@ -112,7 +113,8 @@
     </carousel>
 
     <div id="file-section">
-        <h1>Files</h1>
+        <br>
+        <!-- <h1>Files</h1> -->
         <mat-tab-group dynamicHeight>
             <mat-tab label="Structure">
                 <mat-list>
@@ -127,7 +129,7 @@
                             </mat-form-field>
                         </div>
                     </mat-list-item>
-                    <mat-form-field *ngIf="isEditing">
+                    <mat-form-field class="file-input" *ngIf="isEditing">
                         <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'structure')" placeholder="Add a structure file"></ngx-mat-file-input>
                         <button color='primary' mat-icon-button matSuffix><mat-icon>folder</mat-icon></button>
                     </mat-form-field>
@@ -147,7 +149,7 @@
                             </mat-form-field>
                         </div>
                     </mat-list-item>
-                    <mat-form-field *ngIf="isEditing">
+                    <mat-form-field class="file-input" *ngIf="isEditing">
                         <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'expProtocol')" placeholder="Add an Experiment Protocol file"></ngx-mat-file-input>
                         <button color='primary' mat-icon-button matSuffix><mat-icon>folder</mat-icon></button>
                     </mat-form-field>
@@ -167,7 +169,7 @@
                             </mat-form-field>
                         </div>
                     </mat-list-item>
-                    <mat-form-field *ngIf="isEditing">
+                    <mat-form-field class="file-input" *ngIf="isEditing">
                         <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'expResults')" placeholder="Add an Experiment Results file"></ngx-mat-file-input>
                         <button color='primary' mat-icon-button matSuffix><mat-icon>folder</mat-icon></button>
                     </mat-form-field>
@@ -187,7 +189,7 @@
                             </mat-form-field>
                         </div>
                     </mat-list-item>
-                    <mat-form-field *ngIf="isEditing">
+                    <mat-form-field class="file-input" *ngIf="isEditing">
                         <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'simProtocol')" placeholder="Add a Simulation Protocol file"></ngx-mat-file-input>
                         <button color='primary' mat-icon-button matSuffix><mat-icon>folder</mat-icon></button>
                     </mat-form-field>
@@ -207,8 +209,28 @@
                             </mat-form-field>
                         </div>
                     </mat-list-item>
-                    <mat-form-field *ngIf="isEditing">
+                    <mat-form-field class="file-input" *ngIf="isEditing">
                         <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'simResults')" placeholder="Add a Simulation Results file"></ngx-mat-file-input>
+                        <button color='primary' mat-icon-button matSuffix><mat-icon>folder</mat-icon></button>
+                    </mat-form-field>
+                </mat-list>
+            </mat-tab>
+
+            <mat-tab label="Other Images">
+                <mat-list>
+                    <mat-list-item *ngFor="let file of structure.files.images, let i = index">
+                        <mat-icon *ngIf="isEditing" (click)="deleteFile('images', i)" class="editing clickable">delete</mat-icon>
+                        <mat-icon mat-list-icon><a class='file-download' href="{{'file/'+structure.id+'/images/'+file.name}}" download>download</a></mat-icon>
+                        <div mat-line>
+                            <a class='file-download' href="{{'file/'+structure.id+'/images/'+file.name}}" download>{{file.name}}</a>&nbsp;
+                            <span *ngIf="!isEditing" class="file-description">{{file.description}}</span>
+                            <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
+                                <input matInput (change)="edited()" [(ngModel)]="structure.files.images[i].description" [placeholder]="'Description for '+file.name">
+                            </mat-form-field>
+                        </div>
+                    </mat-list-item>
+                    <mat-form-field class="file-input" *ngIf="isEditing">
+                        <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'images')" placeholder="Add an image file"></ngx-mat-file-input>
                         <button color='primary' mat-icon-button matSuffix><mat-icon>folder</mat-icon></button>
                     </mat-form-field>
                 </mat-list>
@@ -218,17 +240,35 @@
     </div>
     
     <div id="publication-section">
+        <br>
         <h1>Publication Information</h1>
-        <p><b>Citation: </b>{{structure.publication.citation}}</p>
-        <p><b>Authors: </b>{{structure.publication.authors.join(', ')}}</p>
-        <p><b>Date published: </b>{{formatPublishDate(structure.publication.publishDate)}}</p>
-        <p><b>Licensing information: </b>{{structure.publication.licensing}}</p>
-        <p>You may access the publication <a href="{{structure.publication.link}}" target="_blank">here</a></p>
-    </div>
-    <div>
-        <label for="name">Name (4 to 8 characters):</label>
+        <p>
+            <b>Citation: </b>
+            <span *ngIf="!isEditing">{{structure.publication.citation ? structure.publication.citation : 'N/A'}}</span>
+            <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
+                <input (change)="edited()" matInput [(ngModel)]="structure.publication.citation" placeholder="Publication citation">
+            </mat-form-field>
+        </p>
+        
+        <p>
+            <b>Authors: </b>
+            <span *ngIf="!isEditing">{{structure.publication.authors.length > 0 ? structure.publication.authors.join(', ') : 'N/A'}}</span>
+            <mat-chip-list *ngIf="isEditing" #authorList class="chip-list">
+                <mat-chip [removable]="removable" (removed)="removeTag(i, 'authors')" class="author chip" *ngFor="let author of structure.publication.authors;let i=index">{{author}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <mat-chip class="author chip" *ngIf="structure.publication.authors.length === 0">None</mat-chip>
+                <input matInput class="tag-input" placeholder="New author..."
+                    [matChipInputFor]="authorList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="addTag($event, 'authors')">
+            </mat-chip-list>
+        </p>
 
-                <input appAutowidth type="text" id="name" name="name" required
-                    minlength="4" maxlength="8" size="10">
+        <p><b>Date published: </b>{{structure.publication.publishDate[0] === '0000' ? 'N/A' : formatPublishDate(structure.publication.publishDate)}}</p>
+        <p><b>Licensing information: </b>{{structure.publication.licensing ? structure.publication.licensing : 'N/A'}}</p>
+        <p *ngIf="structure.publication.link">You may access the publication <a href="{{structure.publication.link}}" target="_blank">here</a></p>
     </div>
+
 </div>

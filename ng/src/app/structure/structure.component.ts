@@ -3,7 +3,7 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FileInput } from 'ngx-material-file-input';
 import { Structure, StructureService, User, FormService } from '../core';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
@@ -24,7 +24,7 @@ export class StructureComponent implements OnInit {
   removable = true;
   addOnBlur = true;
   loadBar = true;
-  separatorKeysCodes: number[] = [ENTER, COMMA];
+  separatorKeysCodes: number[] = [ENTER, COMMA, SEMICOLON];
   confirmMessage = 'Your unsaved changes will be lost. Are you sure you want to switch to public view?';
 
   constructor(private structureService: StructureService,
@@ -135,7 +135,12 @@ export class StructureComponent implements OnInit {
 
   removeTag(index: number, type: string): void {
     this.hasBeenEdited = true;
-    this.structure.tags[type].splice(index, 1);
+    if (type === 'authors') {
+      this.structure.publication.authors.splice(index, 1);
+    }
+    else {
+      this.structure.tags[type].splice(index, 1);
+    }
   }
 
   addTag(event: MatChipInputEvent, type: string): void {
@@ -144,7 +149,12 @@ export class StructureComponent implements OnInit {
     const value = event.value;
 
     if ((value || '').trim()) {
-      this.structure.tags[type].push(value.trim());
+      if (type === 'authors') {
+        this.structure.publication.authors.push(value.trim());
+      }
+      else {
+        this.structure.tags[type].push(value.trim());
+      }
     }
 
     if (input) {

@@ -65,6 +65,7 @@ delete_keyword = ('DELETE Keywords, KeywordsJoin FROM Keywords INNER JOIN Keywor
 get_author_id = ('SELECT id FROM Authors WHERE author = %s')
 insert_author = ('INSERT INTO Authors (author) VALUES (%s)')
 insert_author_join = ('INSERT INTO AuthorsJoin (structureId, authorId) VALUES (%s, %s)')
+delete_author = ('DELETE Authors, AuthorsJoin FROM Authors INNER JOIN AuthorsJoin on Authors.id = AuthorsJoin.authorId WHERE Authors.author = %s')
 
 def get_structure(id):
     connection = database.pool.get_connection()
@@ -373,6 +374,7 @@ def edit_structure(new_struct):
     new_applicactions = new_struct['tags']['applications']
     new_modifications = new_struct['tags']['modifications']
     new_keywords = new_struct['tags']['keywords']
+    new_authors = new_struct['publication']['authors']
 
     with connection.cursor() as cursor:
         cursor.execute(get_applications_query, (id))
@@ -381,6 +383,8 @@ def edit_structure(new_struct):
         modifications = [x[0] for x in cursor.fetchall()]
         cursor.execute(get_keywords_query, (id))
         keywords = [x[0] for x in cursor.fetchall()]
+        cursor.execute(get_authors_query, (id))
+        authors = [x[0] for x in cursor.fetchall()]
     
         for application in applications:
             if application not in new_applicactions:
@@ -420,6 +424,19 @@ def edit_structure(new_struct):
                     cursor.execute(get_last_id)
                     tag_id = cursor.fetchone()
                 cursor.execute(insert_keyword_join, (id, tag_id))
+        
+        for author in authors:
+            if author not in new_authors:
+                cursor.execute(delete_author, (author))
+        for author in new_authors:
+            if author not in authors:
+                cursor.execute(get_author_id, (author))
+                tag_id = cursor.fetchone()
+                if not tag_id:
+                    cursor.execute(insert_author, (author))
+                    cursor.execute(get_last_id)
+                    tag_id = cursor.fetchone()
+                cursor.execute(insert_author_join, (id, tag_id))
     connection.close()
 
     es.update(index = 'structures', id = id,
@@ -429,6 +446,7 @@ def edit_structure(new_struct):
             'applications': new_applicactions,
             'modifications': new_modifications,
             'keywords': new_keywords,
+            'authors': new_authors,
         }
     })
 

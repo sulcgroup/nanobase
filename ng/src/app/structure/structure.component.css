@@ -51,6 +51,10 @@
     margin-top: 25px;
 }
 
+::ng-deep .file-input {
+    margin-left: 20px!important;
+}
+
 #publication-section {
     margin-bottom: 50px;
 }
@@ -144,7 +148,14 @@ carousel {
     transform: translateX(-50%);
     width: 70%;
     margin-bottom: 25px;
-    /* height: 400px; */
+    border: 1px solid rgb(43, 43, 53);
+    border-radius: 5px;
+    box-shadow: 0 0 8px 2px rgb(197, 197, 197);
+    background-color: rgb(224, 224, 228)
+}
+
+#image-header {
+    text-align: center;
 }
 
 .file-description {
