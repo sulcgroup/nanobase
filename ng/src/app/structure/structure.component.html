@@ -277,9 +277,21 @@
             </mat-form-field>
         </p>
 
+        <p>
+            <b>Licensing information: </b>
+            <span *ngIf="!isEditing">{{structure.publication.licensing ? structure.publication.licensing : 'N/A'}}</span>
+            <mat-form-field *ngIf="isEditing" class="citation"><mat-label></mat-label>
+                <input (change)="edited()" matInput [(ngModel)]="structure.publication.licensing" placeholder="Licensing information">
+            </mat-form-field>
+        </p>
 
-        <p><b>Licensing information: </b>{{structure.publication.licensing ? structure.publication.licensing : 'N/A'}}</p>
-        <p *ngIf="structure.publication.link">You may access the publication <a href="{{structure.publication.link}}" target="_blank">here</a></p>
+        <p>
+            <span *ngIf="structure.publication.link && !isEditing">You may access the publication <a href="{{structure.publication.link}}" target="_blank">here</a></span>
+            <b *ngIf="isEditing">Edit publication link: </b>
+            <mat-form-field *ngIf="isEditing" class="citation"><mat-label></mat-label>
+                <input (change)="edited()" matInput [(ngModel)]="structure.publication.link" placeholder="Publication link">
+            </mat-form-field>
+        </p>
     </div>
 
 </div>

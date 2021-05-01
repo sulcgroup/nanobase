@@ -52,8 +52,6 @@ export class StructureComponent implements OnInit {
       data => {
         data.response.uploadDate = new Date(data.response.uploadDate);
         data.response.publication.publishDate = data.response.publication.publishDate.split('-');
-        // const date = new Date(data.response.publication.publishDate);
-        console.log("ASDF", data.response.publication.publishDate)
 
         // Read file contents
         const fileStrings = data.response.files_contents;
@@ -61,10 +59,6 @@ export class StructureComponent implements OnInit {
         const files = fileStrings.map(file => new File([new Blob([file.contents], type)], file.name, type));
         data.response.files_contents = files;
         this.structure = data.response;
-        // this.structure.publication.publishDate = ['', ''];
-        // this.structure.publication.publishDate[0] = date.getFullYear();
-        // this.structure.publication.publishDate[1] = date.getMonth();
-        // this.structure.publication.publishDate[2] = '01';
 
         console.log('Loaded structure: ', this.structure);
 
