@@ -23,6 +23,7 @@ export class ResetComponent implements OnInit {
   ngOnInit(): void {
     const token: string = this.route.snapshot.queryParamMap.get('token');
 
+    // Verify reset token
     this.userService.checkResetToken(token)
     .subscribe(
       data => {
@@ -40,6 +41,7 @@ export class ResetComponent implements OnInit {
     );
   }
 
+  // Show error on the page
   getPasswordError(): string {
     if (this.password.hasError('required')) {
       return 'You must enter a value';
@@ -54,8 +56,7 @@ export class ResetComponent implements OnInit {
     const token = this.route.snapshot.queryParamMap.get('token');
     console.log(typeof(this.userId))
 
-    this.userService.resetPassword(password, this.userId, token)
-    .subscribe(
+    this.userService.resetPassword(password, this.userId, token).subscribe(
       data => {
         this.header = data.response;
         document.getElementById('header').classList.add('success');

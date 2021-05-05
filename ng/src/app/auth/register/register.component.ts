@@ -26,6 +26,7 @@ export class RegisterComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // Create form
     this.registrationForm = this.fb.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
@@ -47,6 +48,7 @@ export class RegisterComponent implements OnInit {
 
   submitForm(): void {
     this.registrationForm.disable();
+
     const userData = {
       firstName: this.registrationForm.get('firstName').value,
       lastName: this.registrationForm.get('lastName').value,
@@ -54,8 +56,8 @@ export class RegisterComponent implements OnInit {
       institution: this.registrationForm.get('institution').value,
       password: this.registrationForm.get('password').value,
     };
-    this.userService.register(userData)
-    .subscribe(
+
+    this.userService.register(userData).subscribe(
       data => {
         if (Object.keys(data).length === 0) {
           this.router.navigateByUrl('/auth/verify');

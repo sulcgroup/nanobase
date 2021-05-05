@@ -29,8 +29,7 @@ export class ForgotComponent implements OnInit {
 
     const email = this.email.value;
 
-    this.userService.sendResetToken(email)
-    .subscribe(
+    this.userService.sendResetToken(email).subscribe(
       data => {
         this.email.enable();
         this.header = data.response;

@@ -18,9 +18,9 @@ export class VerifyComponent implements OnInit {
     const userId: string = this.route.snapshot.queryParamMap.get('id');
     const verifyCode: string = this.route.snapshot.queryParamMap.get('verify');
 
+    // Verify user
     if (userId && verifyCode) {
-      this.userService.attemptVerify(userId, verifyCode)
-      .subscribe(
+      this.userService.attemptVerify(userId, verifyCode).subscribe(
         data => {
           this.attemptedVerify = true;
           this.verified = data === 'OK';

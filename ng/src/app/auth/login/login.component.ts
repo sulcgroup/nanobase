@@ -40,8 +40,7 @@ export class LoginComponent implements OnInit {
     const email = this.email.value;
     const password = this.password.value;
 
-    this.userService.attemptLogin({email, password})
-    .subscribe(
+    this.userService.attemptLogin({email, password}).subscribe(
       data => {
         if (typeof(data) === 'string') {
           this.error = data;

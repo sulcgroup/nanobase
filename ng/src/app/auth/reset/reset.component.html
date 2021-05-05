@@ -4,6 +4,7 @@
             <mat-card-title id="reset-header">Reset your password</mat-card-title>
         </mat-card-header>
         <mat-card-subtitle id="header">{{header}}</mat-card-subtitle>
+
         <mat-card-content>
             <div class="reset-input">
                 <mat-form-field appearance="outline">
@@ -16,14 +17,12 @@
                 </mat-form-field>
             </div>
         </mat-card-content>
+
         <mat-card-actions>
             <button id="submit-button" (click)='submit()' mat-raised-button color="primary" [disabled]="password.invalid || submitted">
                 Submit
             </button>
         </mat-card-actions>
     </mat-card>
-
-    
-
 </div>
 

@@ -222,10 +222,10 @@ def upload_structure(structure, user_id):
     # print('Uploading: ', structure)
     # Convert dicts to arrays
     applications, modifications, keywords, authors = [], [], [], []
-    structure['applications'] = [d['value'] for d in structure['applications'] if d['value'] != '']
-    structure['modifications'] = [d['value'] for d in structure['modifications'] if d['value'] != '']
-    structure['keywords'] = [d['value'] for d in structure['keywords'] if d['value'] != '']
-    structure['authors'] = [d['value'] for d in structure['authors'] if d['value'] != '']
+    structure['applications'] = [tag['value'] for tag in structure['applications'] if tag['value'] != '']
+    structure['modifications'] = [tag['value'] for tag in structure['modifications'] if tag['value'] != '']
+    structure['keywords'] = [tag['value'] for tag in structure['keywords'] if tag['value'] != '']
+    structure['authors'] = [tag['value'] for tag in structure['authors'] if tag['value'] != '']
 
     # Get structure id and user name
     connection = database.pool.get_connection()
@@ -500,6 +500,7 @@ def search_by_user(user_id):
     
     return jsonify(response)
 
+# Query elasticsearch for matching structures
 def search(input, category):
     if category == 'user_id':
         return search_by_user(input)

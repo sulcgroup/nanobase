@@ -50,28 +50,6 @@ export interface Structure {
         lastName: string;
     };
 }
-// export interface Structure {
-//     id: number;
-//     user: User;
-//     title: string;
-//     type: string;
-//     applications: Array<Tag>;
-//     modifications: Array<Tag>;
-//     keywords: Array<Tag>;
-//     description: string;
-//     files_contents: Array<string>;
-
-//     authors: Array<Tag>;
-//     publishDate: Date;
-//     citation: string;
-//     link: URL;
-//     licensing: string;
-
-//     structureFiles: StructureFiles;
-
-//     private: boolean;
-//     uploadDate: Date;
-// }
 
 // Structure uploaded to database
 export interface StructureUpload {

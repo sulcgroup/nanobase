@@ -15,6 +15,7 @@ export class ApiService {
     return throwError(error.error);
   }
 
+  // Define http methods for application
   get(path: string, params: HttpParams = new HttpParams()): Observable<any> {
     return this.http.get(
       `${environment.api_url}${path}`,

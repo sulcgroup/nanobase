@@ -2,6 +2,7 @@
     <mat-card-header id="card-header">
         <mat-card-title id="forgot-header">Password Reset</mat-card-title>
     </mat-card-header>
+
     <mat-card-content>
         <mat-card-subtitle id="header">{{header}}</mat-card-subtitle>
         <div class="email-input">
@@ -12,6 +13,7 @@
             </mat-form-field>
         </div>
     </mat-card-content>
+    
     <mat-card-actions>
         <button id="submit-button" class="structure-button" (click)="submit()" [disabled]="!email.valid" mat-raised-button color="primary">
             Submit

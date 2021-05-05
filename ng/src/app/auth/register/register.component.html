@@ -3,10 +3,12 @@
         <mat-card-title id="register-header">Sign up</mat-card-title>
         <mat-card-subtitle><a routerLink="/auth/login">Have an account?</a></mat-card-subtitle>
     </mat-card-header>
+    
     <mat-card-content>
         <div class="register-input">
             <form [formGroup]="registrationForm">
 
+                <!-- Name field -->
                 <div class="name-container">
                     <mat-form-field class="name" appearance="outline">
                         <mat-label>Enter First name</mat-label>
@@ -20,6 +22,7 @@
                     </mat-form-field>
                 </div>
                 
+                <!-- Email field -->
                 <mat-form-field class="block-field" appearance="outline">
                     <mat-label>Enter Email</mat-label>
                     <input matInput formControlName="email" placeholder="email@example.com">
@@ -28,12 +31,14 @@
                     <mat-error *ngIf="registrationForm.hasError('registered','email')">Email already registered</mat-error>
                 </mat-form-field>
                 
+                <!-- Institution field -->
                 <mat-form-field class="block-field" appearance="outline">
                     <mat-label>Enter Institution (full title)</mat-label>
                     <input matInput formControlName="institution">
                     <mat-error *ngIf="registrationForm.hasError('required','institution')">Required</mat-error>
                 </mat-form-field>
                 
+                <!-- Passsword field -->
                 <mat-form-field class="block-field" appearance="outline">
                     <mat-label>Enter Password</mat-label>
                     <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" autocomplete="new-password">
@@ -44,6 +49,7 @@
                     <mat-error *ngIf="registrationForm.hasError('minlength','password')">Must be at least 8 characters</mat-error>
                 </mat-form-field>
     
+                <!-- Confirm passsword field -->
                 <mat-form-field class="block-field" appearance="outline">
                     <mat-label>Confirm Password</mat-label>
                     <input matInput formControlName="confirmPassword" [type]="hide ? 'password' : 'text'" autocomplete="new-password">
@@ -58,6 +64,7 @@
 
         </div>
     </mat-card-content>
+
     <mat-card-actions>
         <button id="submit-button" class="structure-button" (click)="submitForm()" [disabled]="!registrationForm.valid" mat-raised-button color="primary">
             Submit

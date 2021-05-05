@@ -4,13 +4,18 @@
         <mat-card-subtitle><a routerLink="/auth/register">Register an account</a></mat-card-subtitle>
         <mat-card-subtitle><a routerLink="/auth/forgot">Forgot your password?</a></mat-card-subtitle>
     </mat-card-header>
+
     <mat-card-content>
         <div class="login-input">
+
+            <!-- Email field -->
             <mat-form-field appearance="outline">
               <mat-label>Enter your email</mat-label>
               <input matInput placeholder="email@example.com" [formControl]="email" autocomplete="new-password">
               <mat-error *ngIf="email.invalid">{{getEmailError()}}</mat-error>
             </mat-form-field>
+
+            <!-- Password field -->
             <mat-form-field appearance="outline">
                 <mat-label>Enter your password</mat-label>
                 <input (keydown.enter)="submitForm()" matInput [formControl]="password" [type]="hide ? 'password' : 'text'" autocomplete="new-password">
@@ -21,10 +26,12 @@
             </mat-form-field>
         </div>
     </mat-card-content>
+
     <mat-card-actions>
         <button id="submit-button" class="structure-button" (click)="submitForm()" [disabled]="!(email.valid && password.valid)" mat-raised-button color="primary">
             Submit
         </button>
         <p id="error">{{ error }}</p>
     </mat-card-actions>
+
 </mat-card>
