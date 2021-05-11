@@ -107,7 +107,7 @@ export class StructureComponent implements OnInit {
 
   save(): void {
     this.loadBar = true;
-    this.processDate();
+    // this.processDate();
     this.structureService.edit(this.structure).subscribe(
       data => {
         this.loadBar = false;
