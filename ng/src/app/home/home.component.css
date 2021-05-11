@@ -64,6 +64,11 @@
     /* overflow-y: overlay; */
 }
 
+.title {
+    cursor: pointer;
+    color: rgb(46, 8, 95);
+}
+
 .box-title {
     font: 15px sans-serif;
     opacity: 0.85;

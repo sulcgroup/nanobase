@@ -6,7 +6,7 @@
         <div id="message">{{message}}</div>
         <mat-card class="structure-container" *ngFor="let structure of structures">
             <mat-card-header>
-                <mat-card-title>{{structure.title}}</mat-card-title>
+                <mat-card-title><span class="title" [routerLink]="['/structure', structure.id]">{{structure.title}}</span></mat-card-title>
                 <mat-card-subtitle>{{structure.lastName}} | {{formatDate(structure.uploadDate)}}</mat-card-subtitle>
             </mat-card-header>
             <img class="display-image" mat-card-image src="{{'file/' + structure.id + '/' + structure.displayImage}}" alt="Display Image" *ngIf="structure.displayImage">
