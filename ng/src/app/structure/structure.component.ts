@@ -51,7 +51,20 @@ export class StructureComponent implements OnInit {
     this.structureService.get(this.id).subscribe(
       data => {
         data.response.uploadDate = new Date(data.response.uploadDate);
-        data.response.publication.publishDate = data.response.publication.publishDate.split('-');
+        console.log(data.response.publication.publishDate);
+        console.log(typeof(data.response.publication.publishDate));
+        const date = new Date(data.response.publication.publishDate);
+        if (isNaN(date.getFullYear())) {
+          data.response.publication.publishDate = data.response.publication.publishDate.split('-');
+        }
+        else {
+          data.response.publication.publishDate = [];
+          data.response.publication.publishDate[0] = date.getFullYear().toString();
+          data.response.publication.publishDate[1] = date.getMonth().toString();
+          data.response.publication.publishDate[2] = '00';
+        }
+        console.log(data.response.publication.publishDate)
+
 
         // Read file contents
         const fileStrings = data.response.files_contents;
@@ -107,7 +120,7 @@ export class StructureComponent implements OnInit {
 
   save(): void {
     this.loadBar = true;
-    // this.processDate();
+    this.processDate();
     this.structureService.edit(this.structure).subscribe(
       data => {
         this.loadBar = false;
