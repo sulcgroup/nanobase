@@ -156,7 +156,7 @@
                 </mat-list>
             </mat-tab>
 
-            <mat-radio-group>
+            <mat-radio-group [(ngModel)]="structure.files.displayImage">
             <mat-tab label="Experiment Results">
                 <mat-list>
                     <mat-list-item *ngFor="let file of structure.files.expResults, let i = index">
@@ -168,7 +168,10 @@
                             <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
                                 <input matInput (change)="edited()" [(ngModel)]="structure.files.expResults[i].description" [placeholder]="'Description for '+file.name">
                             </mat-form-field>
-                        </div>
+                            <mat-radio-button class="radio" [checked]="'expResults/'+structure.files.expResults[i].name === structure.files.displayImage" (change)="edited()" [value]="'expResults/'+structure.files.expResults[i].name" *ngIf="isEditing && formService.isImageFile(structure.files.expResults[i].name)" color="accent">
+                                Primary image
+                            </mat-radio-button>
+                        </div><br>
                     </mat-list-item>
                     <mat-form-field class="file-input" *ngIf="isEditing">
                         <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'expResults')" placeholder="Add an Experiment Results file"></ngx-mat-file-input>
@@ -208,7 +211,10 @@
                             <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
                                 <input matInput (change)="edited()" [(ngModel)]="structure.files.simResults[i].description" [placeholder]="'Description for '+file.name">
                             </mat-form-field>
-                        </div>
+                            <mat-radio-button class="radio" [checked]="'simResults/'+structure.files.simResults[i].name === structure.files.displayImage" (change)="edited()" [value]="'simResults/'+structure.files.simResults[i].name" *ngIf="isEditing && formService.isImageFile(structure.files.simResults[i].name)" color="accent">
+                                Primary image
+                            </mat-radio-button>
+                        </div><br>
                     </mat-list-item>
                     <mat-form-field class="file-input" *ngIf="isEditing">
                         <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'simResults')" placeholder="Add a Simulation Results file"></ngx-mat-file-input>
@@ -228,10 +234,10 @@
                             <mat-form-field *ngIf="isEditing" class="description-field"><mat-label></mat-label>
                                 <input matInput (change)="edited()" [(ngModel)]="structure.files.images[i].description" [placeholder]="'Description for '+file.name">
                             </mat-form-field>
-                        </div>
-                        <mat-radio-button [checked]="'images/'+structure.files.images[i].name === structure.files.displayImage" (change)="edited()" [value]="'images/'+structure.files.images[i].name" *ngIf="formService.isImageFile(structure.files.images[i].name)" color="accent">
-                            Primary image
-                        </mat-radio-button><br>
+                            <mat-radio-button class="radio" [checked]="'images/'+structure.files.images[i].name === structure.files.displayImage" (change)="edited()" [value]="'images/'+structure.files.images[i].name" *ngIf="isEditing && formService.isImageFile(structure.files.images[i].name)" color="accent">
+                                Primary image
+                            </mat-radio-button>
+                        </div><br>
                     </mat-list-item>
                     <mat-form-field class="file-input" *ngIf="isEditing">
                         <ngx-mat-file-input color='primary' (change)="uploadFile($event.target, 'images')" placeholder="Add an image file"></ngx-mat-file-input>

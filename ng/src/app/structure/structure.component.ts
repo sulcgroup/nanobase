@@ -51,8 +51,6 @@ export class StructureComponent implements OnInit {
     this.structureService.get(this.id).subscribe(
       data => {
         data.response.uploadDate = new Date(data.response.uploadDate);
-        console.log(data.response.publication.publishDate);
-        console.log(typeof(data.response.publication.publishDate));
         const date = new Date(data.response.publication.publishDate);
         if (isNaN(date.getFullYear())) {
           data.response.publication.publishDate = data.response.publication.publishDate.split('-');
@@ -63,8 +61,6 @@ export class StructureComponent implements OnInit {
           data.response.publication.publishDate[1] = date.getMonth().toString();
           data.response.publication.publishDate[2] = '00';
         }
-        console.log(data.response.publication.publishDate)
-
 
         // Read file contents
         const fileStrings = data.response.files_contents;
@@ -144,7 +140,7 @@ export class StructureComponent implements OnInit {
       this.structure.publication.publishDate[1] = '00';
     }
     if (!year) {
-      this.structure.publication.publishDate[1] = '0000';
+      this.structure.publication.publishDate[0] = '0000';
     }
   }
 

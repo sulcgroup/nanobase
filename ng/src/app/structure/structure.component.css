@@ -19,6 +19,10 @@
     width: 400px;
 }
 
+.radio ::ng-deep {
+    margin-left: 15px;
+}
+
 .progress-bar {
     position: absolute!important;
     bottom: 92.1%!important;
