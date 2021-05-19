@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { StructureService, StructureCover } from 'src/app/core';
+import { StructureService, StructureCover, LoadbarService } from 'src/app/core';
 
 @Component({
   selector: 'app-home',
@@ -9,8 +9,6 @@ import { StructureService, StructureCover } from 'src/app/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  loadBar = true;
-  loadBarMode = 'query';
   structures: Array<StructureCover> = [];
   oldHeight = 0;
   message: string;
@@ -30,7 +28,12 @@ export class HomeComponent implements OnInit {
     authors: 'author'
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private structService: StructureService) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private structService: StructureService,
+    public loadBarService: LoadbarService
+  ) { }
 
   ngOnInit(): void {
     let input = this.route.snapshot.queryParams.input;
@@ -83,11 +86,11 @@ export class HomeComponent implements OnInit {
           }
           console.log('Loaded searched structures: ', this.structures);
         }
-        this.loadBar = false;
+        this.loadBarService.disable();
       },
       err => {
         console.log('err', err);
-        this.loadBar = false;
+        this.loadBarService.disable();
       }
     );
   }
@@ -98,11 +101,11 @@ export class HomeComponent implements OnInit {
         data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
         this.structures.push(...data);
         console.log(`Loaded ${count} more structures: `, data);
-        this.loadBar = false;
+        this.loadBarService.disable();
       },
       err => {
         console.log('err', err);
-        this.loadBar = false;
+        this.loadBarService.disable();
       }
     );
   }
@@ -115,11 +118,11 @@ export class HomeComponent implements OnInit {
         data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
         this.structures = data;
         console.log('Loaded recent structures: ', this.structures);
-        this.loadBar = false;
+        this.loadBarService.disable();
       },
       err => {
         console.log('err', err);
-        this.loadBar = false;
+        this.loadBarService.disable();
       }
     );
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService } from '../core';
+import { LoadbarService, UserService } from '../core';
 
 
 @Component({
@@ -16,17 +16,21 @@ export class ProfileComponent implements OnInit {
   newPassword = new FormControl('', [Validators.required, Validators.minLength(8)]);
   passwordResponse = '';
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router, public loadBarService: LoadbarService) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.loadBarService.disable();
+  }
 
   viewStructures(): void {
+    this.loadBarService.enable();
     this.userService.getUserId().subscribe(id => {
       this.router.navigateByUrl(`/?input=${id}&category=user_id`);
     });
   }
 
   logout(): void {
+    this.loadBarService.enable();
     this.userService.logout().subscribe(
       data => data.response === 'OK' ? this.router.navigateByUrl('/') : console.log(data),
       err => console.log(err)
@@ -48,12 +52,14 @@ export class ProfileComponent implements OnInit {
   }
 
   updatePassword(): void {
+    this.loadBarService.enable();
     this.oldPassword.disable();
     this.newPassword.disable();
     this.passwordResponse = '';
 
     this.userService.updatePassword(this.oldPassword.value, this.newPassword.value).subscribe(
       data => {
+        this.loadBarService.disable();
         const response = document.getElementById('password-response');
         if (data === 'Your password has been updated') {
           response.classList.remove('fail');
@@ -69,6 +75,7 @@ export class ProfileComponent implements OnInit {
         this.newPassword.enable();
       },
       err => {
+        this.loadBarService.disable();
         console.log(err);
         this.oldPassword.enable();
         this.newPassword.enable();

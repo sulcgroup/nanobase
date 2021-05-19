@@ -23,8 +23,8 @@ get_structure_query = ('SELECT Structures.*, Users.firstName, Users.lastName, Us
 get_structures_by_user = ('SELECT id FROM Structures WHERE userId = %s')
 insert_structure_query = (
     'REPLACE INTO Structures'
-    '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `structureDescriptions`, `expProtocolDescriptions`, `expResultsDescriptions`, `simProtocolDescriptions`, `simResultsDescriptions`, `imageDescriptions`, `private`, `uploadDate`)'
-	'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `structureDescriptions`, `expProtocolDescriptions`, `expResultsDescriptions`, `simProtocolDescriptions`, `simResultsDescriptions`, `imageDescriptions`, `private`, `uploadDate`, `oxdnaFiles`)'
+	'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 )
 insert_max_structure_id = ('INSERT INTO Structures () VALUES ()')
 get_max_structure_id = ('SELECT MAX(id) FROM Structures')
@@ -87,19 +87,22 @@ def get_structure(id):
         keywords = [x[0] for x in cursor.fetchall()]
         cursor.execute(get_authors_query, (id))
         authors = [x[0] for x in cursor.fetchall()]
-
     connection.close()
 
     # Get file contents
+    print(s[25])
+    oxdna_files = s[25][:-1].split('|') if s[25] else []
     files = []
-    structure_files = s[10].split('|')
-    path = os.path.join('structures', id, 'structure/')
-    for file_name in structure_files:
-        file = open(path + file_name, 'r')
-        files.append({
-            'name': file_name,
-            'contents': file.read()
-        })
+    if oxdna_files and (len(oxdna_files) > 1 or oxdna_files[0] != ''):
+        path = os.path.join('structures', id, 'structure/')
+        for file_name in oxdna_files:
+            file = open(path + file_name, 'r')
+            files.append({
+                'name': file_name,
+                'contents': file.read()
+            })
+    else:
+        oxdna_files = []
 
     structure = {
         'id': id,
@@ -109,13 +112,14 @@ def get_structure(id):
         'size': s[5],
         'private': s[23],
         'uploadDate': s[24],
-        'user': { 'id': s[1], 'firstName': s[25], 'lastName': s[26], 'institution': s[26] },
-        'files': { 'displayImage': s[16] },
+        'user': { 'id': s[1], 'firstName': s[26], 'lastName': s[27], 'institution': s[28] },
+        'files': { 'displayImage': s[16], 'oxdnaFiles': oxdna_files },
         'publication': { 'publishDate': s[6], 'citation': s[7], 'link': s[8], 'licensing': s[9], 'authors': authors },
         'tags': { 'applications': applications, 'modifications': modifications, 'keywords': keywords },
         'files_contents': files
     }
 
+    structure_files = s[10].split('|')
     expProtocolFiles = s[11].split('|')
     expResultsFiles = s[12].split('|')
     simProtocolFiles = s[13].split('|')
@@ -235,10 +239,11 @@ def upload_structure(structure, user_id):
         id = cursor.fetchone()[0]
         cursor.execute(get_user_name, (user_id))
         first_name, last_name = cursor.fetchall()[0]
+    
+    print(structure)
         
-
-    file_names, file_descriptions = upload_files(id, structure)
-    insert_structure(id, structure, user_id, file_names, file_descriptions, connection)
+    file_names, file_descriptions, oxdna_files = upload_files(id, structure)
+    insert_structure(id, structure, user_id, file_names, oxdna_files, file_descriptions, connection)
     connection.close()
 
     index_structure(id, structure, first_name, last_name)
@@ -248,7 +253,7 @@ def upload_structure(structure, user_id):
 def upload_files(id, structure):
     struct_path = 'structures/' + str(id)
     os.mkdir(struct_path)
-    
+
     file_types = ['structure', 'expProtocol', 'expResults', 'simProtocol', 'simResults', 'images']
     file_names = [''] * len(file_types)
     file_descriptions = [''] * len(file_types)
@@ -266,10 +271,21 @@ def upload_files(id, structure):
                 continue
             write_file(file_name, f['contents'], file_path)
     
-    return file_names, file_descriptions
+    oxdna_files = ''
+    if len(structure['oxdna']) > 1 or structure['oxdna'][0]['file'] != '':
+        file_dir = os.path.join(struct_path, 'structure')
+        for f in structure['oxdna']:
+            file_name = f['file']['_fileNames']
+            file_path = os.path.join(file_dir, file_name)
+            file_names[0] += file_name + '|'
+            oxdna_files += file_name + '|'
+            file_descriptions[0] += f['description'] + '|'
+            write_file(file_name, f['contents'], file_path)
+
+    return file_names, file_descriptions, oxdna_files
 
 # Add structure to MySQL database
-def insert_structure(id, structure, user_id, file_names, file_descriptions, connection):    
+def insert_structure(id, structure, user_id, file_names, oxdna_files, file_descriptions, connection):
     structure_data = (
         id,
         int(user_id),
@@ -285,6 +301,7 @@ def insert_structure(id, structure, user_id, file_names, file_descriptions, conn
         file_descriptions[0][:-1], file_descriptions[1][:-1], file_descriptions[2][:-1], file_descriptions[3][:-1], file_descriptions[4][:-1], file_descriptions[5][:-1],
         1 if structure['isPrivate'] == True else 0,
         structure['uploadDate'] if structure['uploadDate'] else date.today().strftime('%Y-%m-%d'),
+        oxdna_files
     )
     
     with connection.cursor() as cursor:

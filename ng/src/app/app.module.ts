@@ -14,6 +14,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { HeaderComponent } from './layout/header/header.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
@@ -27,17 +28,18 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MatInputModule,
+    AppRoutingModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    MatInputModule,
     MatButtonModule,
     MatSliderModule,
     MatFormFieldModule,
     MatIconModule,
     MatSelectModule,
-    AppRoutingModule,
-    HttpClientModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent],

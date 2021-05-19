@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, } from '@angular/router';
 import { FileInput } from 'ngx-material-file-input';
-import { Structure, StructureService, User, FormService } from '../core';
+import { Structure, StructureService, User, FormService, LoadbarService } from '../core';
 import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 
@@ -23,14 +23,14 @@ export class StructureComponent implements OnInit {
   selectable = true;
   removable = true;
   addOnBlur = true;
-  loadBar = true;
   separatorKeysCodes: number[] = [ENTER, COMMA, SEMICOLON];
   confirmMessage = 'Your unsaved changes will be lost. Are you sure you want to switch to public view?';
 
   constructor(private structureService: StructureService,
               private formService: FormService,
+              public loadBarService: LoadbarService,
               private route: ActivatedRoute,
-              private router: Router
+              private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -72,6 +72,7 @@ export class StructureComponent implements OnInit {
         console.log('Loaded structure: ', this.structure);
 
         this.checkAuthor(this.structure.user.id);
+        this.loadBarService.disable();
       },
       err => console.log('err', err)
     );
@@ -115,15 +116,15 @@ export class StructureComponent implements OnInit {
   }
 
   save(): void {
-    this.loadBar = true;
+    this.loadBarService.enable();
     this.processDate();
     this.structureService.edit(this.structure).subscribe(
       data => {
-        this.loadBar = false;
+        this.loadBarService.disable();
         console.log('Saved structure: ', data);
       },
       err => {
-        this.loadBar = false;
+        this.loadBarService.disable();
         console.log('err', err);
       }
     );

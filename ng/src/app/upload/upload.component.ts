@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FileInput } from 'ngx-material-file-input';
 import { map, startWith } from 'rxjs/operators';
-import { FormService, ApiService, StructureUpload, UserService, StructureService, User } from '../core';
+import { FormService, ApiService, StructureUpload, UserService, StructureService, User, LoadbarService } from '../core';
 
 const required = ['', Validators.required];
 const fileForm = {
@@ -20,7 +20,6 @@ const fileForm = {
 })
 export class UploadComponent implements OnInit {
   isOptional = true;
-  loadBar = false;
   today = new Date();
   user: User;
 
@@ -47,7 +46,8 @@ export class UploadComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private apiService: ApiService,
-    private structService: StructureService
+    private structService: StructureService,
+    public loadBarService: LoadbarService
   ) { }
 
   ngOnInit(): void {
@@ -78,6 +78,8 @@ export class UploadComponent implements OnInit {
     });
 
     this.fileGroup = this.fb.group({
+      isOxdna: this.fb.control(false),
+      oxdna: this.fb.array([this.fb.group(fileForm)]),
       structure: this.fb.array([this.fb.group(fileForm)]),
       expProtocol: this.fb.array([this.fb.group(fileForm)]),
       expResults: this.fb.array([this.fb.group(fileForm)]),
@@ -106,8 +108,14 @@ export class UploadComponent implements OnInit {
 
   getAutofill(count: number): void {
     this.structService.getRecentTags(count).subscribe(
-      data => this.options = data,
-      err => console.log('err', err)
+      data => {
+        this.loadBarService.disable();
+        this.options = data;
+      },
+      err => {
+        this.loadBarService.disable();
+        console.log('err', err);
+      }
     );
     // tslint:disable: no-string-literal
     for (const type of this.categories) {
@@ -125,22 +133,22 @@ export class UploadComponent implements OnInit {
   }
 
   submit(): void {
+    this.loadBarService.enable();
     const structure: StructureUpload = this.processForm();
     console.log('Uploading structure...', structure);
-    this.loadBar = true;
     this.disableForm();
 
     this.apiService.post('/structure', { structure })
     .subscribe(
       data => {
+        this.loadBarService.disable();
         console.log('UPLOAD SUCCESS', data);
-        this.loadBar = false;
         this.enableForm();
         this.router.navigateByUrl(`/structure/${data.response}`);
       },
       err => {
+        this.loadBarService.disable();
         console.log('UPLOAD ERROR', err);
-        this.loadBar = false;
         this.enableForm();
       }
     );
@@ -153,6 +161,8 @@ export class UploadComponent implements OnInit {
       ...this.fileGroup.value,
       ...this.miscGroup.value,
     };
+
+    // Format date
     const month = structure.month;
     const year = structure.year;
     if (structure.isDelayed) {

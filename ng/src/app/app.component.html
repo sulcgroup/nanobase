@@ -1,6 +1,6 @@
 <app-header></app-header>
+<mat-progress-bar [ngStyle]="{'visibility': loadBarService.loadBar ? 'visible' : 'hidden'}" class='progress-bar' mode="indeterminate"></mat-progress-bar>
 <div id="body">
-
     <app-sidebar id="sidebar"></app-sidebar>
 
     <div id="main">

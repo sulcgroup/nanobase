@@ -25,3 +25,8 @@
     overflow-y: visible;
     /* overflow-y: hidden; */
 }
+
+.progress-bar {
+    position: fixed;
+    z-index: 100;
+}

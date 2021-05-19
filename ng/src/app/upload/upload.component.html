@@ -1,9 +1,8 @@
-<mat-progress-bar [ngClass]="{'invisible': !loadBar}" mode="indeterminate"></mat-progress-bar>
 <mat-horizontal-stepper class="form-container" linear #stepper>
   <mat-step [stepControl]="structureGroup" [optional]="isOptional">
     <form [formGroup]="structureGroup">
       <ng-template matStepLabel>Structure Information</ng-template>
-
+      Please fill out the form in one sitting; your changes will not be saved.<br>
       <mat-form-field class="field-container">
         <mat-label>Structure Name</mat-label>
         <input maxlength="128" matInput formControlName="name">
@@ -84,27 +83,8 @@
       <ng-template matStepLabel>Publication Information</ng-template>
 
       <div formArrayName="authors">
-        <mat-form-field class="field-container hashtag-field" *ngFor="let author of fieldArray('authors', 2).controls; let i=index" [formGroupName]="i" [ngSwitch]="i">
-          <mat-label *ngSwitchCase="0">1st author</mat-label>
-          <mat-label *ngSwitchCase="1">2nd author</mat-label>
-          <mat-label *ngSwitchCase="2">3rd author</mat-label>
-          <mat-label *ngSwitchCase="3">4th author</mat-label>
-          <mat-label *ngSwitchCase="4">5th author</mat-label>
-          <mat-label *ngSwitchCase="5">6th author</mat-label>
-          <mat-label *ngSwitchCase="6">7th author</mat-label>
-          <mat-label *ngSwitchCase="7">8th author</mat-label>
-          <mat-label *ngSwitchCase="8">9th author</mat-label>
-          <mat-label *ngSwitchCase="9">10th author</mat-label>
-          <mat-label *ngSwitchCase="10">11th author</mat-label>
-          <mat-label *ngSwitchCase="11">12th author</mat-label>
-          <mat-label *ngSwitchCase="12">13th author</mat-label>
-          <mat-label *ngSwitchCase="13">14th author</mat-label>
-          <mat-label *ngSwitchCase="14">15th author</mat-label>
-          <mat-label *ngSwitchCase="15">16th author</mat-label>
-          <mat-label *ngSwitchCase="16">17th author</mat-label>
-          <mat-label *ngSwitchCase="17">18th author</mat-label>
-          <mat-label *ngSwitchCase="18">19th author</mat-label>
-          <mat-label *ngSwitchCase="19">20th author</mat-label>
+        <mat-form-field class="field-container hashtag-field" *ngFor="let author of fieldArray('authors', 2).controls; let i=index" [formGroupName]="i">
+          <mat-label>Author #{{i+1}}</mat-label>
           <input maxlength="64" matInput formControlName="value" placeholder="Jane Doe">
           <button *ngIf="i>0" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('authors', 2, i)">
             <mat-icon>close</mat-icon>
@@ -154,9 +134,37 @@
       <mat-radio-group formControlName="displayImage">
         <ng-template matStepLabel>File Uploads</ng-template>
 
+        <mat-checkbox checked formControlName='isOxdna' [value]="true" color="accent">
+          Is this an OxDNA structure?
+        </mat-checkbox>
+        <ng-container *ngIf="fileGroup.controls['isOxdna'].value">
+          <div formArrayName="oxdna" *ngFor="let file of fieldArray('oxdna', 3).controls; let i=index">
+            <mat-form-field class="field-container multiple-field" [formGroupName]="i">
+              <ngx-mat-file-input (change)="uploadFile($event.target, 'oxdna', i)" #oxdna formControlName="file" [placeholder]="i===0 ? 'OxDNA Files' : ''" accept=".top,.dat,.json,.oxdna"
+              [matTooltip]="i===0 ? 'accepts top, dat, json, oxdna files' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
+              <button *ngIf="i===0 && oxdna.empty" mat-icon-button matSuffix>
+                <mat-icon>folder</mat-icon>
+              </button>
+              <button *ngIf="i>0 && oxdna.empty" mat-button matSuffix mat-icon-button aria-label="Clear" (mouseup)="removeField('oxdna', 3, i)">
+                <mat-icon>clear</mat-icon>
+              </button>
+              <button mat-icon-button matSuffix *ngIf="!oxdna.empty" (click)="oxdna.clear($event)">
+                <mat-icon>clear</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field class="file-description" [formGroupName]="i" *ngIf="fileGroup.get('oxdna')?.value[i].file?._fileNames">
+              <mat-label>File Description</mat-label>
+              <input maxlength="256" matInput (change)="fileGroup.controls['oxdna'].value[i].description = $event.target.value">
+            </mat-form-field>
+          </div>
+          <button class="field-button" (mouseup)="addField('oxdna', 3)" mat-stroked-button>Add file</button>
+        </ng-container>
+        
+
         <div formArrayName="structure" *ngFor="let file of fieldArray('structure', 3).controls; let i=index">
           <mat-form-field class="field-container multiple-field" [formGroupName]="i">
-            <ngx-mat-file-input (change)="uploadFile($event.target, 'structure', i)" #structure formControlName="file" [placeholder]="i===0 ? 'Structure File(s)' : ''"
+            <ngx-mat-file-input (change)="uploadFile($event.target, 'structure', i)" #structure formControlName="file"
+            [placeholder]="i===0 ? (fileGroup.controls['isOxdna'].value ? 'Additional Structure File(s)' : 'Structure File(s)') : ''"
             [matTooltip]="i===0 ? 'e.g. oxDNA, CaDNAno, sequences' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
             <button *ngIf="i===0 && structure.empty" mat-icon-button matSuffix>
               <mat-icon>folder</mat-icon>
@@ -323,7 +331,7 @@
 
       <div>
         <button class="stepper-button" mat-flat-button matStepperPrevious color="primary">Back</button>
-        <button class="stepper-button" mat-flat-button (click)="submit()" [disabled]="loadBar" color="primary">Submit</button>
+        <button class="stepper-button" mat-flat-button (click)="submit()" [disabled]="loadBarService.loadBar" color="primary">Submit</button>
       </div>
     </form>
   </mat-step>
