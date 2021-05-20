@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild} from '@angular/core';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router, } from '@angular/router';
 import { FileInput } from 'ngx-material-file-input';
@@ -11,7 +11,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
   templateUrl: './structure.component.html',
   styleUrls: ['./structure.component.css']
 })
-export class StructureComponent implements OnInit {
+export class StructureComponent implements AfterViewInit {
   @ViewChild('slideToggle') editToggle: MatSlideToggle;
   id: number;
   structure: Structure;
@@ -31,9 +31,11 @@ export class StructureComponent implements OnInit {
               public loadBarService: LoadbarService,
               private route: ActivatedRoute,
               private router: Router,
-  ) { }
+  ) {
+    this.loadBarService.enable();
+  }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.route.paramMap.subscribe(params => {
       this.id = parseInt(params.get('id'), 10);
       this.getStructure();
@@ -72,7 +74,7 @@ export class StructureComponent implements OnInit {
         console.log('Loaded structure: ', this.structure);
 
         this.checkAuthor(this.structure.user.id);
-        this.loadBarService.disable();
+        // this.loadBarService.disable();
       },
       err => console.log('err', err)
     );
