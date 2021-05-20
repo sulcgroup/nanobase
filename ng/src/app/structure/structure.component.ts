@@ -74,7 +74,7 @@ export class StructureComponent implements AfterViewInit {
         console.log('Loaded structure: ', this.structure);
 
         this.checkAuthor(this.structure.user.id);
-        // this.loadBarService.disable();
+        this.loadBarService.disable();
       },
       err => console.log('err', err)
     );
