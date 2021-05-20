@@ -9,6 +9,7 @@ from urllib import request
 from datetime import date
 from elasticsearch import Elasticsearch
 import json
+import sys
 import requests
 
 es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
@@ -90,7 +91,7 @@ def get_structure(id):
     connection.close()
 
     # Get file contents
-    print(s[25])
+    print(s[25], file=sys.stderr)
     oxdna_files = s[25][:-1].split('|') if s[25] else []
     files = []
     if oxdna_files and (len(oxdna_files) > 1 or oxdna_files[0] != ''):

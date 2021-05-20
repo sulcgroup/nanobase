@@ -13,7 +13,7 @@ export class LoadbarService {
     this.loadBar = true;
   }
 
-  disable(): void {
+  disable(): void {    
     this.loadBar = false;
   }
 

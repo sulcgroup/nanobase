@@ -6,3 +6,4 @@ __pycache__/
 nohup.out
 nanobase_email/login.txt
 structures/
+restart.sh

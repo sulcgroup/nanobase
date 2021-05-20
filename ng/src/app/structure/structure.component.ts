@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild} from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, AfterContentInit} from '@angular/core';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router, } from '@angular/router';
 import { FileInput } from 'ngx-material-file-input';
@@ -36,6 +36,7 @@ export class StructureComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.loadBarService.enable();
     this.route.paramMap.subscribe(params => {
       this.id = parseInt(params.get('id'), 10);
       this.getStructure();

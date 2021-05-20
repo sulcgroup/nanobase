@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { StructureService, StructureCover, LoadbarService } from 'src/app/core';
@@ -42,8 +42,8 @@ export class HomeComponent implements OnInit {
     this.loadRecentTags(10);
     this.infiniteScroll();
 
-    this.router.events.subscribe(val => {
-      if (val instanceof NavigationEnd) {
+    this.router.events.subscribe(val => {      
+      if (val instanceof NavigationEnd && val.url === '/') {        
         const url = new URLSearchParams(val.url.slice(2));
         input = url.get('input');
         category = url.get('category');
@@ -52,18 +52,25 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  infiniteScroll(): void {
-    document.addEventListener('scroll', e => {
-      const body = document.body;
-      const html = document.documentElement;
-      const currentHeight = window.scrollY + window.innerHeight;
-      const totalHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight);
+  ngOnDestroy(): void {
+    console.log("ASDFQWEFQWEFWEQFEQWEFq")
+    document.addEventListener('scroll', e => e.stopImmediatePropagation(), true);
+  }
 
-      if (currentHeight + 300 >= totalHeight && this.oldHeight + 300 < totalHeight) {
-        this.oldHeight = currentHeight;
-        this.loadRandom(5);
-      }
-    });
+  
+
+  infiniteScroll(): void {
+    const scrollListener = () => {
+      const body = document.body;
+        const html = document.documentElement;
+        const currentHeight = window.scrollY + window.innerHeight;
+        const totalHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight);
+        if (currentHeight + 300 >= totalHeight && this.oldHeight + 300 < totalHeight) {
+          this.oldHeight = currentHeight;
+          this.loadRandom(5);
+        }
+    }
+    document.addEventListener('scroll', scrollListener);
   }
 
   loadSearch(input: string, category: string): void {
