@@ -13,6 +13,7 @@
     </div>
     <mat-divider id="header-divider"></mat-divider><br>
 
+    <h1 id="iframe-title">OxView Visualization</h1>
     <div id="section-one">
         <div id="iframe-container">
             <iframe id="oxview-frame" name="oxview-frame" src="https://sulcgroup.github.io/oxdna-viewer/" (load)="onLoadHandler()"></iframe>
@@ -126,6 +127,9 @@
                             <mat-form-field color="accent" *ngIf="isEditing" class="description-field"><mat-label></mat-label>
                                 <input (change)="edited()" class="file-description" matInput [(ngModel)]="structure.files.structure[i].description" [placeholder]="'Description for '+file.name">
                             </mat-form-field>
+                            <mat-checkbox class="radio" [checked]="structure.files.oxdnaFiles.includes(structure.files.structure[i].name)" (change)="edited();checkOxdna($event.checked, structure.files.structure[i].name)" *ngIf="true" color="accent">
+                                Show in OxView
+                            </mat-checkbox>
                         </div>
                     </mat-list-item>
                     <mat-form-field class="file-input" *ngIf="isEditing">

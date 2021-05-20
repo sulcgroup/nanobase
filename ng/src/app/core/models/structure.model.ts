@@ -16,8 +16,8 @@ export interface StructureCover {
 export interface Structure {
     description: string;
     files: {
-        displayImage: [string];
-        oxdnaFiles: [string];
+        displayImage: string;
+        oxdnaFiles: string[];
         expProtocol: [{name: string, description: string}];
         expResults: [{name: string, description: string}];
         images: [{name: string, description: string}];

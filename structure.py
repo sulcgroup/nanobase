@@ -362,8 +362,13 @@ def edit_structure(new_struct):
     file_names = []
     file_descriptions = []
     for file_type in new_struct['files']:
-        file_names.append('|'.join([file['name'] for file in new_struct['files'][file_type]]))
-        file_descriptions.append('|'.join([file['description'] for file in new_struct['files'][file_type]]))
+        if file_type != 'oxdnaFiles':
+            file_names.append('|'.join([file['name'] for file in new_struct['files'][file_type]]))
+            file_descriptions.append('|'.join([file['description'] for file in new_struct['files'][file_type]]))
+            if file_type == 'structure':
+                print(new_struct['files'], file_names)
+                new_struct['files']['oxdnaFiles'] = [file for file in new_struct['files']['oxdnaFiles'] if file in file_names[5]]
+        
     
     structure_data = (
         id,
@@ -380,6 +385,7 @@ def edit_structure(new_struct):
         file_descriptions[5], file_descriptions[0], file_descriptions[1], file_descriptions[3], file_descriptions[4], file_descriptions[2],
         new_struct['private'],
         new_struct['uploadDate'],
+        '|'.join(new_struct['files']['oxdnaFiles']) + '|'
     )
         
     connection = database.pool.get_connection()
@@ -471,17 +477,18 @@ def edit_structure(new_struct):
 
 def edit_files(new_files, id):
     for file_type in new_files:
-        # Remove deleted files
-        path = 'structures/' + id + '/' + file_type
-        old_files = os.listdir(path)
-        for file in old_files:
-            if file not in [new_file['name'] for new_file in new_files[file_type]]:
-                os.remove(path + '/' + file)
+        if file_type != 'oxdnaFiles':
+            # Remove deleted files
+            path = 'structures/' + id + '/' + file_type
+            old_files = os.listdir(path)
+            for file in old_files:
+                if file not in [new_file['name'] for new_file in new_files[file_type]]:
+                    os.remove(path + '/' + file)
 
-        # Write new filse
-        for file in new_files[file_type]:
-            if 'contents' in file:
-                write_file(file['name'], file['contents'], path + '/' + file['name'])
+            # Write new filse
+            for file in new_files[file_type]:
+                if 'contents' in file:
+                    write_file(file['name'], file['contents'], path + '/' + file['name'])
 
 def write_file(name, contents, path):
     if is_data_url(name):

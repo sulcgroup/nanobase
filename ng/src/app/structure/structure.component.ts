@@ -131,6 +131,18 @@ export class StructureComponent implements OnInit {
     this.hasBeenEdited = false;
   }
 
+  checkOxdna(value: boolean, file: string): void {
+    if (value) {
+      if (this.structure.files.oxdnaFiles.indexOf(file) < 0) {
+        this.structure.files.oxdnaFiles.push(file);
+      }
+    }
+    else {
+      this.structure.files.oxdnaFiles = this.structure.files.oxdnaFiles.filter(oxdnaFile => oxdnaFile !== file);
+    }
+    console.log(this.structure.files.oxdnaFiles);
+  }
+
   processDate(): void {
     const year = this.structure.publication.publishDate[0];
     const month = this.structure.publication.publishDate[1];

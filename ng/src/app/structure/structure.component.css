@@ -39,11 +39,17 @@
     margin: 10px auto;
     margin-bottom: 25px;
 }
+
+#iframe-title {
+    margin-bottom: 0;
+}
+
 #iframe-container {
     margin: auto;
     width: 100%;
     height: 100%;
 }
+
 #structure-info-container {
     flex-basis: 60%;
     margin: 0 auto;
