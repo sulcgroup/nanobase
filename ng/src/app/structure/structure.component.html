@@ -127,7 +127,7 @@
                             <mat-form-field color="accent" *ngIf="isEditing" class="description-field"><mat-label></mat-label>
                                 <input (change)="edited()" class="file-description" matInput [(ngModel)]="structure.files.structure[i].description" [placeholder]="'Description for '+file.name">
                             </mat-form-field>
-                            <mat-checkbox class="radio" [checked]="structure.files.oxdnaFiles.includes(structure.files.structure[i].name)" (change)="edited();checkOxdna($event.checked, structure.files.structure[i].name)" *ngIf="true" color="accent">
+                            <mat-checkbox class="radio" [checked]="structure.files.oxdnaFiles.includes(structure.files.structure[i].name)" (change)="edited();checkOxdna($event.checked, structure.files.structure[i].name)" *ngIf="isEditing" color="accent">
                                 Show in OxView
                             </mat-checkbox>
                         </div>
