@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit {
     this.infiniteScroll();
 
     this.router.events.subscribe(val => {      
-      if (val instanceof NavigationEnd && val.url === '/') {        
+      if (val instanceof NavigationEnd && val.url === '/') {
         const url = new URLSearchParams(val.url.slice(2));
         input = url.get('input');
         category = url.get('category');
@@ -53,23 +53,21 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    console.log("ASDFQWEFQWEFWEQFEQWEFq")
     document.addEventListener('scroll', e => e.stopImmediatePropagation(), true);
   }
 
-  
 
   infiniteScroll(): void {
     const scrollListener = () => {
       const body = document.body;
-        const html = document.documentElement;
-        const currentHeight = window.scrollY + window.innerHeight;
-        const totalHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight);
-        if (currentHeight + 300 >= totalHeight && this.oldHeight + 300 < totalHeight) {
-          this.oldHeight = currentHeight;
-          this.loadRandom(5);
-        }
-    }
+      const html = document.documentElement;
+      const currentHeight = window.scrollY + window.innerHeight;
+      const totalHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight);
+      if (currentHeight + 300 >= totalHeight && this.oldHeight + 300 < totalHeight) {
+        this.oldHeight = currentHeight;
+        this.loadRandom(5);
+      }
+    };
     document.addEventListener('scroll', scrollListener);
   }
 
