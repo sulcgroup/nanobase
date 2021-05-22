@@ -7,8 +7,13 @@ import { FormService, ApiService, StructureUpload, UserService, StructureService
 
 const required = ['', Validators.required];
 const fileForm = {
+  file: '',
+  description: '',
+  contents: [''],
+};
+const structureFileForm = {
   file: required,
-  description: required,
+  description: '',
   contents: [''],
 };
 
@@ -19,7 +24,7 @@ const fileForm = {
   encapsulation: ViewEncapsulation.None,
 })
 export class UploadComponent implements OnInit {
-  isOptional = true;
+  isOptional = false;
   today = new Date();
   user: User;
 
@@ -57,24 +62,19 @@ export class UploadComponent implements OnInit {
     this.structureGroup = this.fb.group({
       name: required,
       type: required,
-      applications: this.fb.array([this.fb.group({ value: required, filteredOptions: [] })]),
-      modifications: this.fb.array([this.fb.group({ value: required, filteredOptions: [] })]),
-      keywords: this.fb.array([this.fb.group({ value: required, filteredOptions: [] })]),
-      description: ['', Validators.compose([Validators.required, Validators.maxLength(300)])],
+      applications: this.fb.array([this.fb.group({ value: '', filteredOptions: [] })]),
+      modifications: this.fb.array([this.fb.group({ value: '', filteredOptions: [] })]),
+      keywords: this.fb.array([this.fb.group({ value: '', filteredOptions: [] })]),
+      description: ['', Validators.compose([Validators.required, Validators.maxLength(1000)])],
     });
 
     this.publicationGroup = this.fb.group({
       authors: this.fb.array([this.fb.group({ value: [''] })]),
-      year: ['', Validators.compose([Validators.pattern(/^(19|20)\d{2}$/),
-                 this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
-                 Validators.required, 'Year error')])],
+      year: ['', Validators.compose([Validators.pattern(/^(19|20)\d{2}$/), this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value, Validators.required, 'Year error')])],
       month: ['', Validators.pattern(/(^0?[1-9]$)|(^1[0-2]$)/)],
-      citation: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
-                     Validators.required, 'Citation error')],
-      link: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
-                       Validators.required, 'Link error')],
-      licensing: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value,
-                       Validators.required, 'Licensing error')],
+      citation: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value, Validators.required, 'Citation error')],
+      link: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value, Validators.maxLength(512), 'Link error')],
+      licensing: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value, Validators.maxLength(512), 'Licensing error')],
     });
 
     this.fileGroup = this.fb.group({
@@ -92,7 +92,7 @@ export class UploadComponent implements OnInit {
     this.miscGroup = this.fb.group({
       isPrivate: this.fb.control(false),
       isDelayed: this.fb.control(false),
-      uploadDate: this.fb.control('')
+      uploadDate: this.fb.control(required)
     });
 
     // Update fields when author field changes
@@ -207,9 +207,8 @@ export class UploadComponent implements OnInit {
   addField(type: string, group: number): void {
     const limit = (type === 'authors') ? 20 : 10;
     if (this.fieldArray(type, group).value.length < limit) {
-      console.log(type, this.categories, type in this.categories);
       if (this.categories.includes(type)) {
-        this.fieldArray(type, group).push(this.fb.group({ value: required }));
+        this.fieldArray(type, group).push(this.fb.group({ value: '' }));
         const i = this.filteredOptions[type].length;
         this.filteredOptions[type].push([]);
         this.filteredOptions[type][i] =
@@ -219,7 +218,7 @@ export class UploadComponent implements OnInit {
         );
       }
       else {
-        const newField = (group === 3) ? this.fb.group(fileForm) : this.fb.group({ value: required });
+        const newField = (group === 3) ? this.fb.group(structureFileForm) : this.fb.group({ value: required });
         this.fieldArray(type, group).push(newField);
       }
     }

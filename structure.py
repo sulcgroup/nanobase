@@ -287,6 +287,20 @@ def upload_files(id, structure):
 
 # Add structure to MySQL database
 def insert_structure(id, structure, user_id, file_names, oxdna_files, file_descriptions, connection):
+    print("QWERQWERQWERQWERQ", file_names)
+    print(structure['uploadDate'])
+    upload_date = ''
+    if structure['uploadDate']:
+        if (len(structure['uploadDate']) == 2 and structure['uploadDate'][0] == ''):
+            upload_date = date.today().strftime('%Y-%m-%d')
+        else:
+            upload_date = structure['uploadDate']
+    else:
+        if structure['isPrivate'] == True:
+            upload_date = '2099-01-01'
+        else:
+            upload_date = date.today().strftime('%Y-%m-%d')
+
     structure_data = (
         id,
         int(user_id),
@@ -301,9 +315,11 @@ def insert_structure(id, structure, user_id, file_names, oxdna_files, file_descr
         structure['displayImage'],
         file_descriptions[0][:-1], file_descriptions[1][:-1], file_descriptions[2][:-1], file_descriptions[3][:-1], file_descriptions[4][:-1], file_descriptions[5][:-1],
         1 if structure['isPrivate'] == True else 0,
-        structure['uploadDate'] if structure['uploadDate'] else date.today().strftime('%Y-%m-%d'),
+        upload_date,
         oxdna_files
     )
+
+    print('qqqqqqqqq',structure_data)
     
     with connection.cursor() as cursor:
         cursor.execute(insert_structure_query, (structure_data))

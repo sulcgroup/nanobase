@@ -5,12 +5,12 @@
       Please fill out the form in one sitting; your changes will not be saved.<br>
       <mat-form-field class="field-container">
         <mat-label>Structure Name</mat-label>
-        <input maxlength="128" matInput formControlName="name">
+        <input maxlength="128" matInput formControlName="name" required>
       </mat-form-field><br>
 
       <mat-form-field class="field-container dropdown-field" appearance="fill">
         <mat-label>Molecule Type</mat-label>
-        <mat-select formControlName="type">
+        <mat-select formControlName="type" required>
           <mat-option value="DNA">DNA</mat-option>
           <mat-option value="RNA">RNA</mat-option>
           <mat-option value="DNA/RNA">DNA/RNA hybrid</mat-option>
@@ -69,10 +69,10 @@
 
       <mat-form-field class="field-container description-field">
         <mat-label>Description (1000 characters max)</mat-label>
-        <textarea maxlength="1000" matInput formControlName="description"></textarea>
+        <textarea maxlength="1000" matInput formControlName="description" required></textarea>
       </mat-form-field>
 
-      <br><button class="stepper-button" mat-flat-button matStepperNext color="primary">Next</button>
+      <br><button class="stepper-button" [disabled]="!structureGroup.valid" mat-flat-button matStepperNext color="primary">Next</button>
     </form>
   </mat-step>
 
@@ -106,23 +106,23 @@
 
       <mat-form-field class="field-container citation-field">
         <mat-label>Citation</mat-label>
-        <textarea maxlength="256" matInput formControlName="citation" ></textarea>
+        <textarea maxlength="512" matInput formControlName="citation"></textarea>
       </mat-form-field><br>
 
       <mat-form-field class="field-container citation-field">
         <mat-label>Link</mat-label>
-        <textarea maxlength="256" matInput formControlName="link" ></textarea>
+        <textarea maxlength="512" matInput formControlName="link" ></textarea>
       </mat-form-field><br>
 
       <mat-form-field class="field-container licensing-field">
         <mat-label>Licensing Information</mat-label>
-        <textarea maxlength="256" matInput formControlName="licensing" 
+        <textarea maxlength="512" matInput formControlName="licensing" 
         matTooltip="e.g. any relevant patents" matTooltipClass="tooltip" matTooltipPosition="above"></textarea>
       </mat-form-field><br>
 
       <div>
         <button class="stepper-button" mat-flat-button matStepperPrevious color="primary">Back</button>
-        <button class="stepper-button" mat-flat-button matStepperNext color="primary">Next</button>
+        <button class="stepper-button" [disabled]="!publicationGroup.valid" mat-flat-button matStepperNext color="primary">Next</button>
       </div>
     </form>
   </mat-step>
@@ -134,7 +134,7 @@
       <mat-radio-group formControlName="displayImage">
         <ng-template matStepLabel>File Uploads</ng-template>
 
-        <mat-checkbox checked formControlName='isOxdna' [value]="true" color="accent">
+        <mat-checkbox formControlName='isOxdna' [value]="true" color="accent">
           Is this an OxDNA structure?
         </mat-checkbox>
         <ng-container *ngIf="fileGroup.controls['isOxdna'].value">
@@ -164,6 +164,7 @@
         <div formArrayName="structure" *ngFor="let file of fieldArray('structure', 3).controls; let i=index">
           <mat-form-field class="field-container multiple-field" [formGroupName]="i">
             <ngx-mat-file-input (change)="uploadFile($event.target, 'structure', i)" #structure formControlName="file"
+            [required]="!fileGroup.controls['isOxdna'].value"
             [placeholder]="i===0 ? (fileGroup.controls['isOxdna'].value ? 'Additional Structure File(s)' : 'Structure File(s)') : ''"
             [matTooltip]="i===0 ? 'e.g. oxDNA, CaDNAno, sequences' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
             <button *ngIf="i===0 && structure.empty" mat-icon-button matSuffix>
@@ -302,7 +303,7 @@
 
       <div>
       <button class="stepper-button" mat-flat-button matStepperPrevious color="primary">Back</button>
-      <button class="stepper-button" mat-flat-button matStepperNext color="primary">Next</button>
+      <button class="stepper-button" [disabled]="!fileGroup.valid " mat-flat-button matStepperNext color="primary">Next</button>
       </div>
     </form>
   </mat-step>
@@ -331,7 +332,7 @@
 
       <div>
         <button class="stepper-button" mat-flat-button matStepperPrevious color="primary">Back</button>
-        <button class="stepper-button" mat-flat-button (click)="submit()" [disabled]="loadBarService.loadBar" color="primary">Submit</button>
+        <button class="stepper-button" mat-flat-button (click)="submit()" [disabled]="(!miscGroup.valid && miscGroup.get('isDelayed').value) || loadBarService.loadBar" color="primary">Submit</button>
       </div>
     </form>
   </mat-step>
