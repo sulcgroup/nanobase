@@ -1,6 +1,5 @@
-import { AfterContentInit, AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { StructureService, StructureCover, LoadbarService } from 'src/app/core';
 
 @Component({
@@ -8,7 +7,7 @@ import { StructureService, StructureCover, LoadbarService } from 'src/app/core';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   structures: Array<StructureCover> = [];
   oldHeight = 0;
   message: string;
@@ -42,8 +41,8 @@ export class HomeComponent implements OnInit {
     this.loadRecentTags(10);
     this.infiniteScroll();
 
-    this.router.events.subscribe(val => {      
-      if (val instanceof NavigationEnd && val.url === '/') {
+    this.router.events.subscribe(val => {
+      if (val instanceof NavigationEnd && (val.url.startsWith('/?') || val.url === '/')) {
         const url = new URLSearchParams(val.url.slice(2));
         input = url.get('input');
         category = url.get('category');
