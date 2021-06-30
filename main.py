@@ -64,6 +64,10 @@ def get_recent_structures(count):
 def get_random_structures(count):
 	return structure.get_random_structures(int(count))
 
+@app.route('/api/structure/next/<date>', methods=['GET'])
+def get_next_structures(date, n=5):
+	return structure.get_next_structures(date, n)
+
 @app.route('/api/tags/recent/<count>', methods=['GET'])
 def get_recent_tags(count):
 	return structure.get_recent_tags(int(count))

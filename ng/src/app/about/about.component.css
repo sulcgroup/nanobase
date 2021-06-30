@@ -5,3 +5,7 @@ h1 {
     margin-left: 25px;
     color: rgb(0, 0, 0);
 }
+.linky {
+    fill:#ffffff;
+    fill-opacity:0.0;
+}

@@ -31,6 +31,7 @@ insert_max_structure_id = ('INSERT INTO Structures () VALUES ()')
 get_max_structure_id = ('SELECT MAX(id) FROM Structures')
 recent_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.private=0 ORDER BY Structures.uploadDate DESC LIMIT %s')
 random_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.private=0 ORDER BY RAND() LIMIT %s')
+next_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.private=0 AND Structures.uploadDate < %s ORDER BY Structures.uploadDate DESC LIMIT %s')
 
 recent_titles_query = ('SELECT DISTINCT title FROM Structures ORDER BY uploadDate DESC LIMIT %s')
 recent_username_query = ('SELECT DISTINCT Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY Structures.uploadDate LIMIT %s')
@@ -164,6 +165,18 @@ def get_recent_structures(count):
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
         cursor.execute(recent_structures_query, (count))
+        results = cursor.fetchall()
+    connection.close()
+
+    keys = ['title', 'uploadDate', 'description', 'displayImage', 'id', 'firstName', 'lastName']
+    structures = [dict(zip(keys, structure)) for structure in results]
+
+    return jsonify(structures)
+
+def get_next_structures(date, count):
+    connection = database.pool.get_connection()
+    with connection.cursor() as cursor:
+        cursor.execute(next_structures_query, (date, count))
         results = cursor.fetchall()
     connection.close()
 
