@@ -205,7 +205,7 @@ export class UploadComponent implements OnInit {
   }
 
   addField(type: string, group: number): void {
-    const limit = (type === 'authors') ? 20 : 10;
+    const limit = 50;
     if (this.fieldArray(type, group).value.length < limit) {
       if (this.categories.includes(type)) {
         this.fieldArray(type, group).push(this.fb.group({ value: '' }));
