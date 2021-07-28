@@ -54,7 +54,7 @@ export class UploadComponent implements OnInit {
     private structService: StructureService,
     public loadBarService: LoadbarService
   ) {
-    this.isOptional = true;
+    this.isOptional = false;
     this.today = new Date();
   }
 
@@ -134,7 +134,6 @@ export class UploadComponent implements OnInit {
 
         // Set other fields
         this.publicationGroup.controls.link.setValue(pub.URL);
-        this.publicationGroup.controls.licensing.setValue(pub.license[0].URL);
 
         this.loadBarService.disable();
       },
