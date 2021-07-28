@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FileInput } from 'ngx-material-file-input';
-import { map, startWith } from 'rxjs/operators';
+import { map, publishBehavior, startWith } from 'rxjs/operators';
 import { FormService, ApiService, StructureUpload, UserService, StructureService, User, LoadbarService } from '../core';
 
 const required = ['', Validators.required];
@@ -23,9 +23,9 @@ const structureFileForm = {
   styleUrls: ['./upload.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class UploadComponent implements OnInit {
-  isOptional = false;
-  today = new Date();
+export class UploadComponent implements OnInit {  
+  isOptional: boolean;
+  today: Date;
   user: User;
 
   structureGroup: FormGroup;
@@ -53,7 +53,10 @@ export class UploadComponent implements OnInit {
     private apiService: ApiService,
     private structService: StructureService,
     public loadBarService: LoadbarService
-  ) { }
+  ) {
+    this.isOptional = true;
+    this.today = new Date();
+  }
 
   ngOnInit(): void {
     this.userService.currentUser.subscribe(user => this.user = user);
@@ -70,6 +73,7 @@ export class UploadComponent implements OnInit {
 
     this.publicationGroup = this.fb.group({
       authors: this.fb.array([this.fb.group({ value: [''] })]),
+      doi: '',
       year: ['', Validators.compose([Validators.pattern(/^(19|20)\d{2}$/), this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value, Validators.required, 'Year error')])],
       month: ['', Validators.pattern(/(^0?[1-9]$)|(^1[0-2]$)/)],
       citation: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value, Validators.required, 'Citation error')],
@@ -104,6 +108,41 @@ export class UploadComponent implements OnInit {
     });
 
     this.getAutofill(100);
+  }
+
+  // Search publication by DOI and autofill form
+  autofillPublication(doi: string): void {
+    this.loadBarService.enable();
+    this.structService.getPublication(doi).subscribe(
+      data => {
+        const pub = data.response;
+        // console.log(pub);
+        // Set year
+        for (let i = 0; i < pub.author.length; i++) {
+          if (i > 0 && (this.publicationGroup.controls.authors as FormArray).controls.length < pub.author.length) {
+            this.addField('authors', 2);
+          }
+          const name = pub.author[i].given + ' ' + pub.author[i].family;
+          ((this.publicationGroup.controls.authors as FormArray).controls[i] as FormGroup).setValue({value: name});
+        }
+
+        // Set date
+        this.publicationGroup.controls.year.setValue(pub.published['date-parts'][0][0]);
+        let month = pub.published['date-parts'][0][1];
+        month = month < 10 ? `0${month}` : month;
+        this.publicationGroup.controls.month.setValue(month);
+
+        // Set other fields
+        this.publicationGroup.controls.link.setValue(pub.URL);
+        this.publicationGroup.controls.licensing.setValue(pub.license[0].URL);
+
+        this.loadBarService.disable();
+      },
+      err => {
+        console.log('err', err);
+        this.loadBarService.disable();
+      }
+    );
   }
 
   getAutofill(count: number): void {

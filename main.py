@@ -6,6 +6,7 @@ import auth
 import user
 import structure
 from utilities import get_session_id
+from crossref.restful import Works
 import database
 
 app = Flask(__name__, static_folder='ng/dist/ng', static_url_path='')
@@ -38,6 +39,11 @@ def upload_structure():
 @app.route('/api/structure/<id>', methods=['GET'])
 def get_structure(id):
 	return {'response': structure.get_structure(id)}
+
+@app.route('/api/publication', methods=['POST'])
+def get_publication():
+	doi_str = request.json['doi']
+	return {'response': Works().doi(doi_str)}
 
 @app.route('/api/structure/author/<id>', methods=['GET'])
 def check_author(id):

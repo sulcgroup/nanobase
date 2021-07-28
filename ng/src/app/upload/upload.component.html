@@ -82,6 +82,14 @@
     <form [formGroup]="publicationGroup">
       <ng-template matStepLabel>Publication Information</ng-template>
 
+      <mat-form-field class="field-container year-field">
+        <mat-label>DOI (optional)</mat-label>
+        <input matInput formControlName="doi">
+      </mat-form-field>
+
+      <button mat-flat-button (click)="autofillPublication(publicationGroup.controls['doi'].value)"  color="primary">Autofill Info</button>
+
+
       <div formArrayName="authors">
         <mat-form-field class="field-container hashtag-field" *ngFor="let author of fieldArray('authors', 2).controls; let i=index" [formGroupName]="i">
           <mat-label>Author #{{i+1}}</mat-label>

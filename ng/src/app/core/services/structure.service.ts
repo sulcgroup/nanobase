@@ -50,4 +50,8 @@ export class StructureService {
     return this.apiService.post(`/structure/edit`, {structure});
   }
 
+  getPublication(doi: string): Observable<any> {
+    return this.apiService.post(`/publication`, {doi});
+  }
+
 }

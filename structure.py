@@ -108,7 +108,7 @@ def get_structure(id):
     connection.close()
 
     # Get file contents
-    print(s[25], file=sys.stderr)
+    # print(s[25], file=sys.stderr)
     oxdna_files = s[25][:-1].split('|') if s[25] else []
     files = []
     if oxdna_files and (len(oxdna_files) > 1 or oxdna_files[0] != ''):
@@ -269,9 +269,7 @@ def upload_structure(structure, user_id):
         id = cursor.fetchone()[0]
         cursor.execute(get_user_name, (user_id))
         first_name, last_name = cursor.fetchall()[0]
-    
-    print(structure)
-        
+            
     file_names, file_descriptions, oxdna_files = upload_files(id, structure)
     insert_structure(id, structure, user_id, file_names, oxdna_files, file_descriptions, connection)
     connection.close()
@@ -316,8 +314,6 @@ def upload_files(id, structure):
 
 # Add structure to MySQL database
 def insert_structure(id, structure, user_id, file_names, oxdna_files, file_descriptions, connection):
-    print("QWERQWERQWERQWERQ", file_names)
-    print(structure['uploadDate'])
     upload_date = ''
     if structure['uploadDate']:
         if (len(structure['uploadDate']) == 2 and structure['uploadDate'][0] == ''):
@@ -347,8 +343,6 @@ def insert_structure(id, structure, user_id, file_names, oxdna_files, file_descr
         upload_date,
         oxdna_files
     )
-
-    print('qqqqqqqqq',structure_data)
     
     with connection.cursor() as cursor:
         cursor.execute(insert_structure_query, (structure_data))
@@ -412,7 +406,6 @@ def edit_structure(new_struct):
             file_names.append('|'.join([file['name'] for file in new_struct['files'][file_type]]))
             file_descriptions.append('|'.join([file['description'] for file in new_struct['files'][file_type]]))
             if file_type == 'structure':
-                print(new_struct['files'], file_names)
                 new_struct['files']['oxdnaFiles'] = [file for file in new_struct['files']['oxdnaFiles'] if file in file_names[5]]
         
     
