@@ -54,7 +54,7 @@ export class UploadComponent implements OnInit {
     private structService: StructureService,
     public loadBarService: LoadbarService
   ) {
-    this.isOptional = false;
+    this.isOptional = true;
     this.today = new Date();
   }
 
@@ -281,6 +281,16 @@ export class UploadComponent implements OnInit {
     this.publicationGroup.enable();
     this.fileGroup.enable();
     this.miscGroup.enable();
+  }
+
+  checkImage(type: string, fileName: string): boolean {
+    if (this.formService.isImageFile(fileName)) {
+      if (!this.fileGroup['controls'].displayImage.value) {
+        this.fileGroup['controls'].displayImage.setValue(type + '/' + fileName);
+      }
+      return true;
+    }
+    return false;
   }
 
 }

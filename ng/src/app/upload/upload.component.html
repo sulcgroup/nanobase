@@ -231,7 +231,7 @@
             <mat-label>File Description</mat-label>
             <input maxlength="256" matInput (change)="fileGroup.controls['expResults'].value[i].description = $event.target.value">
           </mat-form-field>
-          <mat-radio-button [value]="'expResults/'+fileGroup.get('expResults')?.value[i].file?._fileNames" *ngIf="formService.isImageFile(fileGroup.get('expResults')?.value[i].file?._fileNames)" color="accent">
+          <mat-radio-button [value]="'expResults/'+fileGroup.get('expResults')?.value[i].file?._fileNames" *ngIf="checkImage('expResults', fileGroup.get('expResults')?.value[i].file?._fileNames)" color="accent">
             Primary image
           </mat-radio-button><br>
         </div>
@@ -276,7 +276,7 @@
             <mat-label>File Description</mat-label>
             <input maxlength="256" matInput (change)="fileGroup.controls['simResults'].value[i].description = $event.target.value">
           </mat-form-field>
-          <mat-radio-button [value]="'simResults/'+fileGroup.get('simResults')?.value[i].file?._fileNames" *ngIf="formService.isImageFile(fileGroup.get('simResults')?.value[i].file?._fileNames)" color="accent">
+          <mat-radio-button [value]="'simResults/'+fileGroup.get('simResults')?.value[i].file?._fileNames" *ngIf="checkImage('simResults', fileGroup.get('simResults')?.value[i].file?._fileNames)" color="accent">
             Primary image
           </mat-radio-button><br>
         </div>
@@ -301,7 +301,7 @@
             <mat-label>File Description</mat-label>
             <input maxlength="256" matInput (change)="fileGroup.controls['images'].value[i].description = $event.target.value">
           </mat-form-field>
-          <mat-radio-button [value]="'images/'+fileGroup.get('images')?.value[i].file?._fileNames" *ngIf="formService.isImageFile(fileGroup.get('images')?.value[i].file?._fileNames)" color="accent">
+          <mat-radio-button [value]="'images/'+fileGroup.get('images')?.value[i].file?._fileNames" *ngIf="checkImage('images', fileGroup.get('images')?.value[i].file?._fileNames)" color="accent">
             Primary image
           </mat-radio-button><br>
         </div>
