@@ -54,7 +54,7 @@ export class UploadComponent implements OnInit {
     private structService: StructureService,
     public loadBarService: LoadbarService
   ) {
-    this.isOptional = true;
+    this.isOptional = false;
     this.today = new Date();
   }
 
