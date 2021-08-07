@@ -5,10 +5,14 @@
         <mat-card class="structure-container" *ngFor="let structure of structures">
             <mat-card-header>
                 <mat-card-title><span class="title" [routerLink]="['/structure', structure.id]">{{structure.title}}</span></mat-card-title>
-                <mat-card-subtitle>{{structure.lastName}} | {{formatDate(structure.uploadDate)}}</mat-card-subtitle>
+                <mat-card-subtitle>
+                    {{structure.lastAuthor ? structure.lastAuthor.split(' ')[structure.lastAuthor.split(' ').length - 1] : ''}}
+                </mat-card-subtitle>
+                <span class = 'poster'>Uploaded by {{structure.firstName}} {{structure.lastName}} | {{formatDate(structure.uploadDate)}}</span>
+                    
             </mat-card-header>
             <img class="display-image" mat-card-image src="{{'file/' + structure.id + '/' + structure.displayImage}}" alt="Display Image" *ngIf="structure.displayImage">
-
+            
             <mat-card-content>
                 <p>{{structure.description}}</p>
             </mat-card-content>

@@ -62,10 +62,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       const html = document.documentElement;
       const currentHeight = window.scrollY + window.innerHeight;
       const totalHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight);
-      if (currentHeight + 300 >= totalHeight && this.oldHeight + 300 < totalHeight) {
+      if (currentHeight + 450 >= totalHeight && this.oldHeight + 450 < totalHeight) {
         this.oldHeight = currentHeight;
         this.loadNext();
-        //this.loadRandom(5);
+        // this.loadRandom(5);
       }
     };
     document.addEventListener('scroll', scrollListener);
@@ -116,9 +116,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   loadNext(): void {
-    let date = this.structures[this.structures.length-1].uploadDate
-    let date_str = date.toISOString()
-    this.structService.getNext(date_str).subscribe(
+    const date = this.structures[this.structures.length - 1].uploadDate;
+    const dateStr = date.toISOString();
+    this.structService.getNext(dateStr).subscribe(
       data => {
         data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
         this.structures.push(...data);

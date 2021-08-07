@@ -45,6 +45,7 @@ get_applications_query = ('SELECT application FROM Applications WHERE id IN (SEL
 get_modifications_query = ('SELECT modification FROM Modifications WHERE id IN (SELECT modificationId FROM ModificationsJoin WHERE structureId = %s)')
 get_keywords_query = ('SELECT keyword FROM Keywords WHERE id IN (SELECT keywordId FROM KeywordsJoin WHERE structureId = %s)')
 get_authors_query = ('SELECT author FROM Authors WHERE id IN (SELECT authorId FROM AuthorsJoin WHERE structureId = %s)')
+get_last_author = ('SELECT Authors.author FROM Authors INNER JOIN AuthorsJoin on Authors.id = AuthorsJoin.authorId WHERE AuthorsJoin.structureId = %s order by Authors.id desc limit 1;')
 
 get_last_id = ('SELECT LAST_INSERT_ID()')
 get_user_name = ('SELECT firstName, lastName FROM Users WHERE id = %s')
@@ -182,10 +183,18 @@ def get_recent_structures(count):
     with connection.cursor() as cursor:
         cursor.execute(recent_structures_query, (count))
         results = cursor.fetchall()
+        last_authors = []
+        for result in results:
+            cursor.execute(get_last_author, (result[4]))
+            last_authors.append(cursor.fetchone())
     connection.close()
 
-    keys = ['title', 'uploadDate', 'description', 'displayImage', 'id', 'firstName', 'lastName']
-    structures = [dict(zip(keys, structure)) for structure in results]
+    structs = []
+    for i in range(len(results)):
+        structs.append(results[i] + (last_authors[i] if last_authors[i] else ('',)))
+
+    keys = ['title', 'uploadDate', 'description', 'displayImage', 'id', 'firstName', 'lastName', 'lastAuthor']
+    structures = [dict(zip(keys, structure)) for structure in structs]
 
     return jsonify(structures)
 
@@ -194,10 +203,18 @@ def get_next_structures(date, count):
     with connection.cursor() as cursor:
         cursor.execute(next_structures_query, (date, count))
         results = cursor.fetchall()
+        last_authors = []
+        for result in results:
+            cursor.execute(get_last_author, (result[4]))
+            last_authors.append(cursor.fetchone())
     connection.close()
 
-    keys = ['title', 'uploadDate', 'description', 'displayImage', 'id', 'firstName', 'lastName']
-    structures = [dict(zip(keys, structure)) for structure in results]
+    structs = []
+    for i in range(len(results)):
+        structs.append(results[i] + (last_authors[i] if last_authors[i] else ('',)))
+
+    keys = ['title', 'uploadDate', 'description', 'displayImage', 'id', 'firstName', 'lastName', 'lastAuthor']
+    structures = [dict(zip(keys, structure)) for structure in structs]
 
     return jsonify(structures)
 

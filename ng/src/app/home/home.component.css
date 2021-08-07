@@ -50,6 +50,12 @@
     border-right: 0px;
 }
 
+.poster {
+    margin-left: auto;
+    font-size: 13px;
+    opacity: 80%;
+}
+
 .box {
     width: 65%;
     /* height: 175px; */
