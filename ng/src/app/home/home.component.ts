@@ -186,15 +186,33 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   toggleApplicationExpand(): void {
     this.appExpand = !this.appExpand;
-    this.tags.applications = this.appExpand ? this.tagStore.applications : this.tagStore.applications.slice(10);
+    console.log(this.appExpand);
+    if (this.appExpand) {
+      this.tags.applications = [...this.tagStore.applications];
+    }
+    else {
+      this.tags.applications.splice(10, this.tags.applications.length - 5);
+    }
   }
   toggleModificationExpand(): void {
     this.modExpand = !this.modExpand;
-    this.tags.modifications = this.modExpand ? this.tagStore.modifications : this.tagStore.modifications.slice(10);
+    console.log(this.modExpand);
+    if (this.modExpand) {
+      this.tags.modifications = [...this.tagStore.modifications];
+    }
+    else {
+      this.tags.modifications.splice(10, this.tags.modifications.length - 5);
+    }
   }
   toggleKeywordExpand(): void {
     this.keyExpand = !this.keyExpand;
-    this.tags.keywords = this.keyExpand ? this.tagStore.keywords : this.tagStore.keywords.slice(10);
+    console.log(this.keyExpand);
+    if (this.keyExpand) {
+      this.tags.keywords = [...this.tagStore.keywords];
+    }
+    else {
+      this.tags.keywords.splice(10, this.tags.keywords.length - 5);
+    }
   }
 
 }

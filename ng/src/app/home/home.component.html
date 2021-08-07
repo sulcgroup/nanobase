@@ -29,7 +29,7 @@
     <div id="extras-container">
         <div class="box">
             <button mat-button color="primary" class="expand-button" (click)="toggleApplicationExpand()">
-                <span class="box-title">Recent applications</span><mat-icon class="expand-icon" color="primary">expand_more</mat-icon>
+                <span class="box-title">Recent applications</span><mat-icon class="expand-icon" color="primary">{{appExpand ? 'expand_less' : 'expand_more'}}</mat-icon>
             </button>
             <mat-chip-list>
                 <mat-chip class="application chip" (click)="routeTag(application, 'applications')" *ngFor="let application of tags?.applications">{{application}}</mat-chip>
@@ -38,7 +38,7 @@
 
         <div class="box">
             <button mat-button color="primary" class="expand-button" (click)="toggleModificationExpand()">
-                <span class="box-title">Recent modifications</span><mat-icon class="expand-icon" color="primary">expand_more</mat-icon>
+                <span class="box-title">Recent modifications</span><mat-icon class="expand-icon" color="primary">{{modExpand ? 'expand_less' : 'expand_more'}}</mat-icon>
             </button>
             <mat-chip-list>
                 <mat-chip class="modification chip" (click)="routeTag(modification, 'modifications')" *ngFor="let modification of tags?.modifications">{{modification}}</mat-chip>
@@ -46,7 +46,7 @@
         </div>
         <div class="box">
             <button mat-button color="primary" class="expand-button" (click)="toggleKeywordExpand()">
-                <span class="box-title">Recent keywords</span><mat-icon class="expand-icon" color="primary">expand_more</mat-icon>
+                <span class="box-title">Recent keywords</span><mat-icon class="expand-icon" color="primary">{{keyExpand ? 'expand_less' : 'expand_more'}}</mat-icon>
             </button>
             <mat-chip-list>
                 <mat-chip class="keyword chip" (click)="routeTag(keyword, 'keywords')" *ngFor="let keyword of tags?.keywords">{{keyword}}</mat-chip>
