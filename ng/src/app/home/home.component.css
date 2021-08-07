@@ -21,7 +21,7 @@
 
 .structure-container {
     background-color: rgb(224, 224, 230);
-    box-shadow: 0 0 7px 2px rgb(190, 190, 190);
+    box-shadow: 0 0 7px 2px rgb(190, 190, 190)!important;
     z-index: 0;
     margin: 20px auto 30px;
     width: 75%;
@@ -57,17 +57,22 @@
 }
 
 .box {
-    width: 65%;
+    width: 75%;
     /* height: 175px; */
     margin-left: 20px;
     margin-bottom: 40px;
-    padding-left: 11px;
-    padding-top: 10px;
-    padding-bottom: 12px;
+    padding: 5px 5px 12px 5px;
     border-radius: 10px;
     background-color: rgb(224, 224, 230);
-    box-shadow: 0 0 7px 2px rgb(190, 190, 190);
+    box-shadow: 0 0 7px 2px rgb(190, 190, 190)!important;
     /* overflow-y: overlay; */
+}
+
+.expand-button {
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: rgba(211, 205, 224, 0.9)!important;
+    border: 1px solid rgb(170, 154, 209)!important;
 }
 
 .title {
@@ -76,22 +81,21 @@
 }
 
 .box-title {
+    color: rgba(0, 0, 0, 0.9)!important;
+    font-weight: 500!important;
     font: 15px sans-serif;
     opacity: 0.85;
-    margin-bottom: 8px;
 }
 
-.box-title:after {
+/* .expand-button:after {
     position: relative;
-    right: 6px;
+    right: 6%;
     content: "";
     display: block;
-    margin: 0 auto;
     margin-bottom: 5px;
-    width: 98%;
-    padding-top: 5px;
+    width: 109%;
     border-bottom: 1px solid rgb(91, 91, 92);
-}
+} */
 
 .invisible {
     visibility: hidden!important;
@@ -105,21 +109,21 @@
 }
 
 .chip {
-    font-weight: normal;
-    cursor: pointer;
+    font-weight: normal!important;
+    cursor: pointer!important;
 }
 
 .application {
-    background-color: rgba(136, 1, 160, 0.8);
-    color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(136, 1, 160, 0.8)!important;
+    color: rgba(255, 255, 255, 0.9)!important;
 }
 
 .modification {
-    background-color: rgba(93, 241, 158, 0.8);
-    color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(93, 241, 158, 0.8)!important;
+    color: rgba(0, 0, 0, 0.9)!important;
 }
 
 .keyword {
-    background-color: rgba(255, 208, 50, 0.8);
-    color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(255, 208, 50, 0.8)!important;
+    color: rgba(0, 0, 0, 0.9)!important;
 }

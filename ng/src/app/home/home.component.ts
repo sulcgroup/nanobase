@@ -1,11 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { StructureService, StructureCover, LoadbarService } from 'src/app/core';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class HomeComponent implements OnInit, OnDestroy {
   structures: Array<StructureCover> = [];
@@ -16,6 +17,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     modifications: Array<string>,
     keywords: Array<string>
   };
+  tagStore: {
+    applications: Array<string>,
+    modifications: Array<string>,
+    keywords: Array<string>
+  };
+
   months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec'];
   categories = {
     title: 'title',
@@ -26,6 +33,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     keywords: 'keyword',
     authors: 'author'
   };
+  appExpand: boolean;
+  modExpand: boolean;
+  keyExpand: boolean;
 
   constructor(
     private router: Router,
@@ -38,7 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     let input = this.route.snapshot.queryParams.input;
     let category = this.route.snapshot.queryParams.category;
     input ? this.loadSearch(input, category) : this.loadRecent(15);
-    this.loadRecentTags(10);
+    this.loadRecentTags(100);
     this.infiniteScroll();
 
     this.router.events.subscribe(val => {
@@ -151,9 +161,19 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   loadRecentTags(count: number): void {
     this.structService.getRecentTags(count).subscribe(
-      data => this.tags = data,
+      data => {
+        this.tagStore = data;
+        this.tags = {
+          applications: this.tagStore.applications.slice(0, 10),
+          modifications: this.tagStore.modifications.slice(0, 10),
+          keywords: this.tagStore.keywords.slice(0, 10)
+        };
+      },
       err => console.log('err', err)
     );
+    this.appExpand = false;
+    this.modExpand = false;
+    this.keyExpand = false;
   }
 
   routeTag(input: string, category: string): void {
@@ -162,6 +182,19 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   formatDate(date: Date): string {
     return this.months[date.getMonth()] + ` ${date.getDate()}, ${date.getFullYear()}`;
+  }
+
+  toggleApplicationExpand(): void {
+    this.appExpand = !this.appExpand;
+    this.tags.applications = this.appExpand ? this.tagStore.applications : this.tagStore.applications.slice(10);
+  }
+  toggleModificationExpand(): void {
+    this.modExpand = !this.modExpand;
+    this.tags.modifications = this.modExpand ? this.tagStore.modifications : this.tagStore.modifications.slice(10);
+  }
+  toggleKeywordExpand(): void {
+    this.keyExpand = !this.keyExpand;
+    this.tags.keywords = this.keyExpand ? this.tagStore.keywords : this.tagStore.keywords.slice(10);
   }
 
 }
