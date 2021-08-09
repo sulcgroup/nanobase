@@ -6,6 +6,7 @@ export interface StructureCover {
     id: number;
     firstName: string;
     lastName: string;
+    lastAuthor: string;
     title: string;
     description: string;
     displayImage: string;

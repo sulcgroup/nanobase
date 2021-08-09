@@ -57,9 +57,10 @@
 }
 
 .box {
-    width: 75%;
+    width: 80%;
     /* height: 175px; */
-    margin-left: 20px;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 40px;
     padding: 5px 5px 12px 5px;
     border-radius: 10px;

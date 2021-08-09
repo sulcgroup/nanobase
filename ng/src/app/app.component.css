@@ -26,6 +26,12 @@
     /* overflow-y: hidden; */
 }
 
+@media screen and (max-width: 1050px) {
+    #main {
+        margin-left: 60px;
+    }
+}
+
 .progress-bar {
     position: fixed;
     z-index: 100;

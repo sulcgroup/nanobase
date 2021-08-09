@@ -47,14 +47,16 @@ a {
 #header-title-container {
     background-color: rgba(0, 0, 0, .25);
     border-right: 1px solid  rgb(17, 0, 36);
+    min-width: 200px;
     width: 15%;
-    min-width: 160px;
+    max-width: 250px;
+    /* max-width: fit-content; */
     /* Vertically centers title within the container */
     display: flex;
     align-items: center;
 }
 #search-field-container {
-    margin-top: 10px;
+    margin-top: 5px;
     margin-left: 20px;
     margin-right: 20px;
     flex-basis: 500px;
@@ -123,4 +125,14 @@ a {
 
 .mat-select-value {
     color: white!important;
+}
+
+@media screen and (max-width: 1050px) {
+    #header-title-container {
+        width: 49px;
+        min-width: 49px;
+    }
+    #title-text {
+        display: none;
+    }
 }

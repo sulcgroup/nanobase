@@ -4,7 +4,8 @@
     overflow: hidden;
     height: 100%;
     width: 100%;
-    min-width: 161px;
+    min-width: 201px;
+    max-width: 251px;
     background-color: rgb(224, 224, 228);
     border-right: 1px solid rgb(165, 164, 175);
 }
@@ -12,7 +13,7 @@
 a {
     display: block;
     text-align: left;
-    font-size: calc(10px + 0.55vw);
+    font-size: 17px;
     position: relative;
     top: 15px;
     right: 3px;
@@ -35,20 +36,17 @@ a {
     left: 5px;
 }
 
-@media screen and (max-width: 1130px) {
-    a {
-        font-size: 15px;
-        padding-left: 12px;
-        overflow: hidden;
-    }
-    .sidebar-icon {
-        position: relative;
-        top: 2px;
-        font-size: 21px;
+@media screen and (max-width: 1050px) {
+    #sidebar-container {
+        width: 50px;
+        min-width: 50px;
     }
     .navigation {
-        position: relative;
-        right: 5px;
+        display: none;
+    }
+    #main {
+        background-color: black!important;
+        margin-left: 60px;
     }
 }
 
