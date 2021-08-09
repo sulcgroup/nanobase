@@ -282,7 +282,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   slideToggle(): void {
     if (this.viewChecked) {
-      setTimeout(() => this.keepLoading(), 50);
+      setTimeout(() => {
+        this.currentHeight = window.scrollY + window.innerHeight;
+        this.totalHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight,
+                      document.documentElement.clientHeight, document.documentElement.scrollHeight);
+        this.iter = 0;
+        this.keepLoading();
+      }, 50);
     }
   }
 
