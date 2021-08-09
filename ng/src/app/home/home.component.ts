@@ -282,7 +282,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   slideToggle(): void {
     if (this.viewChecked) {
-      this.keepLoading();
+      setTimeout(() => this.keepLoading(), 50);
     }
   }
 
