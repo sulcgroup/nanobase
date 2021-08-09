@@ -10,7 +10,7 @@ import { StructureService, StructureCover, LoadbarService } from 'src/app/core';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   structures: Array<StructureCover> = [];
-
+  viewChecked = false;
   oldHeight = 0;
   message: string;
   tags: {
@@ -150,7 +150,17 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.structures = [
     {
-      description: '',
+      description: 'Hong et al\'s 20 degree layered crossover motif which was used to create 20 degree two-dimensional (2D) and three-dimensional (3D) crystalline structures that may host guest molecules or nanoparticles to achieve novel functionalities',
+      displayImage: 'simResults/tetra (1).png',
+      firstName: 'Aatmik',
+      id: 23,
+      lastAuthor: 'Aatmik Mallya',
+      lastName: 'Mallya',
+      title: 'test structure 4',
+      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
+    },
+    {
+      description: 'asdfasdfa',
       displayImage: 'simResults/tetra (1).png',
       firstName: 'Aatmik',
       id: 23,
@@ -164,7 +174,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       displayImage: 'simResults/tetra (1).png',
       firstName: 'Aatmik',
       id: 23,
-      lastAuthor: '',
+      lastAuthor: 'Aatmik Mallya',
       lastName: 'Mallya',
       title: 'test structure 4',
       uploadDate: new Date ('2021-04-29T00:00:00.000Z')
@@ -174,33 +184,23 @@ export class HomeComponent implements OnInit, OnDestroy {
       displayImage: 'simResults/tetra (1).png',
       firstName: 'Aatmik',
       id: 23,
-      lastAuthor: '',
+      lastAuthor: 'Aatmik Mallya',
       lastName: 'Mallya',
       title: 'test structure 4',
       uploadDate: new Date ('2021-04-29T00:00:00.000Z')
     },
     {
-      description: '',
+      description: 'asdfasdf',
       displayImage: 'simResults/tetra (1).png',
       firstName: 'Aatmik',
       id: 23,
-      lastAuthor: '',
+      lastAuthor: 'asdfas asdfasdfasdf asdf',
       lastName: 'Mallya',
       title: 'test structure 4',
       uploadDate: new Date ('2021-04-29T00:00:00.000Z')
     },
     {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
+      description: 'dsfasdfas',
       displayImage: 'simResults/tetra (1).png',
       firstName: 'Aatmik',
       id: 23,

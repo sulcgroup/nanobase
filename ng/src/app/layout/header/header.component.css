@@ -56,7 +56,7 @@ a {
     align-items: center;
 }
 #search-field-container {
-    margin-top: 5px;
+    margin-top: 10px;
     margin-left: 20px;
     margin-right: 20px;
     flex-basis: 500px;

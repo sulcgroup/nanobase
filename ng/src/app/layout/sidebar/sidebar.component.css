@@ -44,10 +44,6 @@ a {
     .navigation {
         display: none;
     }
-    #main {
-        background-color: black!important;
-        margin-left: 60px;
-    }
 }
 
 

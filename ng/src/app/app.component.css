@@ -17,7 +17,7 @@
 }
 
 #main  {
-    margin-left: max(166px, calc(15% + 2px));
+    margin-left: max(195px, min(270px, calc(15% + 2px)));
     margin-top: 70px;
     width: 100%;
     height: calc(100% - 7px);
