@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loadBarService.disable();
     let input = this.route.snapshot.queryParams.input;
     let category = this.route.snapshot.queryParams.category;
-    input ? this.loadSearch(input, category) : this.loadRecent(5);
+    input ? this.loadSearch(input, category) : this.loadRecent(1);
     this.loadRecentTags(100);
     this.infiniteScroll();
 
@@ -202,7 +202,8 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.currentHeight = window.scrollY + window.innerHeight;
           this.totalHeight = Math.max( document.body.scrollHeight, document.body.offsetHeight,
                             document.documentElement.clientHeight, document.documentElement.scrollHeight);
-          console.log(this.currentHeight, this.totalHeight, this.iter);
+          console.log(this.currentHeight, document.body.scrollHeight, document.body.offsetHeight,
+            document.documentElement.clientHeight, document.documentElement.scrollHeight);
 
           this.keepLoading();
         },
@@ -276,6 +277,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     else {
       this.tags.keywords.splice(10, this.tags.keywords.length - 5);
+    }
+  }
+
+  slideToggle(): void {
+    if (this.viewChecked) {
+      this.keepLoading();
     }
   }
 

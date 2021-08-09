@@ -54,7 +54,7 @@
     <!-- Contains tags-->
     <div id="extras-container">
         <div class="view-toggle">
-            <mat-slide-toggle class="toggle-button" [(ngModel)]="viewChecked">{{viewChecked ? "Grid View" : "List View"}}</mat-slide-toggle>
+            <mat-slide-toggle class="toggle-button" (change)="slideToggle()" [(ngModel)]="viewChecked">{{viewChecked ? "Grid View" : "List View"}}</mat-slide-toggle>
         </div>
         
         <div class="box">

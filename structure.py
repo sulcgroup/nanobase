@@ -201,6 +201,7 @@ def get_recent_structures(count):
 def get_next_structures(date, count):
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
+        count = 1
         cursor.execute(next_structures_query, (date, count))
         results = cursor.fetchall()
         last_authors = []
