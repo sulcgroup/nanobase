@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loadBarService.disable();
     let input = this.route.snapshot.queryParams.input;
     let category = this.route.snapshot.queryParams.category;
-    input ? this.loadSearch(input, category) : this.loadRecent(1);
+    input ? this.loadSearch(input, category) : this.loadRecent(5);
     this.loadRecentTags(100);
     this.infiniteScroll();
 
@@ -64,7 +64,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         input = url.get('input');
         category = url.get('category');
         input ? this.loadSearch(input, category) : this.loadRecent(5);
-        }
+        this.infiniteScroll();
+      }
     });
   }
 
