@@ -148,216 +148,43 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.oldHeight = 0;
     this.message = '';
 
-    this.structures = [
-    {
-      description: 'Hong et al\'s 20 degree layered crossover motif which was used to create 20 degree two-dimensional (2D) and three-dimensional (3D) crystalline structures that may host guest molecules or nanoparticles to achieve novel functionalities',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: 'Aatmik Mallya',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: 'asdfasdfa',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: 'Aatmik Mallya',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: 'Aatmik Mallya',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: 'asdfasdf',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: 'asdfas asdfasdfasdf asdf',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: 'dsfasdfas',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-    {
-      description: '',
-      displayImage: 'simResults/tetra (1).png',
-      firstName: 'Aatmik',
-      id: 23,
-      lastAuthor: '',
-      lastName: 'Mallya',
-      title: 'test structure 4',
-      uploadDate: new Date ('2021-04-29T00:00:00.000Z')
-    },
-  ]
-
-    // this.structService.getRecent(count).subscribe(
-    //   data => {
-    //     data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
-    //     this.structures = data;
-    //     console.log('Loaded recent structures: ', this.structures);
-    //     this.loadBarService.disable();
-    //   },
-    //   err => {
-    //     console.log('err', err);
-    //     this.loadBarService.disable();
-    //   }
-    // );
+    this.structService.getRecent(count).subscribe(
+      data => {
+        data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
+        this.structures = data;
+        console.log('Loaded recent structures: ', this.structures);
+        this.loadBarService.disable();
+      },
+      err => {
+        console.log('err', err);
+        this.loadBarService.disable();
+      }
+    );
   }
 
   loadRecentTags(count: number): void {
-    this.tagStore = {
-      applications: [ 'uy','gkuy','ygkuy','yugkuygkuy','kuyu','kuyg','kuy','tfk','jyt','f','guyfiut','y','guy','gku','ygku','ku','gk','yg','ggk','asds','asdfwef','sdf','asdf','az','a','app30','app20','app10','application','gkuy','ygkuy','yugkuygkuy','kuyu','kuyg','kuy','tfk','jyt','f','guyfiut','y','guy','gku','ygku','ku','gk','yg','ggk','asds','asdfwef','sdf','asdf','az','a','app30','app20','app10'],
-      keywords: [ 'asasdf', 'dfa', 'asdfa', 'key1', 'qqqqqq', 'key20', 'key30', 'c', 'ak', 'd', 'k', 'keywords', 'qwer'],
-      modifications: [ 'd', 'sdf', 'asdsf', 'ada', 'qqqqq', 'mod20', 'mod30', 'b', 'an', 'm', 'asdf', 'sdf', 'asdsf', 'ada', 'qqqqq', 'mod20', 'mod30', 'b', 'an', 'm', 'asdf', 'sdf', 'asdsf', 'ada', 'qqqqq', 'mod20', 'mod30', 'b', 'an', 'm', 'asdf']
-    };
+    // this.tagStore = {
+    //   applications: [ 'uy','gkuy','ygkuy','yugkuygkuy','kuyu','kuyg','kuy','tfk','jyt','f','guyfiut','y','guy','gku','ygku','ku','gk','yg','ggk','asds','asdfwef','sdf','asdf','az','a','app30','app20','app10','application','gkuy','ygkuy','yugkuygkuy','kuyu','kuyg','kuy','tfk','jyt','f','guyfiut','y','guy','gku','ygku','ku','gk','yg','ggk','asds','asdfwef','sdf','asdf','az','a','app30','app20','app10'],
+    //   keywords: [ 'asasdf', 'dfa', 'asdfa', 'key1', 'qqqqqq', 'key20', 'key30', 'c', 'ak', 'd', 'k', 'keywords', 'qwer'],
+    //   modifications: [ 'd', 'sdf', 'asdsf', 'ada', 'qqqqq', 'mod20', 'mod30', 'b', 'an', 'm', 'asdf', 'sdf', 'asdsf', 'ada', 'qqqqq', 'mod20', 'mod30', 'b', 'an', 'm', 'asdf', 'sdf', 'asdsf', 'ada', 'qqqqq', 'mod20', 'mod30', 'b', 'an', 'm', 'asdf']
+    // };
 
-    this.tags = {
-          applications: this.tagStore.applications.slice(0, 10),
-          modifications: this.tagStore.modifications.slice(0, 10),
-          keywords: this.tagStore.keywords.slice(0, 10)
-    };
-    // this.structService.getRecentTags(count).subscribe(
-    //   data => {
-    //     this.tagStore = data;
-    //     this.tags = {
+    // this.tags = {
     //       applications: this.tagStore.applications.slice(0, 10),
     //       modifications: this.tagStore.modifications.slice(0, 10),
     //       keywords: this.tagStore.keywords.slice(0, 10)
-    //     };
-    //   },
-    //   err => console.log('err', err)
-    // );
+    // };
+    this.structService.getRecentTags(count).subscribe(
+      data => {
+        this.tagStore = data;
+        this.tags = {
+          applications: this.tagStore.applications.slice(0, 10),
+          modifications: this.tagStore.modifications.slice(0, 10),
+          keywords: this.tagStore.keywords.slice(0, 10)
+        };
+      },
+      err => console.log('err', err)
+    );
     this.appExpand = false;
     this.modExpand = false;
     this.keyExpand = false;
