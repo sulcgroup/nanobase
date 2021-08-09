@@ -38,6 +38,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   modExpand: boolean;
   keyExpand: boolean;
 
+  currentHeight = window.scrollY + window.innerHeight;
+  totalHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight,
+                document.documentElement.clientHeight, document.documentElement.scrollHeight);
+  iter = 0;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -49,7 +54,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loadBarService.disable();
     let input = this.route.snapshot.queryParams.input;
     let category = this.route.snapshot.queryParams.category;
-    input ? this.loadSearch(input, category) : this.loadRecent(15);
+    input ? this.loadSearch(input, category) : this.loadRecent(5);
     this.loadRecentTags(100);
     this.infiniteScroll();
 
@@ -58,8 +63,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         const url = new URLSearchParams(val.url.slice(2));
         input = url.get('input');
         category = url.get('category');
-        input ? this.loadSearch(input, category) : this.loadRecent(15);
-      }
+        input ? this.loadSearch(input, category) : this.loadRecent(5);
+        }
     });
   }
 
@@ -104,6 +109,8 @@ export class HomeComponent implements OnInit, OnDestroy {
           console.log('Loaded searched structures: ', this.structures);
         }
         this.loadBarService.disable();
+
+        this.keepLoading();
       },
       err => {
         console.log('err', err);
@@ -127,11 +134,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
 
-  loadNext(): void {
+   loadNext(): void {
     const date = this.structures[this.structures.length - 1].uploadDate;
     const dateStr = date.toISOString();
     this.structService.getNext(dateStr).subscribe(
-      data => {
+      (data) => {
         data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
         this.structures.push(...data);
         console.log(`Loaded 5 more structures: `, data);
@@ -154,12 +161,58 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.structures = data;
         console.log('Loaded recent structures: ', this.structures);
         this.loadBarService.disable();
+
+        this.currentHeight = window.scrollY + window.innerHeight;
+        this.totalHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight,
+                      document.documentElement.clientHeight, document.documentElement.scrollHeight);
+        this.iter = 0;
+
+        this.keepLoading();
       },
       err => {
         console.log('err', err);
         this.loadBarService.disable();
       }
     );
+  }
+
+  keepLoading(): void {
+    // const body = document.body;
+    // const html = document.documentElement;
+    // while (this.currentHeight === this.totalHeight && this.iter < 5) {
+    //   this.loadNext();
+    //   this.iter++;
+    //   this.currentHeight = window.scrollY + window.innerHeight;
+    //   this.totalHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight);
+    // }
+
+    if (this.currentHeight !== this.totalHeight || this.iter > 5) {
+      return;
+    }
+    else {
+      const date = this.structures[this.structures.length - 1].uploadDate;
+      const dateStr = date.toISOString();
+      this.structService.getNext(dateStr).subscribe(
+        (data) => {
+          data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
+          this.structures.push(...data);
+          console.log(`Loaded 5 more structures: `, data);
+
+          this.iter++;
+          this.currentHeight = window.scrollY + window.innerHeight;
+          this.totalHeight = Math.max( document.body.scrollHeight, document.body.offsetHeight,
+                            document.documentElement.clientHeight, document.documentElement.scrollHeight);
+          console.log(this.currentHeight, this.totalHeight, this.iter);
+
+          this.keepLoading();
+        },
+        err => {
+          console.log('err', err);
+        }
+      );
+    }
+
+
   }
 
   loadRecentTags(count: number): void {
@@ -200,7 +253,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   toggleApplicationExpand(): void {
     this.appExpand = !this.appExpand;
-    console.log(this.appExpand);
     if (this.appExpand) {
       this.tags.applications = [...this.tagStore.applications];
     }
@@ -210,7 +262,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
   toggleModificationExpand(): void {
     this.modExpand = !this.modExpand;
-    console.log(this.modExpand);
     if (this.modExpand) {
       this.tags.modifications = [...this.tagStore.modifications];
     }
@@ -220,7 +271,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
   toggleKeywordExpand(): void {
     this.keyExpand = !this.keyExpand;
-    console.log(this.keyExpand);
     if (this.keyExpand) {
       this.tags.keywords = [...this.tagStore.keywords];
     }
