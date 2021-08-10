@@ -71,6 +71,7 @@ export class StructureComponent implements AfterViewInit {
         const files = fileStrings.map(file => new File([new Blob([file.contents], type)], file.name, type));
         data.response.files_contents = files;
         this.structure = data.response;
+        this.structure.publication.link = this.addhttp(this.structure.publication.link)
 
         console.log('Loaded structure: ', this.structure);
 
@@ -215,6 +216,13 @@ export class StructureComponent implements AfterViewInit {
       return this.formatDate(new Date(date[0]));
     }
   }
+
+  addhttp(url: string): string {
+    if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
+        url = "http://" + url;
+    }
+    return url;
+}
 
 }
 

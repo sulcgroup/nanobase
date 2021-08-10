@@ -7,3 +7,4 @@ nohup.out
 nanobase_email/login.txt
 structures/
 restart.sh
+node_modules/.cache/*
