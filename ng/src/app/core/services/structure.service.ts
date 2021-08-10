@@ -18,8 +18,8 @@ export class StructureService {
     return this.apiService.get(`/structure/random/${count}`);
   }
 
-  getNext(date: string): Observable<Array<StructureCover>> {
-    return this.apiService.get(`/structure/next/${date}`);
+  getNext(id: number): Observable<Array<StructureCover>> {
+    return this.apiService.get(`/structure/next/${id}`);
   }
 
   getRecentTags(count: number): Observable<any> {

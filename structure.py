@@ -31,7 +31,7 @@ insert_max_structure_id = ('INSERT INTO Structures () VALUES ()')
 get_max_structure_id = ('SELECT MAX(id) FROM Structures')
 recent_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.private=0 ORDER BY Structures.uploadDate DESC LIMIT %s')
 random_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.private=0 ORDER BY RAND() LIMIT %s')
-next_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.private=0 AND Structures.uploadDate < %s ORDER BY Structures.uploadDate DESC LIMIT %s')
+next_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.private=0 AND Structures.id < %s ORDER BY Structures.id DESC LIMIT %s')
 delete_structure_query = ('DELETE Structures FROM Structures WHERE Structures.id = %s')
 
 recent_titles_query = ('SELECT DISTINCT title FROM Structures ORDER BY uploadDate DESC LIMIT %s')
@@ -45,7 +45,7 @@ get_applications_query = ('SELECT application FROM Applications WHERE id IN (SEL
 get_modifications_query = ('SELECT modification FROM Modifications WHERE id IN (SELECT modificationId FROM ModificationsJoin WHERE structureId = %s)')
 get_keywords_query = ('SELECT keyword FROM Keywords WHERE id IN (SELECT keywordId FROM KeywordsJoin WHERE structureId = %s)')
 get_authors_query = ('SELECT author FROM Authors WHERE id IN (SELECT authorId FROM AuthorsJoin WHERE structureId = %s)')
-get_last_author = ('SELECT Authors.author FROM Authors INNER JOIN AuthorsJoin on Authors.id = AuthorsJoin.authorId WHERE AuthorsJoin.structureId = %s order by Authors.id desc limit 1;')
+get_last_author = ('SELECT author FROM (SELECT author FROM Authors WHERE id IN (SELECT authorId FROM AuthorsJoin WHERE structureId = %s)) as T, (SELECT @s:= 0) AS s ORDER BY @s:=@s+1 DESC LIMIT 1')
 
 get_last_id = ('SELECT LAST_INSERT_ID()')
 get_user_name = ('SELECT firstName, lastName FROM Users WHERE id = %s')
@@ -198,11 +198,10 @@ def get_recent_structures(count):
 
     return jsonify(structures)
 
-def get_next_structures(date, count):
+def get_next_structures(id, count):
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
-        count = 1
-        cursor.execute(next_structures_query, (date, count))
+        cursor.execute(next_structures_query, (id, count))
         results = cursor.fetchall()
         last_authors = []
         for result in results:

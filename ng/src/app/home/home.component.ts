@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { StructureService, StructureCover, LoadbarService } from 'src/app/core';
 
+const ev = e => e.stopImmediatePropagation();
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -10,6 +12,7 @@ import { StructureService, StructureCover, LoadbarService } from 'src/app/core';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   structures: Array<StructureCover> = [];
+  wait = false;
   viewChecked = false;
   oldHeight = 0;
   message: string;
@@ -59,33 +62,33 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.infiniteScroll();
 
     this.router.events.subscribe(val => {
+      // this.infiniteScroll();
       if (val instanceof NavigationEnd && (val.url.startsWith('/?') || val.url === '/')) {
         const url = new URLSearchParams(val.url.slice(2));
         input = url.get('input');
         category = url.get('category');
         input ? this.loadSearch(input, category) : this.loadRecent(5);
-        this.infiniteScroll();
       }
     });
   }
 
   ngOnDestroy(): void {
-    document.addEventListener('scroll', e => e.stopImmediatePropagation(), true);
+    document.addEventListener('scroll', ev, true);
   }
-
 
   infiniteScroll(): void {
     const scrollListener = () => {
       const body = document.body;
       const html = document.documentElement;
       const currentHeight = window.scrollY + window.innerHeight;
-      const totalHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight);
-      if (currentHeight + 450 >= totalHeight && this.oldHeight + 450 < totalHeight) {
-        this.oldHeight = currentHeight;
+      const totalHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight);
+      
+      if (currentHeight + 450 >= totalHeight && !this.wait) {
+        this.wait = true;
         this.loadNext();
-        // this.loadRandom(5);
       }
     };
+    document.removeEventListener('scroll', ev, true);
     document.addEventListener('scroll', scrollListener);
   }
 
@@ -136,14 +139,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
    loadNext(): void {
-    const date = this.structures[this.structures.length - 1].uploadDate;
-    const dateStr = date.toISOString();
-    this.structService.getNext(dateStr).subscribe(
+    const id = this.structures[this.structures.length - 1].id;
+    this.structService.getNext(id).subscribe(
       (data) => {
         data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
         this.structures.push(...data);
         console.log(`Loaded 5 more structures: `, data);
         this.loadBarService.disable();
+        this.wait = false;
       },
       err => {
         console.log('err', err);
@@ -191,9 +194,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     else {
-      const date = this.structures[this.structures.length - 1].uploadDate;
-      const dateStr = date.toISOString();
-      this.structService.getNext(dateStr).subscribe(
+      const id = this.structures[this.structures.length - 1].id;
+      this.structService.getNext(id).subscribe(
         (data) => {
           data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
           this.structures.push(...data);
@@ -283,6 +285,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   slideToggle(): void {
     if (this.viewChecked) {
+      // this.infiniteScroll();
       setTimeout(() => {
         this.currentHeight = window.scrollY + window.innerHeight;
         this.totalHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight,
