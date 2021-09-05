@@ -50,6 +50,7 @@ get_last_author = ('SELECT author FROM (SELECT author FROM Authors WHERE id IN (
 get_last_id = ('SELECT LAST_INSERT_ID()')
 get_user_name = ('SELECT firstName, lastName FROM Users WHERE id = %s')
 get_by_id = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.id IN %(ids)s LIMIT 10')
+get_by_id_single = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.id = %s')
 
 get_app_id = ('SELECT id FROM Applications WHERE application = %s')
 insert_app = ('INSERT INTO Applications (application) VALUES (%s)')
@@ -580,10 +581,35 @@ def search_by_user(user_id):
     
     return jsonify(response)
 
+def search_by_last_author(input):
+    connection = database.pool.get_connection()
+    with connection.cursor() as cursor:
+        cursor.execute(get_structures_by_last_author, (input))
+        ids = cursor.fetchall()
+        cursor.execute(get_by_id, ({'ids': tuple(ids)}))
+        structures = cursor.fetchall()
+    connection.close()
+    
+    response = []
+    for structure in structures:
+        response.append({
+            'title': structure[0],
+            'uploadDate': structure[1],
+            'description': structure[2],
+            'displayImage': structure[3],
+            'id': structure[4],
+            'firstName': structure[5],
+            'lastName': structure[6]
+        })
+    
+    return jsonify(response)
+
 # Query elasticsearch for matching structures
 def search(input, category):
     if category == 'user_id':
         return search_by_user(input)
+    if category == 'last_author':
+        return search_by_last_author(input)
 
     query = {
         'query': {
@@ -608,11 +634,13 @@ def search(input, category):
     ids = [hit['_id'] for hit in hits]
     if not ids:
         return {}
-
+    
+    structures = []
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
-        cursor.execute(get_by_id, ({'ids': tuple(ids)}))
-        structures = cursor.fetchall()
+        for id in ids:
+            cursor.execute(get_by_id_single, id)
+            structures.append(cursor.fetchone())
     connection.close()
 
     response = []
