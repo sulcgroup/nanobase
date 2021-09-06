@@ -108,7 +108,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.message = 'Showing your structures...';
           }
           else {
-            this.message = `Showing structures with ${this.categories[category]} '${input}'...`;
+            this.message = `Showing search results for ${this.categories[category]} '${input}':`;
           }
           console.log('Loaded searched structures: ', this.structures);
         }

@@ -10,7 +10,7 @@
         <mat-form-field [ngStyle]="{color:'#fff'}" id="search-field">
             <mat-label >Search structures</mat-label>
             <input matInput id="myInput" type="text" [formControl]="input" [matAutocomplete]="auto" (keyup.enter)="search()">
-            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let option of filteredOptions[category ? category : 'title'] | async" [value]="option">
                     {{option}}
                 </mat-option>
