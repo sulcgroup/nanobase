@@ -28,6 +28,14 @@ def get_file(id=None, file_type=None, file=None):
 	else:
 		abort(404, description='File not found')
 
+@app.route('/download/<file>')
+def file_downloads(file=None):
+	if os.path.isfile('backups/{}'.format(file)):
+		return send_file('backups/{}'.format(file))
+	else:
+		abort(404, description='File not found')
+
+
 @app.route('/api/structure', methods=['POST'])
 def upload_structure():
 	user_id = get_session_id()

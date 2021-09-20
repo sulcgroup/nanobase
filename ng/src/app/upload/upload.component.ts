@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FileInput } from 'ngx-material-file-input';
 import { map, publishBehavior, startWith } from 'rxjs/operators';
@@ -44,6 +44,10 @@ export class UploadComponent implements OnInit {
     modifications: [[]],
     keywords: [[]]
   };
+  scaffold1: FormControl;
+  scaffold2: FormControl;
+  scaffold3: FormControl;
+  scaffold_names = ['m13 (p7249)', 'p8064', 'Other']
 
   constructor(
     private fb: FormBuilder,
@@ -69,6 +73,10 @@ export class UploadComponent implements OnInit {
       modifications: this.fb.array([this.fb.group({ value: '', filteredOptions: [] })]),
       keywords: this.fb.array([this.fb.group({ value: '', filteredOptions: [] })]),
       description: ['', Validators.compose([Validators.required, Validators.maxLength(1000)])],
+      scaffold1: new FormControl(null),
+      scaffold2: new FormControl(null),
+      scaffold3: new FormControl(null),
+      scaffoldOther: new FormControl(null)
     });
 
     this.publicationGroup = this.fb.group({
@@ -219,6 +227,20 @@ export class UploadComponent implements OnInit {
     }
     delete structure.year;
     delete structure.month;
+    let scaffold_names = ['m13 (p7249)', 'p8064', 'Other']
+    if (structure.scaffold1) {
+      structure.keywords.push({value: 'm13 (p7249)'});
+    }
+    if (structure.scaffold2) {
+      structure.keywords.push({value: 'p8064'});
+    }
+    if (structure.scaffold3 && structure.scaffoldOther) {
+      structure.keywords.push({value: structure.scaffoldOther});
+    }
+    delete structure.scaffold1;
+    delete structure.scaffold2;
+    delete structure.scaffold3;
+    delete structure.scaffoldOther;
 
     return structure;
   }

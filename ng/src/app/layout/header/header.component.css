@@ -8,6 +8,32 @@ a {
     color: rgba(255, 255, 255, 0.87);
 }
 
+#download-container {
+    position: relative;
+    font-size: 15px;
+}
+
+#download-button {
+    color: rgba(255, 255, 255, 0.87);
+    margin: 0;
+    position: absolute;
+    top: 60%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    font-size: 15px;
+}
+
+.download-file-button {
+    color: rgb(32, 32, 32)!important;
+}
+
+#download-menu-icon {
+    font-size: 27px;
+    position: relative;
+    bottom: 2px;
+    right: 1px;
+}
+
 .mat-option {
     background-color: rgba(51, 51, 51)!important;
     color: rgba(255, 255, 255, 0.9)!important;

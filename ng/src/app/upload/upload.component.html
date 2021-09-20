@@ -67,6 +67,31 @@
         <button class="field-button" (mouseup)="addField('keywords', 1)" mat-stroked-button>Add field</button>
       </div>
 
+      <div class="example-list-section">
+        Select which scaffold(s) (if any) are used in the structure.
+        <ul>
+          <li>
+            <mat-checkbox formControlName='scaffold1' color='accent'>
+              m13 (p7249)
+            </mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox formControlName='scaffold2' color='accent'>
+              p8064
+            </mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox formControlName='scaffold3' color='accent'>
+              Other
+            </mat-checkbox>
+          </li>
+        </ul>
+        <mat-form-field *ngIf="structureGroup.controls['scaffold3'].value">
+          <mat-label>Other scaffold name</mat-label>
+          <input matInput formControlName="scaffoldOther">
+        </mat-form-field>
+      </div>
+
       <mat-form-field class="field-container description-field">
         <mat-label>Description (1000 characters max)</mat-label>
         <textarea maxlength="1000" matInput formControlName="description" required></textarea>

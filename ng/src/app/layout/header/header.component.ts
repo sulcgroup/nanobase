@@ -15,7 +15,7 @@ export class HeaderComponent implements OnInit {
   category = '';
   currentURL = '';
   user: User;
-  categories = ['title', 'user_name', 'applications', 'modifications', 'keywords', 'authors'];
+  categories = ['title', 'authors', 'applications', 'modifications', 'keywords', 'user_name'];
   options = {
     title: [],
     user_name: [],

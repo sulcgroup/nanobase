@@ -343,6 +343,13 @@ def insert_structure(id, structure, user_id, file_names, oxdna_files, file_descr
             upload_date = '2099-01-01'
         else:
             upload_date = date.today().strftime('%Y-%m-%d')
+    
+    private = 0
+    if structure['isPrivate'] == True:
+        if upload_date == date.today().strftime('%Y-%m-%d') or upload_date == '2099-01-01':
+            private = 2
+        else:
+            private = 1
 
     structure_data = (
         id,
@@ -357,7 +364,7 @@ def insert_structure(id, structure, user_id, file_names, oxdna_files, file_descr
         file_names[0][:-1], file_names[1][:-1], file_names[2][:-1], file_names[3][:-1], file_names[4][:-1], file_names[5][:-1],
         structure['displayImage'],
         file_descriptions[0][:-1], file_descriptions[1][:-1], file_descriptions[2][:-1], file_descriptions[3][:-1], file_descriptions[4][:-1], file_descriptions[5][:-1],
-        1 if structure['isPrivate'] == True else 0,
+        private,
         upload_date,
         oxdna_files
     )

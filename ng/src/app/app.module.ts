@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { HeaderComponent } from './layout/header/header.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
@@ -39,6 +40,7 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
     MatIconModule,
     MatSelectModule,
     MatAutocompleteModule,
+    MatMenuModule,
     MatProgressBarModule
   ],
   providers: [],
