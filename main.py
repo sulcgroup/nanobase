@@ -7,6 +7,7 @@ import user
 import structure
 from utilities import get_session_id
 from crossref.restful import Works
+import zipfile
 import database
 
 app = Flask(__name__, static_folder='ng/dist/ng', static_url_path='')
@@ -27,6 +28,19 @@ def get_file(id=None, file_type=None, file=None):
 		return send_file('structures/{}/{}/{}'.format(id, file_type, file))
 	else:
 		abort(404, description='File not found')
+
+@app.route('/oxdna/<id>')
+def get_oxdna_files(id=None):
+	# zipf = zipfile.ZipFile('nanobase.zip','w', zipfile.ZIP_DEFLATED)
+	filenames = structure.get_oxdna_files(id)
+	# for file in filenames:
+	# 	zipf.write(file)
+	# zipf.close()
+	# return send_file('nanobase.zip',
+    #         mimetype = 'zip',
+    #         attachment_filename= 'nanobase.zip',
+    #         as_attachment = True)
+	return filenames
 
 @app.route('/download/<file>')
 def file_downloads(file=None):

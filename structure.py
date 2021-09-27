@@ -21,12 +21,18 @@ es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 # print(es.search(index='structures', body={'query': {'match_all' : {}}}))
 
 get_structure_query = ('SELECT Structures.*, Users.firstName, Users.lastName, Users.institution FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.id = %s')
+get_private_structure_query = ('SELECT Structures.*, Users.firstName, Users.lastName, Users.institution FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.private_hash = %s')
 get_structures_by_user = ('SELECT id FROM Structures WHERE userId = %s')
 insert_structure_query = (
     'REPLACE INTO Structures'
-    '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `structureDescriptions`, `expProtocolDescriptions`, `expResultsDescriptions`, `simProtocolDescriptions`, `simResultsDescriptions`, `imageDescriptions`, `private`, `uploadDate`, `oxdnaFiles`)'
-	'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `structureDescriptions`, `expProtocolDescriptions`, `expResultsDescriptions`, `simProtocolDescriptions`, `simResultsDescriptions`, `imageDescriptions`, `private`, `uploadDate`, `oxdnaFiles`, `private_hash`)'
+	'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 )
+modify_structure_query = (
+    'UPDATE Structures SET userId = %s, title = %s, type = %s, description = %s, publishDate = %s, citation = %s, link = %s, licensing = %s, structureFiles = %s, expProtocolFiles = %s, expResultsFiles = %s, simProtocolFiles = %s, simResultsFiles = %s, imageFiles = %s, displayImage = %s, structureDescriptions = %s, expProtocolDescriptions = %s, expResultsDescriptions = %s, simProtocolDescriptions = %s, simResultsDescriptions = %s, imageDescriptions = %s, private = %s, uploadDate = %s, oxdnaFiles = %s WHERE id = %s'
+)
+get_oxdna_files_query = ('SELECT oxdnaFiles FROM Structures WHERE id = %s')
+get_private_id = ('SELECT id FROM Structures WHERE private_hash = %s')
 insert_max_structure_id = ('INSERT INTO Structures () VALUES ()')
 get_max_structure_id = ('SELECT MAX(id) FROM Structures')
 recent_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.private=0 ORDER BY Structures.uploadDate DESC LIMIT %s')
@@ -87,11 +93,29 @@ def delete_structure(struct_id):
         cursor.execute(delete_author_by_id, (struct_id))
     connection.close()
 
-def get_structure(id):
+def get_oxdna_files(id):
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
-        cursor.execute(get_structure_query, (id))
-        s = list(cursor.fetchone())
+        cursor.execute(get_oxdna_files_query, (id))
+        oxdna_files = cursor.fetchone()[0][:-1]
+    connection.close()
+    return oxdna_files
+
+def get_structure(id):
+    connection = database.pool.get_connection()
+
+    with connection.cursor() as cursor:
+        cursor.execute(get_private_structure_query, (id))
+        s = cursor.fetchone()
+        if s:
+            s = list(s)
+            id = str(s[0])
+        else:
+            cursor.execute(get_structure_query, (id))
+            s = list(cursor.fetchone())
+            if s[23] > 0:
+                connection.close()
+                return 'Structure is private'
     
     if not s:
         connection.close()
@@ -273,7 +297,6 @@ def get_autofill(count):
 def upload_structure(structure, user_id):
     # print('Uploading: ', structure)
     # Convert dicts to arrays
-    applications, modifications, keywords, authors = [], [], [], []
     structure['applications'] = [tag['value'] for tag in structure['applications'] if tag['value'] != '']
     structure['modifications'] = [tag['value'] for tag in structure['modifications'] if tag['value'] != '']
     structure['keywords'] = [tag['value'] for tag in structure['keywords'] if tag['value'] != '']
@@ -289,11 +312,12 @@ def upload_structure(structure, user_id):
         first_name, last_name = cursor.fetchall()[0]
             
     file_names, file_descriptions, oxdna_files = upload_files(id, structure)
-    insert_structure(id, structure, user_id, file_names, oxdna_files, file_descriptions, connection)
+    isPrivate, private_hash = insert_structure(id, structure, user_id, file_names, oxdna_files, file_descriptions, connection)
     connection.close()
 
     index_structure(id, structure, first_name, last_name)
-    return id
+
+    return private_hash if isPrivate else id
 
 # Write all files into filesystem
 def upload_files(id, structure):
@@ -345,7 +369,9 @@ def insert_structure(id, structure, user_id, file_names, oxdna_files, file_descr
             upload_date = date.today().strftime('%Y-%m-%d')
     
     private = 0
+    private_hash = ''
     if structure['isPrivate'] == True:
+        private_hash = uuid.uuid4().hex[:8]
         if upload_date == date.today().strftime('%Y-%m-%d') or upload_date == '2099-01-01':
             private = 2
         else:
@@ -366,7 +392,8 @@ def insert_structure(id, structure, user_id, file_names, oxdna_files, file_descr
         file_descriptions[0][:-1], file_descriptions[1][:-1], file_descriptions[2][:-1], file_descriptions[3][:-1], file_descriptions[4][:-1], file_descriptions[5][:-1],
         private,
         upload_date,
-        oxdna_files
+        oxdna_files,
+        private_hash
     )
     
     with connection.cursor() as cursor:
@@ -407,6 +434,7 @@ def insert_structure(id, structure, user_id, file_names, oxdna_files, file_descr
                 cursor.execute(get_last_id)
                 tag_id = cursor.fetchone()
             cursor.execute(insert_author_join, (id, tag_id))
+    return structure['isPrivate'] == True, private_hash
 
 # Store structure in ES
 def index_structure(id, structure, first_name, last_name):
@@ -422,6 +450,11 @@ def index_structure(id, structure, first_name, last_name):
     })
 
 def edit_structure(new_struct):
+    # if new_struct['private'] :
+    #     connection = database.pool.get_connection()
+    #     with connection.cursor() as cursor:
+    #         cursor.execute(get_private_id, (new_struct['id']))
+    #         new_struct['id'] = cursor.fetchone()[0]
     id = new_struct['id']
     displayImage = new_struct['files'].pop('displayImage', None)
     file_names = []
@@ -435,7 +468,6 @@ def edit_structure(new_struct):
         
     
     structure_data = (
-        id,
         int(new_struct['user']['id']),
         new_struct['title'],
         new_struct['type'],
@@ -449,12 +481,13 @@ def edit_structure(new_struct):
         file_descriptions[5], file_descriptions[0], file_descriptions[1], file_descriptions[3], file_descriptions[4], file_descriptions[2],
         new_struct['private'],
         new_struct['uploadDate'],
-        '|'.join(new_struct['files']['oxdnaFiles']) + '|'
+        '|'.join(new_struct['files']['oxdnaFiles']) + '|',
+        id
     )
         
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
-        cursor.execute(insert_structure_query, (structure_data))
+        cursor.execute(modify_structure_query, (structure_data))
     
     edit_files(new_struct['files'], str(id))
 
@@ -588,35 +621,10 @@ def search_by_user(user_id):
     
     return jsonify(response)
 
-def search_by_last_author(input):
-    connection = database.pool.get_connection()
-    with connection.cursor() as cursor:
-        cursor.execute(get_structures_by_last_author, (input))
-        ids = cursor.fetchall()
-        cursor.execute(get_by_id, ({'ids': tuple(ids)}))
-        structures = cursor.fetchall()
-    connection.close()
-    
-    response = []
-    for structure in structures:
-        response.append({
-            'title': structure[0],
-            'uploadDate': structure[1],
-            'description': structure[2],
-            'displayImage': structure[3],
-            'id': structure[4],
-            'firstName': structure[5],
-            'lastName': structure[6]
-        })
-    
-    return jsonify(response)
-
 # Query elasticsearch for matching structures
 def search(input, category):
     if category == 'user_id':
         return search_by_user(input)
-    if category == 'last_author':
-        return search_by_last_author(input)
 
     query = {
         'query': {
