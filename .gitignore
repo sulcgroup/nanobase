@@ -9,3 +9,4 @@ structures/
 restart.sh
 node_modules/.cache/*
 backups/
+backup.py

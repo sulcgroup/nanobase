@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LoadbarService {
-  public loadBar = true;
+  public loadBar = false;
 
   constructor() { }
 

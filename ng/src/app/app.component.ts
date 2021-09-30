@@ -7,11 +7,10 @@ import { UserService, LoadbarService } from './core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor(private userService: UserService, public loadBarService: LoadbarService) {}
+  constructor(private userService: UserService, public loadBarService: LoadbarService) { }
 
   ngOnInit(): void {
     this.userService.populate();
-    this.loadBarService.enable();
   }
 
 }

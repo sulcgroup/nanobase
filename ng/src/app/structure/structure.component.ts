@@ -13,7 +13,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 })
 export class StructureComponent implements AfterViewInit {
   @ViewChild('slideToggle') editToggle: MatSlideToggle;
-  id: number;
+  id: any;
   structure: Structure;
   months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
   files = {};
@@ -38,7 +38,7 @@ export class StructureComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.loadBarService.enable();
     this.route.paramMap.subscribe(params => {
-      this.id = parseInt(params.get('id'), 10);
+      this.id = params.get('id');
       this.getStructure();
     });
   }
@@ -50,7 +50,7 @@ export class StructureComponent implements AfterViewInit {
     }
   }
 
-  getStructure(): void {
+  getStructure(): void {    
     this.structureService.get(this.id).subscribe(
       data => {
         data.response.uploadDate = new Date(data.response.uploadDate);
@@ -82,7 +82,7 @@ export class StructureComponent implements AfterViewInit {
     );
   }
 
-  checkAuthor(id: number): void {
+  checkAuthor(id: any): void {
     this.structureService.checkAuthor(id).subscribe(
       data => {
         if (data.response) {

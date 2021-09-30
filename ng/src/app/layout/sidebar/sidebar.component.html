@@ -1,18 +1,35 @@
 <div id="sidebar-container">
-    <a mat-button (click)="scrollTop()" routerLink="/" color="primary">
+    <a class="sidebar-link" mat-button (click)="scrollTop()" routerLink="/" color="primary">
         <mat-icon class="sidebar-icon">home</mat-icon>
         <div class="navigation">Homepage</div>
     </a>
-    <a mat-button (click)="scrollTop()" routerLink="{{isAuthenticated ? '/upload' : '/auth/login'}}" color="primary">
+    <a class="sidebar-link" mat-button (click)="scrollTop()" routerLink="{{isAuthenticated ? '/upload' : '/auth/login'}}" color="primary">
         <mat-icon class="sidebar-icon">publish</mat-icon>
         <div class="navigation">Upload Structure</div>
     </a>
-    <a mat-button (click)="scrollTop()" routerLink="{{isAuthenticated ? '/profile' : '/auth/login'}}" color="primary">
+    <a class="sidebar-link" mat-button (click)="scrollTop()" routerLink="{{isAuthenticated ? '/profile' : '/auth/login'}}" color="primary">
         <mat-icon class="sidebar-icon">person</mat-icon>
         <div class="navigation">Profile</div>
     </a>
-    <a mat-button (click)="scrollTop()" routerLink="/about" color="primary">
+    <a class="sidebar-link" mat-button (click)="scrollTop()" routerLink="/about" color="primary">
         <mat-icon class="sidebar-icon">description</mat-icon>
         <div class="navigation">About</div>
     </a>
+
+    <a class="sidebar-link" mat-button [matMenuTriggerFor]="menu" color="primary">
+        <mat-icon class="sidebar-icon">menu</mat-icon>
+        <div class="navigation quick-download">Quick Download</div>
+        <mat-menu class="navigation" #menu="matMenu">
+            <button mat-menu-item><a href='download/all_files.zip' download>
+                <mat-icon>download</mat-icon><span class="download-description">Download all database files</span></a>
+            </button>
+            <button mat-menu-item><a href='download/structures.zip' download>
+                <mat-icon>download</mat-icon><span class="download-description">Download all structures</span></a>
+            </button>
+            <button mat-menu-item><a href='download/SQL_Database.csv' download>
+                <mat-icon>download</mat-icon><span class="download-description">Download SQL database</span></a>
+            </button>
+        </mat-menu>
+    </a>
+
 </div>

@@ -35,17 +35,6 @@
         </mat-form-field>
     </div>
 
-    <div id="download-container">
-        <button id="download-button" mat-button [matMenuTriggerFor]="menu">
-            <mat-icon id="download-menu-icon">menu</mat-icon>
-            Quick download
-        </button>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item><a class="download-file-button" href='download/all_files.tar.gz' download><mat-icon>download</mat-icon>Download all database files</a></button>
-            <button mat-menu-item><a class="download-file-button" href='download/structures.tar.gz' download><mat-icon>download</mat-icon>Download all structures</a></button>
-        </mat-menu>
-    </div>
-
     <div id="sign-in-container">
         <button id="sign-in" mat-raised-button routerLink="{{user.firstName ? '/profile' : '/auth/login'}}">
             {{user.firstName ? user.firstName : 'Sign in'}}

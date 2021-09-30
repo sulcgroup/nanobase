@@ -47,7 +47,7 @@ export class UploadComponent implements OnInit {
   scaffold1: FormControl;
   scaffold2: FormControl;
   scaffold3: FormControl;
-  scaffold_names = ['m13 (p7249)', 'p8064', 'Other']
+  scaffold_names = ['M13mp18', 'p8064', 'p7308', 'p7560', 'Other']
 
   constructor(
     private fb: FormBuilder,

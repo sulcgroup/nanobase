@@ -18,7 +18,7 @@ export class StructureService {
     return this.apiService.get(`/structure/random/${count}`);
   }
 
-  getNext(id: number): Observable<Array<StructureCover>> {
+  getNext(id: any): Observable<Array<StructureCover>> {
     return this.apiService.get(`/structure/next/${id}`);
   }
 
@@ -34,11 +34,11 @@ export class StructureService {
     return this.apiService.get(`/search/${input}/${category}`);
   }
 
-  get(id: number): Observable<any> {
+  get(id: any): Observable<any> {    
     return this.apiService.get(`/structure/${id}`);
   }
 
-  checkAuthor(id: number): Observable<any> {
+  checkAuthor(id: any): Observable<any> {
     return this.apiService.get(`/structure/author/${id}`);
   }
 
