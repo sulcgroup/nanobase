@@ -1,0 +1,21 @@
+#how-to-container {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: 500;
+    margin-top: 25px;
+    margin-bottom: 5px;
+    line-height: 1.1;
+    /* margin-left: 25px; */
+    color: rgb(0, 0, 0);
+    white-space: scroll;
+}
+
+iframe {
+    margin-top: 10px;
+    border-radius: 7px;
+    border: 1px rgb(58, 42, 84) solid;
+}

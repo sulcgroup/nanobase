@@ -9,11 +9,15 @@
     </a>
     <a class="sidebar-link" mat-button (click)="scrollTop()" routerLink="{{isAuthenticated ? '/profile' : '/auth/login'}}" color="primary">
         <mat-icon class="sidebar-icon">person</mat-icon>
-        <div class="navigation">Profile</div>
+        <div class="navigation profile">Profile</div>
     </a>
     <a class="sidebar-link" mat-button (click)="scrollTop()" routerLink="/about" color="primary">
         <mat-icon class="sidebar-icon">description</mat-icon>
         <div class="navigation">About</div>
+    </a>
+    <a class="sidebar-link" mat-button (click)="scrollTop()" routerLink="/how-to" color="primary">
+        <mat-icon class="sidebar-icon">help_outline</mat-icon>
+        <div class="navigation how-to">How to Upload</div>
     </a>
 
     <a class="sidebar-link" mat-button [matMenuTriggerFor]="menu" color="primary">

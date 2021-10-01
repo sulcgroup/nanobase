@@ -113,7 +113,8 @@ def get_structure(id):
         else:
             cursor.execute(get_structure_query, (id))
             s = list(cursor.fetchone())
-            if s[23] > 0:
+            print(s, file=sys.stderr)
+            if s[24] > 0:
                 connection.close()
                 return 'Structure is private'
     
@@ -135,7 +136,7 @@ def get_structure(id):
 
     # Get file contents
     # print(s[25], file=sys.stderr)
-    oxdna_files = s[25][:-1].split('|') if s[25] else []
+    oxdna_files = s[26][:-1].split('|') if s[26] else []
     files = []
     if oxdna_files and (len(oxdna_files) > 1 or oxdna_files[0] != ''):
         path = os.path.join('structures', id, 'structure/')
@@ -154,9 +155,9 @@ def get_structure(id):
         'title': s[2],
         'type': s[3],
         'size': s[5],
-        'private': s[23],
-        'uploadDate': s[24],
-        'user': { 'id': s[1], 'firstName': s[26], 'lastName': s[27], 'institution': s[28] },
+        'private': s[24],
+        'uploadDate': s[25],
+        'user': { 'id': s[1], 'firstName': s[28], 'lastName': s[29], 'institution': s[30] },
         'files': { 'displayImage': s[16], 'oxdnaFiles': oxdna_files },
         'publication': { 'publishDate': s[6], 'citation': s[7], 'link': s[8], 'licensing': s[9], 'authors': authors },
         'tags': { 'applications': applications, 'modifications': modifications, 'keywords': keywords },
@@ -197,9 +198,11 @@ def get_structure(id):
     ] if simResultsFiles[0] != '' else []
     structure['files']['images'] = [{
         'name': imageFiles[i],
-        'description': s[22].split('|')[i]}
+        'description': s[23].split('|')[i]}
         for i in range(len(imageFiles))
     ] if imageFiles[0] != '' else []
+
+    structure['stats'] = s[22]
     
     return structure
 

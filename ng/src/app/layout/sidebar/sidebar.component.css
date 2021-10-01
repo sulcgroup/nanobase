@@ -17,7 +17,7 @@
     position: relative;
     top: 15px;
     right: 3px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     padding-top: 5px;
     padding-bottom: 5px;
     width: 100%;
@@ -25,9 +25,19 @@
     color: rgba(34, 18, 63, 0.878)!important;
 }
 
+.how-to {
+    position: relative;
+    top: -2px;
+}
+
+.profile {
+    position: relative;
+    top: -1px;
+}
+
 .quick-download {
     position: relative;
-    top: -3px;
+    top: -2px;
 }
 
 .download-description {

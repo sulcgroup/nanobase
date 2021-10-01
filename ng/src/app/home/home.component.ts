@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { StructureService, StructureCover, LoadbarService } from 'src/app/core';
 
@@ -50,7 +50,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private structService: StructureService,
-    public loadBarService: LoadbarService
+    public loadBarService: LoadbarService,
+    private changeDetection: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -128,6 +129,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       data => {
         data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
         this.structures.push(...data);
+        this.changeDetection.detectChanges();
         console.log(`Loaded ${count} more structures: `, data);
         this.loadBarService.disable();
       },
@@ -144,7 +146,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       (data) => {
         data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
         this.structures.push(...data);
-        console.log(`Loaded 5 more structures: `, data);
+        this.changeDetection.detectChanges();
+        console.log(`Loaded 5 more structures2: `, data);
+        
         this.loadBarService.disable();
         this.wait = false;
       },
@@ -199,6 +203,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         (data) => {
           data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
           this.structures.push(...data);
+          this.changeDetection.detectChanges();
           console.log(`Loaded 5 more structures: `, data);
 
           this.iter++;
