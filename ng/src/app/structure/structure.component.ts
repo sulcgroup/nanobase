@@ -71,7 +71,13 @@ export class StructureComponent implements AfterViewInit {
         const files = fileStrings.map(file => new File([new Blob([file.contents], type)], file.name, type));
         data.response.files_contents = files;
         this.structure = data.response;
-        this.structure.publication.link = this.addhttp(this.structure.publication.link)
+        this.structure.publication.link = this.addhttp(this.structure.publication.link);
+        this.structure.statsData = data.response.stats.split('|');
+
+        this.structure.statsData[0] = parseInt(this.structure.statsData[0], 10);
+        this.structure.statsData[1] = parseInt(this.structure.statsData[1], 10);
+        this.structure.statsData[2] = parseInt(this.structure.statsData[2], 10);
+        this.structure.statsData[3] = parseInt(this.structure.statsData[3], 10);
 
         console.log('Loaded structure: ', this.structure);
 

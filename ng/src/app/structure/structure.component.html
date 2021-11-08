@@ -140,7 +140,12 @@
             </mat-tab>
 
             <mat-tab label="Stats">
-                
+                <b>Number of nucleotides: </b>{{structure.statsData[0]}}<br>
+                <b *ngIf="structure.statsData[1] > 0">Number of staple strands: </b>{{structure.statsData[1]}}<br>
+                <b>Number of amino acids: </b>{{structure.statsData[2]}}<br>
+                <b>Number of peptide strands: </b>{{structure.statsData[3]}}<br>
+                <b *ngIf="structure.statsData[1] > 0">Staple length distribution: </b><br>
+                <img class="statsImage" src="{{'file/'+structure.id+'/structure/'+structure.statsData[4]}}">
             </mat-tab>
 
             <mat-tab label="Experiment Protocol">

@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  api_url: 'https://nanobase.org/api'
+  api_url: 'http://localhost:5000/api'
+  // http://localhost:5000/api
 };
 
 /*

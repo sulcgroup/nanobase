@@ -51,6 +51,7 @@ export interface Structure {
         institution: string;
         lastName: string;
     };
+    statsData: Array<any>;
 }
 
 // Structure uploaded to database

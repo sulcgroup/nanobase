@@ -4,6 +4,10 @@
     color: rgb(30, 30, 37);
 }
 
+b {
+    line-height: 1.8;
+}
+
 #title {
     line-height: 50px;
     font-size: 46px;
@@ -93,6 +97,11 @@
 .slide-toggle {
     font-size: 22px;
     color: rgba(0, 0, 0, 0.9);
+}
+
+.statsImage {
+    border: 1px solid #a999b6;
+    border-radius: 5px;
 }
 
 .mat-icon {
