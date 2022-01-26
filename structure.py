@@ -4,7 +4,9 @@ import uuid
 import subprocess
 import bcrypt
 from flask import jsonify
+from pymysql import NULL
 import database
+from extract_stats import stats
 from urllib import request
 from datetime import date
 from elasticsearch import Elasticsearch
@@ -25,8 +27,8 @@ get_private_structure_query = ('SELECT Structures.*, Users.firstName, Users.last
 get_structures_by_user = ('SELECT id FROM Structures WHERE userId = %s')
 insert_structure_query = (
     'REPLACE INTO Structures'
-    '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `structureDescriptions`, `expProtocolDescriptions`, `expResultsDescriptions`, `simProtocolDescriptions`, `simResultsDescriptions`, `imageDescriptions`, `private`, `uploadDate`, `oxdnaFiles`, `private_hash`)'
-	'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `structureDescriptions`, `expProtocolDescriptions`, `expResultsDescriptions`, `simProtocolDescriptions`, `simResultsDescriptions`, `statsData`, `imageDescriptions`, `private`, `uploadDate`, `oxdnaFiles`, `private_hash`)'
+	'VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 )
 modify_structure_query = (
     'UPDATE Structures SET userId = %s, title = %s, type = %s, description = %s, publishDate = %s, citation = %s, link = %s, licensing = %s, structureFiles = %s, expProtocolFiles = %s, expResultsFiles = %s, simProtocolFiles = %s, simResultsFiles = %s, imageFiles = %s, displayImage = %s, structureDescriptions = %s, expProtocolDescriptions = %s, expResultsDescriptions = %s, simProtocolDescriptions = %s, simResultsDescriptions = %s, imageDescriptions = %s, private = %s, uploadDate = %s, oxdnaFiles = %s WHERE id = %s'
@@ -83,7 +85,7 @@ delete_author = ('DELETE Authors, AuthorsJoin FROM Authors INNER JOIN AuthorsJoi
 delete_author_by_id = ('DELETE Authors, AuthorsJoin FROM Authors INNER JOIN AuthorsJoin on Authors.id = AuthorsJoin.authorId WHERE AuthorsJoin.structureId = %s')
 
 def delete_structure(struct_id):
-    es.delete(index = 'structures', id = struct_id)
+    # es.delete(index = 'structures', id = struct_id)
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
         cursor.execute(delete_structure_query, (struct_id))
@@ -113,7 +115,7 @@ def get_structure(id):
         else:
             cursor.execute(get_structure_query, (id))
             s = list(cursor.fetchone())
-            print(s, file=sys.stderr)
+            #print(s, file=sys.stderr)
             if s[24] > 0:
                 connection.close()
                 return 'Structure is private'
@@ -380,6 +382,16 @@ def insert_structure(id, structure, user_id, file_names, oxdna_files, file_descr
         else:
             private = 1
 
+    #extract structure stats from the oxDNA topology file, if exists
+    try:
+        top_file = [f for f in file_names[0][:-1].split('|') if '.top' in f][0]
+        top_path = 'structures/'+str(id)+'/structure/'+top_file
+        stats_data = stats(top_path)
+    except Exception as e:
+        print('No/bad top file for structure', id, file=sys.stderr)
+        stats_data = 'NULL'
+    
+
     structure_data = (
         id,
         int(user_id),
@@ -392,7 +404,7 @@ def insert_structure(id, structure, user_id, file_names, oxdna_files, file_descr
         structure['licensing'],
         file_names[0][:-1], file_names[1][:-1], file_names[2][:-1], file_names[3][:-1], file_names[4][:-1], file_names[5][:-1],
         structure['displayImage'],
-        file_descriptions[0][:-1], file_descriptions[1][:-1], file_descriptions[2][:-1], file_descriptions[3][:-1], file_descriptions[4][:-1], file_descriptions[5][:-1],
+        file_descriptions[0][:-1], file_descriptions[1][:-1], file_descriptions[2][:-1], file_descriptions[3][:-1], file_descriptions[4][:-1], stats_data, file_descriptions[5][:-1],
         private,
         upload_date,
         oxdna_files,

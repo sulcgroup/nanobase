@@ -35,8 +35,14 @@ def stats(top_file):
                 else:
                     p_counter += 1
             l = f.readline()
+
+    #catch the last strand
+    if s_counter > 0:
+        s_lengths.append(s_counter)
+    elif p_counter > 0:
+        p_lengths.append(p_counter)
     
-    total_n = np.sum(s_lengths)
+    total_n = int(np.sum(s_lengths))
 
     # remove scaffold from the list if it exists.  1000 is an entirely arbitrary cutoff.
     s_lengths = [i for i in s_lengths if i < 1000]
@@ -57,8 +63,8 @@ def stats(top_file):
         plt.savefig('/'.join(path))
         plt.close()
 
-
-    return("{total_n}|{n_saples}|{total_a}|{n_peptides}|{graph}".format(total_n, len(s_lengths), np.sum(p_lengths), len(p_lengths), out_name))
+    #output is:   total nucleotides | #non-scaffold strands | total amino acids | #peptides | graph name
+    return("{total_n}|{n_staples}|{total_a}|{n_peptides}|{graph}".format(total_n=total_n, n_staples=len(s_lengths), total_a=int(np.sum(p_lengths)), n_peptides=len(p_lengths), graph=out_name))
 
 if __name__ == '__main__':
     import database
@@ -70,6 +76,7 @@ if __name__ == '__main__':
             connection = database.pool.get_connection()
             with connection.cursor() as cursor:
                 cursor.execute(update_stats_query, (results,dir))
+            connection.close()
         except Exception as e:
             print(e)
             print('No topology or bad topology found in ', dir)
