@@ -50,6 +50,10 @@ export class StructureService {
     return this.apiService.post(`/structure/edit`, {structure});
   }
 
+  delete(id: String): Observable<any> {
+    return this.apiService.post(`/structure/delete`, {id});
+  }
+
   getPublication(doi: string): Observable<any> {
     return this.apiService.post(`/publication`, {doi});
   }

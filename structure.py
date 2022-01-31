@@ -1,4 +1,5 @@
 import os
+import shutil
 import time
 import uuid
 import subprocess
@@ -64,25 +65,26 @@ get_app_id = ('SELECT id FROM Applications WHERE application = %s')
 insert_app = ('INSERT INTO Applications (application) VALUES (%s)')
 insert_app_join = ('INSERT INTO ApplicationsJoin (structureId, applicationId) VALUES (%s, %s)')
 delete_app = ('DELETE Applications, ApplicationsJoin FROM Applications INNER JOIN ApplicationsJoin on Applications.id = ApplicationsJoin.applicationId WHERE Applications.application = %s')
-delete_app_by_id = ('DELETE Applications, ApplicationsJoin FROM Applications INNER JOIN ApplicationsJoin on Applications.id = ApplicationsJoin.applicationId WHERE ApplicationsJoin.structureId = %s')
+delete_app_by_id = ('DELETE ApplicationsJoin FROM Applications INNER JOIN ApplicationsJoin on Applications.id = ApplicationsJoin.applicationId WHERE ApplicationsJoin.structureId = %s')
 
 get_mod_id = ('SELECT id FROM Modifications WHERE modification = %s')
 insert_mod = ('INSERT INTO Modifications (modification) VALUES (%s)')
 insert_mod_join = ('INSERT INTO ModificationsJoin (structureId, modificationId) VALUES (%s, %s)')
 delete_mod = ('DELETE Modifications, ModificationsJoin FROM Modifications INNER JOIN ModificationsJoin on Modifications.id = ModificationsJoin.modificationId WHERE Modifications.modification = %s')
-delete_mod_by_id = ('DELETE Modifications, ModificationsJoin FROM Modifications INNER JOIN ModificationsJoin on Modifications.id = ModificationsJoin.modificationId WHERE ModificationsJoin.structureId = %s')
+delete_mod_by_id = ('DELETE ModificationsJoin FROM Modifications INNER JOIN ModificationsJoin on Modifications.id = ModificationsJoin.modificationId WHERE ModificationsJoin.structureId = %s')
 
 get_keyword_id = ('SELECT id FROM Keywords WHERE keyword = %s')
 insert_keyword = ('INSERT INTO Keywords (keyword) VALUES (%s)')
 insert_keyword_join = ('INSERT INTO KeywordsJoin (structureId, keywordId) VALUES (%s, %s)')
 delete_keyword = ('DELETE Keywords, KeywordsJoin FROM Keywords INNER JOIN KeywordsJoin on Keywords.id = KeywordsJoin.keywordId WHERE Keywords.keyword = %s')
-delete_keyword_by_id = ('DELETE Keywords, KeywordsJoin FROM Keywords INNER JOIN KeywordsJoin on Keywords.id = KeywordsJoin.keywordId WHERE KeywordsJoin.structureId = %s')
+delete_keyword_by_id = ('DELETE KeywordsJoin FROM Keywords INNER JOIN KeywordsJoin on Keywords.id = KeywordsJoin.keywordId WHERE KeywordsJoin.structureId = %s')
 
 get_author_id = ('SELECT id FROM Authors WHERE author = %s')
 insert_author = ('INSERT INTO Authors (author) VALUES (%s)')
 insert_author_join = ('INSERT INTO AuthorsJoin (structureId, authorId) VALUES (%s, %s)')
 delete_author = ('DELETE Authors, AuthorsJoin FROM Authors INNER JOIN AuthorsJoin on Authors.id = AuthorsJoin.authorId WHERE Authors.author = %s')
-delete_author_by_id = ('DELETE Authors, AuthorsJoin FROM Authors INNER JOIN AuthorsJoin on Authors.id = AuthorsJoin.authorId WHERE AuthorsJoin.structureId = %s')
+delete_author_by_id = ('DELETE AuthorsJoin FROM Authors INNER JOIN AuthorsJoin on Authors.id = AuthorsJoin.authorId WHERE AuthorsJoin.structureId = %s')
+#probably just want to delete AuthorsJoin so that it doesn't remove the author entirely...
 
 def delete_structure(struct_id):
     # es.delete(index = 'structures', id = struct_id)
@@ -94,6 +96,10 @@ def delete_structure(struct_id):
         cursor.execute(delete_keyword_by_id, (struct_id))
         cursor.execute(delete_author_by_id, (struct_id))
     connection.close()
+    path = os.path.join('structures', struct_id)
+    shutil.rmtree(path)
+
+    return 'OK'
 
 def get_oxdna_files(id):
     connection = database.pool.get_connection()

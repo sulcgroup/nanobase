@@ -10,3 +10,4 @@ restart.sh
 node_modules/.cache/*
 backups/
 backup.py
+ng/node_modules/*

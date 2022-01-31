@@ -84,6 +84,14 @@ def edit_structure():
 	authenticated = struct['user']['id'] == id or auth.check_admin(id)
 	return {'response': structure.edit_structure(struct) if authenticated else 'Action not allowed'}
 
+@app.route('/api/structure/delete', methods=['POST'])
+def delete_structure():
+	id = request.json['id']
+	user_id = get_session_id()
+	authenticated = user_id == id or auth.check_admin(user_id)
+	return {'response': structure.delete_structure(id) if authenticated else 'Action not allowed'}
+
+
 @app.route('/api/structure/recent/<count>', methods=['GET'])
 def get_recent_structures(count):
 	return structure.get_recent_structures(int(count))

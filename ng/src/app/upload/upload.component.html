@@ -181,10 +181,14 @@
           Is this an OxDNA structure?
         </mat-checkbox>
         <ng-container *ngIf="fileGroup.controls['isOxdna'].value">
+          <br>
+          <strong>This should be either a topology (.top)/configuration(.dat, .conf, or .oxdna) file pair or an oxView (.oxview) file.</strong>
+        </ng-container>
+        <ng-container *ngIf="fileGroup.controls['isOxdna'].value">
           <div formArrayName="oxdna" *ngFor="let file of fieldArray('oxdna', 3).controls; let i=index">
             <mat-form-field class="field-container multiple-field" [formGroupName]="i">
-              <ngx-mat-file-input (change)="uploadFile($event.target, 'oxdna', i)" #oxdna formControlName="file" [placeholder]="i===0 ? 'OxDNA Files' : ''" accept=".top,.dat,.json,.oxdna,.pdb"
-              [matTooltip]="i===0 ? 'accepts top, dat, json, oxdna, pdb files' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
+              <ngx-mat-file-input (change)="uploadFile($event.target, 'oxdna', i)" #oxdna formControlName="file" [placeholder]="i===0 ? 'OxDNA Files' : ''" accept=".top,.dat,.json,.oxdna,.pdb,.oxview,.unf"
+              [matTooltip]="i===0 ? 'accepts top, dat, oxview, json, oxdna, pdb files' : ''" matTooltipClass="tooltip" matTooltipPosition="above"></ngx-mat-file-input>
               <button *ngIf="i===0 && oxdna.empty" mat-icon-button matSuffix>
                 <mat-icon>folder</mat-icon>
               </button>

@@ -25,6 +25,7 @@ export class StructureComponent implements AfterViewInit {
   addOnBlur = true;
   separatorKeysCodes: number[] = [ENTER, COMMA, SEMICOLON];
   confirmMessage = 'Your unsaved changes will be lost. Are you sure you want to switch to public view?';
+  deleteMessage = 'Are you sure you want to delete the structure?  This action cannot be undone.'
 
   constructor(private structureService: StructureService,
               private formService: FormService,
@@ -139,6 +140,23 @@ export class StructureComponent implements AfterViewInit {
       }
     );
     this.hasBeenEdited = false;
+  }
+
+  delete(): void {
+    this.loadBarService.enable();
+    if (confirm(this.deleteMessage)) {
+      this.structureService.delete(this.structure.id).subscribe(
+        data => {
+          this.loadBarService.disable();
+          console.log('Deleted structure: ', data);
+          this.router.navigate(['/']);
+        },
+        err => {
+          this.loadBarService.disable();
+          console.log('err', err);
+        }
+      );
+    }
   }
 
   checkOxdna(value: boolean, file: string): void {
