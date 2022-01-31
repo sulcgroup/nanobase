@@ -142,6 +142,22 @@ export class StructureComponent implements AfterViewInit {
     this.hasBeenEdited = false;
   }
 
+  togglePrivate(): void {
+    this.loadBarService.enable();
+    console.log(this.structure);
+    this.structureService.togglePrivate(this.structure).subscribe(
+      data => {
+        this.loadBarService.disable();
+        console.log('Structure toggled: ', data);
+        this.router.navigateByUrl(`/structure/${data.response}`);
+      },
+      err => {
+        this.loadBarService.disable();
+        console.log('err', err);
+      }
+    );
+  }
+
   delete(): void {
     this.loadBarService.enable();
     if (confirm(this.deleteMessage)) {

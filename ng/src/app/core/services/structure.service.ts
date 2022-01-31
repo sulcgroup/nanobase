@@ -54,6 +54,10 @@ export class StructureService {
     return this.apiService.post(`/structure/delete`, {id});
   }
 
+  togglePrivate(structure: Structure): Observable<any> {
+    return this.apiService.post(`/structure/togglePrivate`, {structure});
+  }
+
   getPublication(doi: string): Observable<any> {
     return this.apiService.post(`/publication`, {doi});
   }

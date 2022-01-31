@@ -10,6 +10,7 @@
             <span class="slide-toggle" [ngClass]="isEditing ? 'editing' : 'public'">{{isEditing ? 'Editing View' : 'Public View'}}&ensp;</span>
         </mat-slide-toggle>
         <button id="save-button" (click)="save()" *ngIf="isEditing" [disabled]="!hasBeenEdited" mat-raised-button color="primary">SAVE CHANGES</button>
+        <button id="private-button" (click)="togglePrivate()" *ngIf="isEditing" mat-raised-button color="primary" style="margin-left:10px;">{{structure.private ? 'MAKE PUBLIC' : 'MAKE PRIVATE'}}</button>
         <button id="delete-button" (click)="delete()" *ngIf="isEditing" mat-raised-button color="warn" style="margin-left:10px;">DELETE STRUCTURE</button>
     </div>
     <mat-divider id="header-divider"></mat-divider><br>

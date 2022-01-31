@@ -91,6 +91,13 @@ def delete_structure():
 	authenticated = user_id == id or auth.check_admin(user_id)
 	return {'response': structure.delete_structure(id) if authenticated else 'Action not allowed'}
 
+@app.route('/api/structure/togglePrivate', methods=['POST'])
+def toggle_private():
+	struct = request.json['structure']
+	id = get_session_id()
+	authenticated = struct['user']['id'] == id or auth.check_admin(id)
+	return {'response': structure.toggle_private(struct) if authenticated else 'Action not allowed'}
+
 
 @app.route('/api/structure/recent/<count>', methods=['GET'])
 def get_recent_structures(count):

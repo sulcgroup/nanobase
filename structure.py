@@ -43,6 +43,10 @@ random_structures_query = ('SELECT Structures.title, Structures.uploadDate, Stru
 next_structures_query = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.private=0 AND Structures.id < %s ORDER BY Structures.id DESC LIMIT %s')
 delete_structure_query = ('DELETE Structures FROM Structures WHERE Structures.id = %s')
 
+toggle_private_query = ('UPDATE Structures SET private = %s WHERE id = %s')
+update_hash_query = ('UPDATE Structures SET private_hash = %s WHERE id = %s')
+update_date_query = ('UPDATE Structures SET uploadDate = %s WHERE id = %s')
+
 recent_titles_query = ('SELECT DISTINCT title FROM Structures ORDER BY uploadDate DESC LIMIT %s')
 recent_username_query = ('SELECT DISTINCT Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY Structures.uploadDate DESC LIMIT %s')
 recent_applications_query = ('SELECT DISTINCT Applications.application FROM Applications INNER JOIN ApplicationsJoin ON Applications.id = ApplicationsJoin.applicationId INNER JOIN Structures ON Structures.id = ApplicationsJoin.structureId ORDER BY Structures.uploadDate DESC LIMIT %s')
@@ -84,7 +88,6 @@ insert_author = ('INSERT INTO Authors (author) VALUES (%s)')
 insert_author_join = ('INSERT INTO AuthorsJoin (structureId, authorId) VALUES (%s, %s)')
 delete_author = ('DELETE Authors, AuthorsJoin FROM Authors INNER JOIN AuthorsJoin on Authors.id = AuthorsJoin.authorId WHERE Authors.author = %s')
 delete_author_by_id = ('DELETE AuthorsJoin FROM Authors INNER JOIN AuthorsJoin on Authors.id = AuthorsJoin.authorId WHERE AuthorsJoin.structureId = %s')
-#probably just want to delete AuthorsJoin so that it doesn't remove the author entirely...
 
 def delete_structure(struct_id):
     # es.delete(index = 'structures', id = struct_id)
@@ -618,6 +621,41 @@ def write_file(name, contents, path):
         file = open(path, 'w')
         file.write(contents)
     file.close()
+
+def toggle_private(structure):
+    id = structure['id']
+    print(structure['private'], flush=True)
+    new_privacy = 0 if structure['private'] else 1
+    if new_privacy:
+        new_hash = uuid.uuid4().hex[:8]
+        upload_date = '2099-01-01'
+    else:
+        upload_date = date.today().strftime('%Y-%m-%d')
+
+    connection = database.pool.get_connection()
+    with connection.cursor() as cursor:
+        print(new_privacy, flush=True)
+        cursor.execute(toggle_private_query, (new_privacy, id))
+        cursor.execute(update_date_query, (upload_date, id))
+        if new_privacy:
+            cursor.execute(update_hash_query, (new_hash, id))
+    connection.close()
+
+    if new_privacy:
+        es.update(index = 'structures', id = id,
+        body = {
+            'doc': {
+                'private': 1
+            }
+        })
+    else:
+        es.update(index = 'structures', id = id,
+        body = {
+            'doc': {
+                'private': 0
+            }
+        })
+    return new_hash if new_privacy else id
 
 def search_by_user(user_id):
     connection = database.pool.get_connection()
