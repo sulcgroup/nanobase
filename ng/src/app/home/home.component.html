@@ -17,7 +17,7 @@
                 <p>{{structure.description}}</p>
             </mat-card-content>
             <mat-card-actions>
-                <button class="structure-button" mat-button color="primary" [routerLink]="['/structure', structure.id]">
+                <button class="structure-button" mat-button color="primary" [routerLink]="structure.private ? ['/structure', structure.privateHash] : ['/structure', structure.id]">
                     <mat-icon color="primary">subject</mat-icon>
                     VIEW STRUCTURE
                 </button>

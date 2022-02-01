@@ -8,6 +8,7 @@ from flask import jsonify
 from pymysql import NULL
 import database
 from extract_stats import stats
+from utilities import get_session_id
 from urllib import request
 from datetime import date
 from elasticsearch import Elasticsearch
@@ -25,7 +26,7 @@ es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 
 get_structure_query = ('SELECT Structures.*, Users.firstName, Users.lastName, Users.institution FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.id = %s')
 get_private_structure_query = ('SELECT Structures.*, Users.firstName, Users.lastName, Users.institution FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.private_hash = %s')
-get_structures_by_user = ('SELECT id FROM Structures WHERE userId = %s')
+get_structures_by_user = ('SELECT Structures.title, Structures.uploadDate, Structures.description, Structures.displayImage, Structures.id, Users.firstName, Users.lastName, Structures.private, Structures.private_hash FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Users.id=%s')
 insert_structure_query = (
     'REPLACE INTO Structures'
     '(`id`, `userId`, `title`, `type`, `description`, `publishDate`, `citation`, `link`, `licensing`, `structureFiles`, `expProtocolFiles`, `expResultsFiles`, `simProtocolFiles`, `simResultsFiles`, `imageFiles`, `displayImage`, `structureDescriptions`, `expProtocolDescriptions`, `expResultsDescriptions`, `simProtocolDescriptions`, `simResultsDescriptions`, `statsData`, `imageDescriptions`, `private`, `uploadDate`, `oxdnaFiles`, `private_hash`)'
@@ -624,7 +625,6 @@ def write_file(name, contents, path):
 
 def toggle_private(structure):
     id = structure['id']
-    print(structure['private'], flush=True)
     new_privacy = 0 if structure['private'] else 1
     if new_privacy:
         new_hash = uuid.uuid4().hex[:8]
@@ -634,7 +634,6 @@ def toggle_private(structure):
 
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
-        print(new_privacy, flush=True)
         cursor.execute(toggle_private_query, (new_privacy, id))
         cursor.execute(update_date_query, (upload_date, id))
         if new_privacy:
@@ -661,8 +660,6 @@ def search_by_user(user_id):
     connection = database.pool.get_connection()
     with connection.cursor() as cursor:
         cursor.execute(get_structures_by_user, (user_id))
-        ids = cursor.fetchall()
-        cursor.execute(get_by_id, ({'ids': tuple(ids)}))
         structures = cursor.fetchall()
     connection.close()
 
@@ -677,6 +674,9 @@ def search_by_user(user_id):
             'firstName': structure[5],
             'lastName': structure[6]
         })
+        if get_session_id() == int(user_id):
+            response[-1]['private'] = structure[7]
+            response[-1]['privateHash'] = structure[8]
     
     return jsonify(response)
 
