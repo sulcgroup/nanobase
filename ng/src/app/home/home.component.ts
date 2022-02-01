@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation, ChangeDetectorRef, HostListener } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { StructureService, StructureCover, LoadbarService } from 'src/app/core';
 
@@ -73,24 +73,28 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  @HostListener('window:beforeunload')
   ngOnDestroy(): void {
     document.addEventListener('scroll', ev, true);
+    document.removeEventListener('scroll', this.scrollListener);
   }
 
+  scrollListener = () => {
+    const body = document.body;
+    const html = document.documentElement;
+    const currentHeight = window.scrollY + window.innerHeight;
+    const totalHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight);
+    
+    if (currentHeight + 450 >= totalHeight && !this.wait) {
+      this.wait = true;
+      this.loadNext();
+    }
+  };
+
   infiniteScroll(): void {
-    const scrollListener = () => {
-      const body = document.body;
-      const html = document.documentElement;
-      const currentHeight = window.scrollY + window.innerHeight;
-      const totalHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight);
-      
-      if (currentHeight + 450 >= totalHeight && !this.wait) {
-        this.wait = true;
-        this.loadNext();
-      }
-    };
+
     document.removeEventListener('scroll', ev, true);
-    document.addEventListener('scroll', scrollListener);
+    document.addEventListener('scroll', this.scrollListener);
   }
 
   loadSearch(input: string, category: string): void {
@@ -140,7 +144,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
 
-   loadNext(): void {
+  loadNext(): void {
     const id = this.structures[this.structures.length - 1].id;
     this.structService.getNext(id).subscribe(
       (data) => {
