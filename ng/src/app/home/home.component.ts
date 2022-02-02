@@ -60,7 +60,21 @@ export class HomeComponent implements OnInit, OnDestroy {
     let category = this.route.snapshot.queryParams.category;
     input ? this.loadSearch(input, category) : this.loadRecent(5);
     this.loadRecentTags(100);
-    this.infiniteScroll();
+
+    this.router.events.subscribe(event =>{
+      if (event instanceof NavigationEnd){
+        if (event.url == '/') {
+          this.infiniteScroll();
+        }
+        else {
+          document.removeEventListener('scroll', this.scrollListener);
+        }
+      }
+   })
+
+    if (!input) {
+      this.infiniteScroll();
+    }
 
     this.router.events.subscribe(val => {
       // this.infiniteScroll();
@@ -92,7 +106,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   };
 
   infiniteScroll(): void {
-
     document.removeEventListener('scroll', ev, true);
     document.addEventListener('scroll', this.scrollListener);
   }
@@ -119,7 +132,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
         this.loadBarService.disable();
 
-        this.keepLoading();
+        //this.keepLoading();
       },
       err => {
         console.log('err', err);
@@ -214,8 +227,6 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.currentHeight = window.scrollY + window.innerHeight;
           this.totalHeight = Math.max( document.body.scrollHeight, document.body.offsetHeight,
                             document.documentElement.clientHeight, document.documentElement.scrollHeight);
-          console.log(this.currentHeight, document.body.scrollHeight, document.body.offsetHeight,
-            document.documentElement.clientHeight, document.documentElement.scrollHeight);
 
           this.keepLoading();
         },

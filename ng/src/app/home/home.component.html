@@ -4,7 +4,7 @@
         <div [className]="message ? 'message' : 'invisible'">{{message}}</div>
         <mat-card class="structure-container" *ngFor="let structure of structures">
             <mat-card-header>
-                <mat-card-title><span class="title" [routerLink]="['/structure', structure.id]">{{structure.title}}</span></mat-card-title>
+                <mat-card-title><span class="title" [routerLink]="structure.private ? ['/structure', structure.privateHash] : ['/structure', structure.id]">{{structure.title}}</span></mat-card-title>
                 <mat-card-subtitle>
                     {{structure.lastAuthor ? structure.lastAuthor.split(' ')[structure.lastAuthor.split(' ').length - 1] : ''}}
                 </mat-card-subtitle>
