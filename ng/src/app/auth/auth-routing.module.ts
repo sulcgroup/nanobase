@@ -14,8 +14,8 @@ const routes: Routes = [
   { path: 'forgot', component: ForgotComponent, canActivate: [NoAuthGuard] },
   { path: 'reset', component: ResetComponent, canActivate: [NoAuthGuard] },
   { path: 'verify', component: VerifyComponent },
-  { path: '', redirectTo: '/auth/login', pathMatch: 'full', canActivate: [NoAuthGuard] },
-  { path: 'auth', redirectTo: '/auth/login', pathMatch: 'full', canActivate: [NoAuthGuard] },
+  { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
+  { path: 'auth', redirectTo: '/auth/login', pathMatch: 'full' },
 ];
 
 @NgModule({
