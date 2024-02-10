@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators, UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 // import { FileInput } from 'ngx-material-file-input';
 import { map, publishBehavior, startWith } from 'rxjs/operators';
@@ -28,10 +28,10 @@ export class UploadComponent implements OnInit {
   today: Date;
   user: User;
 
-  structureGroup: FormGroup;
-  publicationGroup: FormGroup;
-  fileGroup: FormGroup;
-  miscGroup: FormGroup;
+  structureGroup: UntypedFormGroup;
+  publicationGroup: UntypedFormGroup;
+  fileGroup: UntypedFormGroup;
+  miscGroup: UntypedFormGroup;
 
   categories = ['applications', 'modifications', 'keywords'];
   options = {
@@ -44,13 +44,13 @@ export class UploadComponent implements OnInit {
     modifications: [[]],
     keywords: [[]]
   };
-  scaffold1: FormControl;
-  scaffold2: FormControl;
-  scaffold3: FormControl;
+  scaffold1: UntypedFormControl;
+  scaffold2: UntypedFormControl;
+  scaffold3: UntypedFormControl;
   scaffold_names = ['M13mp18', 'p8064', 'p7308', 'p7560', 'Other']
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public formService: FormService,
     private router: Router,
     private userService: UserService,
@@ -73,10 +73,10 @@ export class UploadComponent implements OnInit {
       modifications: this.fb.array([this.fb.group({ value: '', filteredOptions: [] })]),
       keywords: this.fb.array([this.fb.group({ value: '', filteredOptions: [] })]),
       description: ['', Validators.compose([Validators.required, Validators.maxLength(1000)])],
-      scaffold1: new FormControl(null),
-      scaffold2: new FormControl(null),
-      scaffold3: new FormControl(null),
-      scaffoldOther: new FormControl(null)
+      scaffold1: new UntypedFormControl(null),
+      scaffold2: new UntypedFormControl(null),
+      scaffold3: new UntypedFormControl(null),
+      scaffoldOther: new UntypedFormControl(null)
     });
 
     this.publicationGroup = this.fb.group({
@@ -127,11 +127,11 @@ export class UploadComponent implements OnInit {
         // console.log(pub);
         // Set year
         for (let i = 0; i < pub.author.length; i++) {
-          if (i > 0 && (this.publicationGroup.controls.authors as FormArray).controls.length < pub.author.length) {
+          if (i > 0 && (this.publicationGroup.controls.authors as UntypedFormArray).controls.length < pub.author.length) {
             this.addField('authors', 2);
           }
           const name = pub.author[i].given + ' ' + pub.author[i].family;
-          ((this.publicationGroup.controls.authors as FormArray).controls[i] as FormGroup).setValue({value: name});
+          ((this.publicationGroup.controls.authors as UntypedFormArray).controls[i] as UntypedFormGroup).setValue({value: name});
         }
 
         // Set date
@@ -255,11 +255,11 @@ export class UploadComponent implements OnInit {
     };
   }
 
-  fieldArray(type: string, group: number): FormArray {
+  fieldArray(type: string, group: number): UntypedFormArray {
     switch (group) {
-      case 1: return this.structureGroup.get(type) as FormArray;
-      case 2: return this.publicationGroup.get(type) as FormArray;
-      case 3: return this.fileGroup.get(type) as FormArray;
+      case 1: return this.structureGroup.get(type) as UntypedFormArray;
+      case 2: return this.publicationGroup.get(type) as UntypedFormArray;
+      case 3: return this.fileGroup.get(type) as UntypedFormArray;
       default: return;
     }
   }

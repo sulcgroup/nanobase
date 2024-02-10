@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService, FormService } from 'src/app/core';
 
@@ -11,15 +11,15 @@ import { UserService, FormService } from 'src/app/core';
 })
 export class RegisterComponent implements OnInit {
   hide = true;
-  registrationForm: FormGroup;
-  firstName: FormControl;
-  lastName: FormControl;
-  institution: FormControl;
-  email: FormControl;
-  passwords: FormGroup;
+  registrationForm: UntypedFormGroup;
+  firstName: UntypedFormControl;
+  lastName: UntypedFormControl;
+  institution: UntypedFormControl;
+  email: UntypedFormControl;
+  passwords: UntypedFormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router,
     private userService: UserService,
     private formService: FormService

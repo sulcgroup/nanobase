@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/core';
 
@@ -13,7 +13,7 @@ export class ResetComponent implements OnInit {
   checkCompleted = false;
   submitted = false;
   hidePassword = true;
-  password = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  password = new UntypedFormControl('', [Validators.required, Validators.minLength(8)]);
   userId: number;
   header = 'You may create a new password below (must be at least 8 characters long).';
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/core';
 
@@ -10,15 +10,15 @@ import { UserService } from 'src/app/core';
 })
 export class LoginComponent implements OnInit {
   hide = true;
-  email: FormControl;
-  password: FormControl;
+  email: UntypedFormControl;
+  password: UntypedFormControl;
   error = '';
 
   constructor(private router: Router, private userService: UserService) { }
 
   ngOnInit(): void {
-    this.email = new FormControl('', [Validators.required, Validators.email]);
-    this.password = new FormControl('', [Validators.required]);
+    this.email = new UntypedFormControl('', [Validators.required, Validators.email]);
+    this.password = new UntypedFormControl('', [Validators.required]);
   }
 
   getEmailError(): string {

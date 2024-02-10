@@ -115,7 +115,6 @@
       }
     }
   },
-  "defaultProject": "ng",
   "cli": {
     "analytics": false
   }

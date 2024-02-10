@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadbarService, UserService } from '../core';
 
@@ -12,8 +12,8 @@ import { LoadbarService, UserService } from '../core';
 export class ProfileComponent implements OnInit {
   hideOld = true;
   hideNew = true;
-  oldPassword = new FormControl('', [Validators.required, Validators.minLength(8)]);
-  newPassword = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  oldPassword = new UntypedFormControl('', [Validators.required, Validators.minLength(8)]);
+  newPassword = new UntypedFormControl('', [Validators.required, Validators.minLength(8)]);
   passwordResponse = '';
 
   constructor(private userService: UserService, private router: Router, public loadBarService: LoadbarService) { }

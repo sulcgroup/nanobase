@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { UserService } from 'src/app/core';
 
 @Component({
@@ -9,12 +9,12 @@ import { UserService } from 'src/app/core';
 })
 export class ForgotComponent implements OnInit {
   header = 'Enter your email below, and we will email you a link to reset your password.';
-  email: FormControl;
+  email: UntypedFormControl;
 
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.email = new FormControl('', [Validators.required, Validators.email]);
+    this.email = new UntypedFormControl('', [Validators.required, Validators.email]);
   }
 
   getEmailError(): string {
