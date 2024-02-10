@@ -14,7 +14,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MaterialFileInputModule } from 'ngx-material-file-input';
+// import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -22,9 +22,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-import { IvyCarouselModule } from 'angular-responsive-carousel';
-
-
+// import { IvyCarouselModule } from 'angular-responsive-carousel';
 
 @NgModule({
   declarations: [StructureComponent],
@@ -42,13 +40,13 @@ import { IvyCarouselModule } from 'angular-responsive-carousel';
     MatSelectModule,
     MatSlideToggleModule,
     FormsModule,
-    MaterialFileInputModule,
+    // MaterialFileInputModule,
     MatFormFieldModule,
     MatInputModule,
     MatProgressBarModule,
     MatCheckboxModule,
     MatRadioModule,
-    IvyCarouselModule
-  ]
+    // IvyCarouselModule
+  ],
 })
-export class StructureModule { }
+export class StructureModule {}

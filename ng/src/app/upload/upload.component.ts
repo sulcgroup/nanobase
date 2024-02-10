@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FileInput } from 'ngx-material-file-input';
+// import { FileInput } from 'ngx-material-file-input';
 import { map, publishBehavior, startWith } from 'rxjs/operators';
 import { FormService, ApiService, StructureUpload, UserService, StructureService, User, LoadbarService } from '../core';
 

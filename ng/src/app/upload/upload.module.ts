@@ -16,7 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MaterialFileInputModule } from 'ngx-material-file-input';
+// import { MaterialFileInputModule } from 'ngx-material-file-input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -40,13 +40,13 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MaterialFileInputModule,
+    // MaterialFileInputModule,
     MatRadioModule,
     MatCheckboxModule,
     MatProgressBarModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
   ],
   providers: [MatDatepickerModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class UploadModule { }
+export class UploadModule {}
