@@ -45,3 +45,7 @@ testem.log
 .DS_Store
 Thumbs.db
 ../ubuntu-xenial-16.04-cloudimg-console.log
+
+
+#node_modules
+node_modules/*

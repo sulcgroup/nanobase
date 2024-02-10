@@ -123,5 +123,8 @@
       }
     }
   },
-  "defaultProject": "ng"
+  "defaultProject": "ng",
+  "cli": {
+    "analytics": false
+  }
 }
