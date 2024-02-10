@@ -5,7 +5,7 @@ import {
   ViewChild,
   AfterContentInit,
 } from '@angular/core';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatLegacySlideToggle as MatSlideToggle } from '@angular/material/legacy-slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 // import { FileInput } from 'ngx-material-file-input';
 import {
@@ -16,7 +16,7 @@ import {
   LoadbarService,
 } from '../core';
 import { COMMA, ENTER, SEMICOLON } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 
 @Component({
   selector: 'app-structure',
