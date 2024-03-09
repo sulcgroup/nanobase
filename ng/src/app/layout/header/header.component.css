@@ -34,16 +34,16 @@ a {
     right: 1px;
 }
 
-.mat-option {
+.mat-mdc-option {
     background-color: rgba(51, 51, 51)!important;
     color: rgba(255, 255, 255, 0.9)!important;
 }
 
-.mat-option:hover, .mat-option.mat-active {
+.mat-mdc-option:hover, .mat-option.mat-active {
     background-color: rgb(61, 61, 61)!important;
 }
 
-::ng-deep .cdk-overlay-pane, .mat-autocomplete-panel, .mat-autocomplete, .mat-option , .mat-autocomplete-panel
+::ng-deep .cdk-overlay-pane, .mat-mdc-autocomplete-panel, .mat-autocomplete, .mat-option , .mat-autocomplete-panel
 { overflow: overlay; }
 
 ::ng-deep #cdk-overlay-0 { overflow: overlay; }
@@ -123,16 +123,18 @@ a {
     height: 60%;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
 ::ng-deep .mat-select-value {    
     color: white!important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 ::ng-deep .mat-form-field-subscript-wrapper {
     margin: 0!important;
 }
 
 
-::ng-deep .mat-form-field{
+::ng-deep .mat-mdc-form-field{
     margin-bottom: -1.25em!important;
  }
 
@@ -141,14 +143,16 @@ a {
 }
 
 /* Overrides Angular Material */
-.mat-input-element, .mat-form-field-autofill-control, .ng-pristine, .ng-valid, .cdk-text-field-autofill-monitored, .ng-touched {
+.mat-mdc-input-element, .mat-form-field-autofill-control, .ng-pristine, .ng-valid, .cdk-text-field-autofill-monitored, .ng-touched {
     font-size: 16px;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .mat-form-field-label, .ng-tns-c59-0, .mat-empty, .mat-form-field-empty, .ng-star-inserted {
     color: rgba(255, 255, 255, 0.87);
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
 .mat-select-value {
     color: white!important;
 }

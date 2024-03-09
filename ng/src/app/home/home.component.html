@@ -2,7 +2,7 @@
   <!-- Contains structures -->
   <div id="list-container" *ngIf="!viewChecked">
     <div [className]="message ? 'message' : 'invisible'">{{ message }}</div>
-    <mat-card class="structure-container" *ngFor="let structure of structures">
+    <mat-card appearance="outlined" class="structure-container" *ngFor="let structure of structures">
       <mat-card-header>
         <mat-card-title
           ><span
@@ -66,6 +66,7 @@
   <div id="grid-container" *ngIf="viewChecked">
     <div [className]="message ? 'message' : 'invisible'">{{ message }}</div>
     <mat-card
+      appearance="outlined"
       class="grid-structure-container"
       *ngFor="let structure of structures"
     >
@@ -148,14 +149,14 @@
           appExpand ? "expand_less" : "expand_more"
         }}</mat-icon>
       </button>
-      <mat-chip-list>
-        <mat-chip
+      <mat-chip-listbox>
+        <mat-chip-option
           class="application chip"
           (click)="routeTag(application, 'applications')"
           *ngFor="let application of tags?.applications"
-          >{{ application }}</mat-chip
+          >{{ application }}</mat-chip-option
         >
-      </mat-chip-list>
+      </mat-chip-listbox>
     </div>
 
     <div class="box">
@@ -170,14 +171,14 @@
           modExpand ? "expand_less" : "expand_more"
         }}</mat-icon>
       </button>
-      <mat-chip-list>
-        <mat-chip
+      <mat-chip-listbox>
+        <mat-chip-option
           class="modification chip"
           (click)="routeTag(modification, 'modifications')"
           *ngFor="let modification of tags?.modifications"
-          >{{ modification }}</mat-chip
+          >{{ modification }}</mat-chip-option
         >
-      </mat-chip-list>
+      </mat-chip-listbox>
     </div>
     <div class="box">
       <button
@@ -191,14 +192,14 @@
           keyExpand ? "expand_less" : "expand_more"
         }}</mat-icon>
       </button>
-      <mat-chip-list>
-        <mat-chip
+      <mat-chip-listbox>
+        <mat-chip-option
           class="keyword chip"
           (click)="routeTag(keyword, 'keywords')"
           *ngFor="let keyword of tags?.keywords"
-          >{{ keyword }}</mat-chip
+          >{{ keyword }}</mat-chip-option
         >
-      </mat-chip-list>
+      </mat-chip-listbox>
     </div>
   </div>
 </div>

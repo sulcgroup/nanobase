@@ -40,11 +40,11 @@
   margin-top: 15px;
 }
 
-.mat-card-subtitle {
+.mat-mdc-card-subtitle {
   margin-bottom: 5px !important;
 }
 
-:host ::ng-deep .mat-card-content {
+:host ::ng-deep .mat-mdc-card-content {
   margin-bottom: 0 !important;
 }
 

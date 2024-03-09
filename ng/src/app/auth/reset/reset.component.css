@@ -24,7 +24,7 @@ a {
     text-decoration: none;
 }
 
-:host ::ng-deep .mat-form-field {
+:host ::ng-deep .mat-mdc-form-field {
     margin: auto!important;
     width: 50%;
     display: block;
@@ -39,11 +39,13 @@ a {
     font-size: 16px;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 ::ng-deep .mat-card-header-text {
     margin: 0 auto!important;
     text-align: center;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card-subtitle {
     text-align: center;
 }

@@ -42,55 +42,55 @@
                 </mat-form-field>
             </p>
             <p><b>Applications: </b>
-                <mat-chip-list *ngIf="!isEditing" class="chip-list">
-                    <mat-chip class="application chip" (click)="routeTag(application, 'applications')" *ngFor="let application of structure.tags.applications">{{application}}</mat-chip>
-                    <mat-chip class="application chip" *ngIf="structure.tags.applications.length === 0">None</mat-chip>
-                </mat-chip-list>
-                <mat-chip-list *ngIf="isEditing" #applicationList class="chip-list">
-                    <mat-chip [removable]="removable" (removed)="removeTag(i, 'applications')" class="application chip" *ngFor="let application of structure.tags.applications;let i=index">{{application}}
+                <mat-chip-listbox *ngIf="!isEditing" class="chip-list">
+                    <mat-chip-option class="application chip" (click)="routeTag(application, 'applications')" *ngFor="let application of structure.tags.applications">{{application}}</mat-chip-option>
+                    <mat-chip-option class="application chip" *ngIf="structure.tags.applications.length === 0">None</mat-chip-option>
+                </mat-chip-listbox>
+                <mat-chip-grid *ngIf="isEditing" #applicationList class="chip-list">
+                    <mat-chip-row [removable]="removable" (removed)="removeTag(i, 'applications')" class="application chip" *ngFor="let application of structure.tags.applications;let i=index">{{application}}
                         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                    </mat-chip>
-                    <mat-chip class="application chip" *ngIf="structure.tags.applications.length === 0">None</mat-chip>
+                    </mat-chip-row>
+                    <mat-chip-row class="application chip" *ngIf="structure.tags.applications.length === 0">None</mat-chip-row>
                     <input matInput class="tag-input" placeholder="New application..."
                         [matChipInputFor]="applicationList"
                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                         [matChipInputAddOnBlur]="addOnBlur"
                         (matChipInputTokenEnd)="addTag($event, 'applications')">
-                </mat-chip-list>
+                </mat-chip-grid>
             </p>
             <p><b>Modifications: </b>
-                <mat-chip-list *ngIf="!isEditing" class="chip-list">
-                    <mat-chip class="modification chip" (click)="routeTag(modification, 'modifications')" *ngFor="let modification of structure.tags.modifications">{{modification}}</mat-chip>
-                    <mat-chip class="modification chip" *ngIf="structure.tags.modifications.length === 0">None</mat-chip>
-                </mat-chip-list>
-                <mat-chip-list *ngIf="isEditing" #modificationList class="chip-list">
-                    <mat-chip [removable]="removable" (removed)="removeTag(i, 'modifications')" class="modification chip" *ngFor="let modification of structure.tags.modifications;let i=index">{{modification}}
+                <mat-chip-listbox *ngIf="!isEditing" class="chip-list">
+                    <mat-chip-option class="modification chip" (click)="routeTag(modification, 'modifications')" *ngFor="let modification of structure.tags.modifications">{{modification}}</mat-chip-option>
+                    <mat-chip-option class="modification chip" *ngIf="structure.tags.modifications.length === 0">None</mat-chip-option>
+                </mat-chip-listbox>
+                <mat-chip-grid *ngIf="isEditing" #modificationList class="chip-list">
+                    <mat-chip-row [removable]="removable" (removed)="removeTag(i, 'modifications')" class="modification chip" *ngFor="let modification of structure.tags.modifications;let i=index">{{modification}}
                         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                    </mat-chip>
-                    <mat-chip class="modification chip" *ngIf="structure.tags.modifications.length === 0">None</mat-chip>
+                    </mat-chip-row>
+                    <mat-chip-row class="modification chip" *ngIf="structure.tags.modifications.length === 0">None</mat-chip-row>
                     <input matInput class="tag-input" placeholder="New modification..."
                         [matChipInputFor]="modificationList"
                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                         [matChipInputAddOnBlur]="addOnBlur"
                         (matChipInputTokenEnd)="addTag($event, 'modifications')">
-                </mat-chip-list>
+                </mat-chip-grid>
             </p>
             <p><b>Keywords: </b>
-                <mat-chip-list *ngIf="!isEditing" class="chip-list">
-                    <mat-chip class="keyword chip" (click)="routeTag(keyword, 'keywords')" *ngFor="let keyword of structure.tags.keywords">{{keyword}}</mat-chip>
-                    <mat-chip class="keyword chip" *ngIf="structure.tags.keywords.length === 0">None</mat-chip>
-                </mat-chip-list>
-                <mat-chip-list *ngIf="isEditing" #keywordList class="chip-list">
-                    <mat-chip [removable]="removable" (removed)="removeTag(i, 'keywords')" class="keyword chip" *ngFor="let keyword of structure.tags.keywords;let i=index">{{keyword}}
+                <mat-chip-listbox *ngIf="!isEditing" class="chip-list">
+                    <mat-chip-option class="keyword chip" (click)="routeTag(keyword, 'keywords')" *ngFor="let keyword of structure.tags.keywords">{{keyword}}</mat-chip-option>
+                    <mat-chip-option class="keyword chip" *ngIf="structure.tags.keywords.length === 0">None</mat-chip-option>
+                </mat-chip-listbox>
+                <mat-chip-grid *ngIf="isEditing" #keywordList class="chip-list">
+                    <mat-chip-row [removable]="removable" (removed)="removeTag(i, 'keywords')" class="keyword chip" *ngFor="let keyword of structure.tags.keywords;let i=index">{{keyword}}
                         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                    </mat-chip>
-                    <mat-chip class="keyword chip" *ngIf="structure.tags.keywords.length === 0">None</mat-chip>
+                    </mat-chip-row>
+                    <mat-chip-row class="keyword chip" *ngIf="structure.tags.keywords.length === 0">None</mat-chip-row>
                     <input matInput class="tag-input" placeholder="New keyword..."
                         [matChipInputFor]="keywordList"
                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                         [matChipInputAddOnBlur]="addOnBlur"
                         (matChipInputTokenEnd)="addTag($event, 'keywords')">
-                </mat-chip-list>
+                </mat-chip-grid>
             </p>
         </div>
     </div>
@@ -278,17 +278,17 @@
         <p>
             <b>Authors: </b>
             <span *ngIf="!isEditing">{{structure.publication.authors.length > 0 ? structure.publication.authors.join(', ') : 'N/A'}}</span>
-            <mat-chip-list *ngIf="isEditing" #authorList class="chip-list">
-                <mat-chip [removable]="removable" (removed)="removeTag(i, 'authors')" class="author chip" *ngFor="let author of structure.publication.authors;let i=index">{{author}}
+            <mat-chip-grid *ngIf="isEditing" #authorList class="chip-list">
+                <mat-chip-row [removable]="removable" (removed)="removeTag(i, 'authors')" class="author chip" *ngFor="let author of structure.publication.authors;let i=index">{{author}}
                     <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                </mat-chip>
-                <mat-chip class="author chip" *ngIf="structure.publication.authors.length === 0">None</mat-chip>
+                </mat-chip-row>
+                <mat-chip-row class="author chip" *ngIf="structure.publication.authors.length === 0">None</mat-chip-row>
                 <input matInput class="tag-input" placeholder="New author..."
                     [matChipInputFor]="authorList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     [matChipInputAddOnBlur]="addOnBlur"
                     (matChipInputTokenEnd)="addTag($event, 'authors')">
-            </mat-chip-list>
+            </mat-chip-grid>
         </p>
 
         <p>

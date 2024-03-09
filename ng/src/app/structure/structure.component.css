@@ -15,6 +15,7 @@ b {
     display: inline;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 #title-field ::ng-deep .mat-form-field-infix {
     padding-top: 0;
     padding-bottom: 0;
@@ -148,6 +149,7 @@ b {
     color: hsl(262, 52%, 47%);
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of chips that may no longer apply for the MDC version. */
 ::ng-deep .mat-chip-list .mat-chip-list-wrapper {
     margin-top: 0px;
     margin-bottom: 5px;
@@ -170,7 +172,7 @@ b {
 ::ng-deep .ng-tns-c86-10 {
     color: black!important;
 }
-::ng-deep .mat-select {
+::ng-deep .mat-mdc-select {
     color: black!important;
 }
 /* .ng-star-inserted {
