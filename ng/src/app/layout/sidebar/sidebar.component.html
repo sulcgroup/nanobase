@@ -1,39 +1,154 @@
-<div id="sidebar-container">
-    <a class="sidebar-link" mat-button (click)="scrollTop()" routerLink="/" color="primary">
-        <mat-icon class="sidebar-icon">home</mat-icon>
-        <div class="navigation">Homepage</div>
-    </a>
-    <a class="sidebar-link" mat-button (click)="scrollTop()" routerLink="{{isAuthenticated ? '/upload' : '/auth/login'}}" color="primary">
-        <mat-icon class="sidebar-icon">publish</mat-icon>
-        <div class="navigation">Upload Structure</div>
-    </a>
-    <a class="sidebar-link" mat-button (click)="scrollTop()" routerLink="{{isAuthenticated ? '/profile' : '/auth/login'}}" color="primary">
-        <mat-icon class="sidebar-icon">person</mat-icon>
-        <div class="navigation profile">Profile</div>
-    </a>
-    <a class="sidebar-link" mat-button (click)="scrollTop()" routerLink="/about" color="primary">
-        <mat-icon class="sidebar-icon">description</mat-icon>
-        <div class="navigation">About</div>
-    </a>
-    <a class="sidebar-link" mat-button (click)="scrollTop()" routerLink="/how-to" color="primary">
-        <mat-icon class="sidebar-icon">help_outline</mat-icon>
-        <div class="navigation how-to">How to Upload</div>
-    </a>
+<div class="sidnav-container">
+  <!-- <div>
+    <button type="button" mat-button (click)="drawer.toggle()">Nanobase</button>
+  </div> -->
+  <mat-drawer-container class="example-container" autosize>
+    <mat-drawer
+      #drawer
+      class="example-sidenav"
+      mode="side"
+      [opened]="sideNavOpen"
+    >
+      <div id="sidebar-container">
+        <ng-container *ngIf="!isAuthenticated">
+          <a
+            class="sidebar-link"
+            mat-button
+            (click)="scrollTop()"
+            routerLink="/"
+            color="primary"
+          >
+            <mat-icon class="sidebar-icon">login</mat-icon>
+            <div class="navigation">Login</div>
+          </a>
+        </ng-container>
 
-    <a class="sidebar-link" mat-button [matMenuTriggerFor]="menu" color="primary">
-        <mat-icon class="sidebar-icon">menu</mat-icon>
-        <div class="navigation quick-download">Quick Download</div>
-        <mat-menu class="navigation" #menu="matMenu">
-            <button mat-menu-item><a href='download/all_files.zip' download>
-                <mat-icon>download</mat-icon><span class="download-description">Download all database files</span></a>
-            </button>
-            <button mat-menu-item><a href='download/structures.zip' download>
-                <mat-icon>download</mat-icon><span class="download-description">Download all structures</span></a>
-            </button>
-            <button mat-menu-item><a href='download/SQL_Database.csv' download>
-                <mat-icon>download</mat-icon><span class="download-description">Download SQL database</span></a>
-            </button>
-        </mat-menu>
-    </a>
+        <ng-container *ngIf="isAuthenticated">
+          <div class="person">
+            <app-round-initials-chip
+              [initials]="initials"
+            ></app-round-initials-chip>
+            <div>
+              <P>Welcome!</P>
+              <p class="name">{{ name }}</p>
+            </div>
+          </div>
+        </ng-container>
 
+        <a
+          class="sidebar-link"
+          mat-button
+          (click)="scrollTop()"
+          routerLink="/"
+          color="primary"
+        >
+          <mat-icon class="sidebar-icon">home</mat-icon>
+          <div class="navigation">Homepage</div>
+        </a>
+        <a
+          class="sidebar-link"
+          mat-button
+          (click)="scrollTop()"
+          routerLink="{{ isAuthenticated ? '/upload' : '/auth/login' }}"
+          color="primary"
+        >
+          <mat-icon class="sidebar-icon">publish</mat-icon>
+          <div class="navigation">Upload Structure</div>
+        </a>
+        <a
+          class="sidebar-link"
+          mat-button
+          (click)="scrollTop()"
+          routerLink="{{ isAuthenticated ? '/profile' : '/auth/login' }}"
+          color="primary"
+        >
+          <mat-icon class="sidebar-icon">person</mat-icon>
+          <div class="navigation profile">Profile</div>
+        </a>
+        <a
+          class="sidebar-link"
+          mat-button
+          (click)="scrollTop()"
+          routerLink="/about"
+          color="primary"
+        >
+          <mat-icon class="sidebar-icon">description</mat-icon>
+          <div class="navigation">About</div>
+        </a>
+        <a
+          class="sidebar-link"
+          mat-button
+          (click)="scrollTop()"
+          routerLink="/how-to"
+          color="primary"
+        >
+          <mat-icon class="sidebar-icon">help_outline</mat-icon>
+          <div class="navigation how-to">How to Upload</div>
+        </a>
+
+        <a
+          class="sidebar-link"
+          mat-button
+          [matMenuTriggerFor]="menu"
+          color="primary"
+        >
+          <mat-icon class="sidebar-icon">menu</mat-icon>
+          <div class="navigation quick-download">Quick Download</div>
+          <mat-menu class="navigation" #menu="matMenu">
+            <button mat-menu-item>
+              <a href="download/all_files.zip" download>
+                <mat-icon>download</mat-icon
+                ><span class="download-description"
+                  >Download all database files</span
+                ></a
+              >
+            </button>
+            <button mat-menu-item>
+              <a href="download/structures.zip" download>
+                <mat-icon>download</mat-icon
+                ><span class="download-description"
+                  >Download all structures</span
+                ></a
+              >
+            </button>
+            <button mat-menu-item>
+              <a href="download/SQL_Database.csv" download>
+                <mat-icon>download</mat-icon
+                ><span class="download-description"
+                  >Download SQL database</span
+                ></a
+              >
+            </button>
+          </mat-menu>
+        </a>
+
+        <ng-container *ngIf="isAuthenticated">
+          <a
+            class="sidebar-link"
+            mat-button
+            (click)="scrollTop()"
+            routerLink="/"
+            color="primary"
+          >
+            <mat-icon class="sidebar-icon">logout</mat-icon>
+            <div class="navigation">Sign Out</div>
+          </a>
+        </ng-container>
+      </div>
+
+      <!-- <p>Auto-resizing sidenav</p>
+      @if (showFiller) {
+      <p>Lorem, ipsum dolor sit amet consectetur.</p>
+      }
+      <button (click)="showFiller = !showFiller" mat-raised-button>
+        Toggle extra text
+      </button> -->
+    </mat-drawer>
+
+    <!-- <div class="example-sidenav-content">
+      <button type="button" mat-button (click)="drawer.toggle()">
+        Toggle sidenav
+      </button>
+    </div> -->
+  </mat-drawer-container>
 </div>

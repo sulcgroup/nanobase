@@ -1,86 +1,204 @@
 <div id="content-container">
-    <!-- Contains structures -->
-    <div id="list-container" *ngIf="!viewChecked">
-        <div [className]="message ? 'message' : 'invisible'">{{message}}</div>
-        <mat-card class="structure-container" *ngFor="let structure of structures">
-            <mat-card-header>
-                <mat-card-title><span class="title" [routerLink]="structure.private ? ['/structure', structure.privateHash] : ['/structure', structure.id]">{{structure.title}}</span></mat-card-title>
-                <mat-card-subtitle>
-                    {{structure.lastAuthor ? structure.lastAuthor.split(' ')[structure.lastAuthor.split(' ').length - 1] : ''}}
-                </mat-card-subtitle>
-                <span class = 'poster'>Uploaded by {{structure.firstName}} {{structure.lastName}} | {{formatDate(structure.uploadDate)}}</span>
-                    
-            </mat-card-header>
-            <img class="display-image" mat-card-image src="{{'file/' + structure.id + '/' + structure.displayImage}}" alt="Display Image" *ngIf="structure.displayImage">
-            
-            <mat-card-content>
-                <p>{{structure.description}}</p>
-            </mat-card-content>
-            <mat-card-actions>
-                <button class="structure-button" mat-button color="primary" [routerLink]="structure.private ? ['/structure', structure.privateHash] : ['/structure', structure.id]">
-                    <mat-icon color="primary">subject</mat-icon>
-                    VIEW STRUCTURE
-                </button>
-            </mat-card-actions>
-        </mat-card>
+  <!-- Contains structures -->
+  <div id="list-container" *ngIf="!viewChecked">
+    <div [className]="message ? 'message' : 'invisible'">{{ message }}</div>
+    <mat-card class="structure-container" *ngFor="let structure of structures">
+      <mat-card-header>
+        <mat-card-title
+          ><span
+            class="title"
+            [routerLink]="
+              structure.private
+                ? ['/structure', structure.privateHash]
+                : ['/structure', structure.id]
+            "
+            >{{ structure.title }}</span
+          ></mat-card-title
+        >
+        <mat-card-subtitle>
+          {{
+            structure.lastAuthor
+              ? structure.lastAuthor.split(" ")[
+                  structure.lastAuthor.split(" ").length - 1
+                ]
+              : ""
+          }}
+        </mat-card-subtitle>
+        <span class="poster"
+          >Uploaded by {{ structure.firstName }} {{ structure.lastName }} |
+          {{ formatDate(structure.uploadDate) }}</span
+        >
+      </mat-card-header>
+      <img
+        class="display-image"
+        mat-card-image
+        src="{{
+          'http://localhost:5000/file/' +
+            structure.id +
+            '/' +
+            structure.displayImage
+        }}"
+        alt="Display Image"
+        *ngIf="structure.displayImage"
+      />
+
+      <mat-card-content>
+        <p>{{ structure.description }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          class="structure-button"
+          mat-button
+          color="primary"
+          [routerLink]="
+            structure.private
+              ? ['/structure', structure.privateHash]
+              : ['/structure', structure.id]
+          "
+        >
+          <mat-icon color="primary">subject</mat-icon>
+          VIEW STRUCTURE
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div id="grid-container" *ngIf="viewChecked">
+    <div [className]="message ? 'message' : 'invisible'">{{ message }}</div>
+    <mat-card
+      class="grid-structure-container"
+      *ngFor="let structure of structures"
+    >
+      <mat-card-header>
+        <mat-card-title
+          ><span
+            class="grid-title"
+            [routerLink]="['/structure', structure.id]"
+            >{{ structure.title }}</span
+          ></mat-card-title
+        >
+        <mat-card-subtitle class="grid-subtitle">
+          {{
+            structure.lastAuthor
+              ? structure.lastAuthor.split(" ")[
+                  structure.lastAuthor.split(" ").length - 1
+                ] + " |"
+              : ""
+          }}
+          Posted {{ formatDate(structure.uploadDate) }}
+        </mat-card-subtitle>
+        <!-- <span class = 'poster'>Uploaded by {{structure.firstName}} {{structure.lastName}} | {{formatDate(structure.uploadDate)}}</span> -->
+      </mat-card-header>
+      <img
+        class="grid-display-image"
+        mat-card-image
+        src="{{ 'file/' + structure.id + '/' + structure.displayImage }}"
+        alt="Display Image"
+        *ngIf="structure.displayImage"
+      />
+
+      <mat-card-content class="grid-content">
+        <p>
+          {{
+            structure.description.length > 100
+              ? structure.description.slice(0, 100) + "..."
+              : structure.description
+          }}
+        </p>
+      </mat-card-content>
+      <mat-card-actions class="grid-actions">
+        <button
+          class="structure-button"
+          mat-button
+          color="primary"
+          [routerLink]="['/structure', structure.id]"
+        >
+          <mat-icon color="primary">subject</mat-icon>
+          VIEW STRUCTURE
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Contains tags-->
+
+  <div id="extras-container">
+    <div class="search-container">
+      <app-search-strctures></app-search-strctures>
     </div>
 
-    <div id="grid-container" *ngIf="viewChecked">
-        <div [className]="message ? 'message' : 'invisible'">{{message}}</div>
-        <mat-card class="grid-structure-container" *ngFor="let structure of structures">
-            <mat-card-header>
-                <mat-card-title><span class="grid-title" [routerLink]="['/structure', structure.id]">{{structure.title}}</span></mat-card-title>
-                <mat-card-subtitle class="grid-subtitle">
-                    {{structure.lastAuthor ? structure.lastAuthor.split(' ')[structure.lastAuthor.split(' ').length - 1] + ' |' : ''}}
-                    Posted {{formatDate(structure.uploadDate)}}
-                </mat-card-subtitle>
-                <!-- <span class = 'poster'>Uploaded by {{structure.firstName}} {{structure.lastName}} | {{formatDate(structure.uploadDate)}}</span> -->
-                    
-            </mat-card-header>
-            <img class="grid-display-image" mat-card-image src="{{'file/' + structure.id + '/' + structure.displayImage}}" alt="Display Image" *ngIf="structure.displayImage">
-            
-            <mat-card-content class="grid-content">
-                <p>{{structure.description.length > 100 ? structure.description.slice(0, 100) + '...' : structure.description}}</p>
-            </mat-card-content>
-            <mat-card-actions class="grid-actions">
-                <button class="structure-button" mat-button color="primary" [routerLink]="['/structure', structure.id]">
-                    <mat-icon color="primary">subject</mat-icon>
-                    VIEW STRUCTURE
-                </button>
-            </mat-card-actions>
-        </mat-card>
+    <div class="view-toggle">
+      <mat-slide-toggle
+        class="toggle-button"
+        (change)="slideToggle()"
+        [(ngModel)]="viewChecked"
+        >{{ viewChecked ? "Grid View" : "List View" }}</mat-slide-toggle
+      >
     </div>
 
-    <!-- Contains tags-->
-    <div id="extras-container">
-        <div class="view-toggle">
-            <mat-slide-toggle class="toggle-button" (change)="slideToggle()" [(ngModel)]="viewChecked">{{viewChecked ? "Grid View" : "List View"}}</mat-slide-toggle>
-        </div>
-        
-        <div class="box">
-            <button mat-button color="primary" class="expand-button" (click)="toggleApplicationExpand()">
-                <span class="box-title">Recent applications</span><mat-icon class="expand-icon" color="primary">{{appExpand ? 'expand_less' : 'expand_more'}}</mat-icon>
-            </button>
-            <mat-chip-list>
-                <mat-chip class="application chip" (click)="routeTag(application, 'applications')" *ngFor="let application of tags?.applications">{{application}}</mat-chip>
-            </mat-chip-list>
-        </div>
-
-        <div class="box">
-            <button mat-button color="primary" class="expand-button" (click)="toggleModificationExpand()">
-                <span class="box-title">Recent modifications</span><mat-icon class="expand-icon" color="primary">{{modExpand ? 'expand_less' : 'expand_more'}}</mat-icon>
-            </button>
-            <mat-chip-list>
-                <mat-chip class="modification chip" (click)="routeTag(modification, 'modifications')" *ngFor="let modification of tags?.modifications">{{modification}}</mat-chip>
-            </mat-chip-list>
-        </div>
-        <div class="box">
-            <button mat-button color="primary" class="expand-button" (click)="toggleKeywordExpand()">
-                <span class="box-title">Recent keywords</span><mat-icon class="expand-icon" color="primary">{{keyExpand ? 'expand_less' : 'expand_more'}}</mat-icon>
-            </button>
-            <mat-chip-list>
-                <mat-chip class="keyword chip" (click)="routeTag(keyword, 'keywords')" *ngFor="let keyword of tags?.keywords">{{keyword}}</mat-chip>
-            </mat-chip-list>
-        </div>
+    <div class="box">
+      <button
+        mat-button
+        color="primary"
+        class="expand-button"
+        (click)="toggleApplicationExpand()"
+      >
+        <span class="box-title">Recent applications</span
+        ><mat-icon class="expand-icon" color="primary">{{
+          appExpand ? "expand_less" : "expand_more"
+        }}</mat-icon>
+      </button>
+      <mat-chip-list>
+        <mat-chip
+          class="application chip"
+          (click)="routeTag(application, 'applications')"
+          *ngFor="let application of tags?.applications"
+          >{{ application }}</mat-chip
+        >
+      </mat-chip-list>
     </div>
+
+    <div class="box">
+      <button
+        mat-button
+        color="primary"
+        class="expand-button"
+        (click)="toggleModificationExpand()"
+      >
+        <span class="box-title">Recent modifications</span
+        ><mat-icon class="expand-icon" color="primary">{{
+          modExpand ? "expand_less" : "expand_more"
+        }}</mat-icon>
+      </button>
+      <mat-chip-list>
+        <mat-chip
+          class="modification chip"
+          (click)="routeTag(modification, 'modifications')"
+          *ngFor="let modification of tags?.modifications"
+          >{{ modification }}</mat-chip
+        >
+      </mat-chip-list>
+    </div>
+    <div class="box">
+      <button
+        mat-button
+        color="primary"
+        class="expand-button"
+        (click)="toggleKeywordExpand()"
+      >
+        <span class="box-title">Recent keywords</span
+        ><mat-icon class="expand-icon" color="primary">{{
+          keyExpand ? "expand_less" : "expand_more"
+        }}</mat-icon>
+      </button>
+      <mat-chip-list>
+        <mat-chip
+          class="keyword chip"
+          (click)="routeTag(keyword, 'keywords')"
+          *ngFor="let keyword of tags?.keywords"
+          >{{ keyword }}</mat-chip
+        >
+      </mat-chip-list>
+    </div>
+  </div>
 </div>

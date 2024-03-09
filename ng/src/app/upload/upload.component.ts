@@ -1,9 +1,23 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators, UntypedFormControl } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  UntypedFormArray,
+  Validators,
+  UntypedFormControl,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 // import { FileInput } from 'ngx-material-file-input';
 import { map, publishBehavior, startWith } from 'rxjs/operators';
-import { FormService, ApiService, StructureUpload, UserService, StructureService, User, LoadbarService } from '../core';
+import {
+  FormService,
+  ApiService,
+  StructureUpload,
+  UserService,
+  StructureService,
+  User,
+  LoadbarService,
+} from '../core';
 
 const required = ['', Validators.required];
 const fileForm = {
@@ -23,7 +37,7 @@ const structureFileForm = {
   styleUrls: ['./upload.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class UploadComponent implements OnInit {  
+export class UploadComponent implements OnInit {
   isOptional: boolean;
   today: Date;
   user: User;
@@ -42,12 +56,12 @@ export class UploadComponent implements OnInit {
   filteredOptions = {
     applications: [[]],
     modifications: [[]],
-    keywords: [[]]
+    keywords: [[]],
   };
   scaffold1: UntypedFormControl;
   scaffold2: UntypedFormControl;
   scaffold3: UntypedFormControl;
-  scaffold_names = ['M13mp18', 'p8064', 'p7308', 'p7560', 'Other']
+  scaffold_names = ['M13mp18', 'p8064', 'p7308', 'p7560', 'Other'];
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -63,30 +77,70 @@ export class UploadComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.currentUser.subscribe(user => this.user = user);
+    this.userService.currentUser.subscribe((user) => (this.user = user));
 
     // Define each section and field of the form
     this.structureGroup = this.fb.group({
       name: required,
       type: required,
-      applications: this.fb.array([this.fb.group({ value: '', filteredOptions: [] })]),
-      modifications: this.fb.array([this.fb.group({ value: '', filteredOptions: [] })]),
-      keywords: this.fb.array([this.fb.group({ value: '', filteredOptions: [] })]),
-      description: ['', Validators.compose([Validators.required, Validators.maxLength(1000)])],
+      applications: this.fb.array([
+        this.fb.group({ value: '', filteredOptions: [] }),
+      ]),
+      modifications: this.fb.array([
+        this.fb.group({ value: '', filteredOptions: [] }),
+      ]),
+      keywords: this.fb.array([
+        this.fb.group({ value: '', filteredOptions: [] }),
+      ]),
+      description: [
+        '',
+        Validators.compose([Validators.required, Validators.maxLength(1000)]),
+      ],
       scaffold1: new UntypedFormControl(null),
       scaffold2: new UntypedFormControl(null),
       scaffold3: new UntypedFormControl(null),
-      scaffoldOther: new UntypedFormControl(null)
+      scaffoldOther: new UntypedFormControl(null),
     });
 
     this.publicationGroup = this.fb.group({
       authors: this.fb.array([this.fb.group({ value: [''] })]),
       doi: '',
-      year: ['', Validators.compose([Validators.pattern(/^(19|20)\d{2}$/), this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value, Validators.required, 'Year error')])],
+      year: [
+        '',
+        Validators.compose([
+          Validators.pattern(/^(19|20)\d{2}$/),
+          this.formService.conditionalValidator(
+            () => this.fieldArray('authors', 2).value[0].value,
+            Validators.required,
+            'Year error'
+          ),
+        ]),
+      ],
       month: ['', Validators.pattern(/(^0?[1-9]$)|(^1[0-2]$)/)],
-      citation: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value, Validators.required, 'Citation error')],
-      link: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value, Validators.maxLength(512), 'Link error')],
-      licensing: ['', this.formService.conditionalValidator(() => this.fieldArray('authors', 2).value[0].value, Validators.maxLength(512), 'Licensing error')],
+      citation: [
+        '',
+        this.formService.conditionalValidator(
+          () => this.fieldArray('authors', 2).value[0].value,
+          Validators.required,
+          'Citation error'
+        ),
+      ],
+      link: [
+        '',
+        this.formService.conditionalValidator(
+          () => this.fieldArray('authors', 2).value[0].value,
+          Validators.maxLength(512),
+          'Link error'
+        ),
+      ],
+      licensing: [
+        '',
+        this.formService.conditionalValidator(
+          () => this.fieldArray('authors', 2).value[0].value,
+          Validators.maxLength(512),
+          'Licensing error'
+        ),
+      ],
     });
 
     this.fileGroup = this.fb.group({
@@ -98,13 +152,13 @@ export class UploadComponent implements OnInit {
       simProtocol: this.fb.array([this.fb.group(fileForm)]),
       simResults: this.fb.array([this.fb.group(fileForm)]),
       images: this.fb.array([this.fb.group(fileForm)]),
-      displayImage: this.fb.control('')
+      displayImage: this.fb.control(''),
     });
 
     this.miscGroup = this.fb.group({
       isPrivate: this.fb.control(false),
       isDelayed: this.fb.control(false),
-      uploadDate: this.fb.control(required)
+      uploadDate: this.fb.control(required),
     });
 
     // Update fields when author field changes
@@ -122,20 +176,29 @@ export class UploadComponent implements OnInit {
   autofillPublication(doi: string): void {
     this.loadBarService.enable();
     this.structService.getPublication(doi).subscribe(
-      data => {
+      (data) => {
         const pub = data.response;
         // console.log(pub);
         // Set year
         for (let i = 0; i < pub.author.length; i++) {
-          if (i > 0 && (this.publicationGroup.controls.authors as UntypedFormArray).controls.length < pub.author.length) {
+          if (
+            i > 0 &&
+            (this.publicationGroup.controls.authors as UntypedFormArray)
+              .controls.length < pub.author.length
+          ) {
             this.addField('authors', 2);
           }
           const name = pub.author[i].given + ' ' + pub.author[i].family;
-          ((this.publicationGroup.controls.authors as UntypedFormArray).controls[i] as UntypedFormGroup).setValue({value: name});
+          (
+            (this.publicationGroup.controls.authors as UntypedFormArray)
+              .controls[i] as UntypedFormGroup
+          ).setValue({ value: name });
         }
 
         // Set date
-        this.publicationGroup.controls.year.setValue(pub.published['date-parts'][0][0]);
+        this.publicationGroup.controls.year.setValue(
+          pub.published['date-parts'][0][0]
+        );
         let month = pub.published['date-parts'][0][1];
         month = month < 10 ? `0${month}` : month;
         this.publicationGroup.controls.month.setValue(month);
@@ -145,7 +208,7 @@ export class UploadComponent implements OnInit {
 
         this.loadBarService.disable();
       },
-      err => {
+      (err) => {
         console.log('err', err);
         this.loadBarService.disable();
       }
@@ -154,28 +217,31 @@ export class UploadComponent implements OnInit {
 
   getAutofill(count: number): void {
     this.structService.getRecentTags(count).subscribe(
-      data => {
+      (data) => {
         this.loadBarService.disable();
         this.options = data;
       },
-      err => {
+      (err) => {
         this.loadBarService.disable();
         console.log('err', err);
       }
     );
     // tslint:disable: no-string-literal
     for (const type of this.categories) {
-      this.filteredOptions[type][0] =
-      this.structureGroup.get(type)['controls'][0]['controls'].value.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filter(value, type))
-      );
+      this.filteredOptions[type][0] = this.structureGroup
+        .get(type)
+        ['controls'][0]['controls'].value.valueChanges.pipe(
+          startWith(''),
+          map((value) => this._filter(value, type))
+        );
     }
   }
 
   private _filter(value: any, category: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.options[category].filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+    return this.options[category].filter(
+      (option) => option.toLowerCase().indexOf(filterValue) === 0
+    );
   }
 
   submit(): void {
@@ -184,15 +250,14 @@ export class UploadComponent implements OnInit {
     console.log('Uploading structure...', structure);
     this.disableForm();
 
-    this.apiService.post('/structure', { structure })
-    .subscribe(
-      data => {
+    this.apiService.post('/structure', { structure }).subscribe(
+      (data) => {
         this.loadBarService.disable();
         console.log('UPLOAD SUCCESS', data);
         this.enableForm();
         this.router.navigateByUrl(`/structure/${data.response}`);
       },
-      err => {
+      (err) => {
         this.loadBarService.disable();
         console.log('UPLOAD ERROR', err);
         this.enableForm();
@@ -218,24 +283,24 @@ export class UploadComponent implements OnInit {
     if (year) {
       structure.publishDate = year;
       if (month) {
-        structure.publishDate += (month.length === 1) ? '-0' + month : '-' + month;
-      }
-      else {
+        structure.publishDate +=
+          month.length === 1 ? '-0' + month : '-' + month;
+      } else {
         structure.publishDate += '-00';
       }
       structure.publishDate += '-02';
     }
     delete structure.year;
     delete structure.month;
-    let scaffold_names = ['m13 (p7249)', 'p8064', 'Other']
+    let scaffold_names = ['m13 (p7249)', 'p8064', 'Other'];
     if (structure.scaffold1) {
-      structure.keywords.push({value: 'm13 (p7249)'});
+      structure.keywords.push({ value: 'm13 (p7249)' });
     }
     if (structure.scaffold2) {
-      structure.keywords.push({value: 'p8064'});
+      structure.keywords.push({ value: 'p8064' });
     }
     if (structure.scaffold3 && structure.scaffoldOther) {
-      structure.keywords.push({value: structure.scaffoldOther});
+      structure.keywords.push({ value: structure.scaffoldOther });
     }
     delete structure.scaffold1;
     delete structure.scaffold2;
@@ -245,22 +310,25 @@ export class UploadComponent implements OnInit {
     return structure;
   }
 
-  uploadFile(fileInput: FileInput, type: string, index: number): void {
-    const fileReader: FileReader = new FileReader();
-    const file: File = fileInput.files[0];
-    this.formService.isDataURLFile(file.name) ? fileReader.readAsDataURL(file) : fileReader.readAsText(file);
-
-    fileReader.onloadend = () => {
-      this.fileGroup.controls[type].value[index].contents = fileReader.result;
-    };
+  uploadFile(fileInput: any, type: string, index: number): void {
+    // const fileReader: FileReader = new FileReader();
+    // const file: File = fileInput.files[0];
+    // this.formService.isDataURLFile(file.name) ? fileReader.readAsDataURL(file) : fileReader.readAsText(file);
+    // fileReader.onloadend = () => {
+    //   this.fileGroup.controls[type].value[index].contents = fileReader.result;
+    // };
   }
 
   fieldArray(type: string, group: number): UntypedFormArray {
     switch (group) {
-      case 1: return this.structureGroup.get(type) as UntypedFormArray;
-      case 2: return this.publicationGroup.get(type) as UntypedFormArray;
-      case 3: return this.fileGroup.get(type) as UntypedFormArray;
-      default: return;
+      case 1:
+        return this.structureGroup.get(type) as UntypedFormArray;
+      case 2:
+        return this.publicationGroup.get(type) as UntypedFormArray;
+      case 3:
+        return this.fileGroup.get(type) as UntypedFormArray;
+      default:
+        return;
     }
   }
 
@@ -271,14 +339,17 @@ export class UploadComponent implements OnInit {
         this.fieldArray(type, group).push(this.fb.group({ value: '' }));
         const i = this.filteredOptions[type].length;
         this.filteredOptions[type].push([]);
-        this.filteredOptions[type][i] =
-        this.structureGroup.get(type)['controls'][i]['controls'].value.valueChanges.pipe(
-          startWith(''),
-          map(value => this._filter(value, type))
-        );
-      }
-      else {
-        const newField = (group === 3) ? this.fb.group(structureFileForm) : this.fb.group({ value: required });
+        this.filteredOptions[type][i] = this.structureGroup
+          .get(type)
+          ['controls'][i]['controls'].value.valueChanges.pipe(
+            startWith(''),
+            map((value) => this._filter(value, type))
+          );
+      } else {
+        const newField =
+          group === 3
+            ? this.fb.group(structureFileForm)
+            : this.fb.group({ value: required });
         this.fieldArray(type, group).push(newField);
       }
     }
@@ -314,5 +385,4 @@ export class UploadComponent implements OnInit {
     }
     return false;
   }
-
 }

@@ -26,8 +26,9 @@ class MyConnection:
 class MyPool:
 	def __init__(self):
 		pymysqlpool.logger.setLevel('DEBUG')
-		config = {'host':'localhost', 'user':'root', 'password':'', 'database':'nanobase', 'autocommit':True}
+		config = {'host':'localhost', 'user':'root', 'password':'password', 'database':'nanobase', 'autocommit':True}
 		self._pool = pymysqlpool.ConnectionPool(size=10, name='pool1', **config)
+		print("Ankur")
 	
 	def get_connection(self):
 		#https://stackoverflow.com/questions/2654113/how-to-get-the-callers-method-name-in-the-called-method
@@ -40,7 +41,7 @@ class MyPool:
 		print("CONNECTION: ", connection_identifier, " OPEN BY:", calframe[1][3])
 
 		wrapped_connection = MyConnection(self._pool.get_connection(), function_caller, connection_identifier)
-
+		
 		return wrapped_connection
 
 pool = MyPool()

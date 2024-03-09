@@ -1,74 +1,111 @@
 #sidebar-container {
-    z-index: 15;
-    display: inline-block;
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-    min-width: 201px;
-    max-width: 251px;
-    background-color: rgb(224, 224, 228);
-    border-right: 1px solid rgb(165, 164, 175);
+  z-index: 15;
+  display: inline-block;
+  overflow: hidden;
+  /* height: 100%;
+  width: 100%; */
+  /* min-width: 201px;
+  max-width: 251px; */
+  /* background-color: rgb(224, 224, 228); */
+  /* border-right: 1px solid rgb(165, 164, 175); */
+
+  background-color: rgb(22, 22, 24) !important;
 }
 
 .sidebar-link {
-    display: block;
-    text-align: left;
-    font-size: 17px;
-    position: relative;
-    top: 15px;
-    right: 3px;
-    margin-bottom: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    width: 100%;
-    overflow: hidden;
-    color: rgba(34, 18, 63, 0.878)!important;
+  display: block;
+  text-align: left;
+  font-size: 14px;
+  position: relative;
+  top: 15px;
+  right: 3px;
+  margin-bottom: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+  overflow: hidden;
+  color: white !important;
 }
 
 .how-to {
-    position: relative;
-    top: -2px;
+  position: relative;
+  top: -2px;
 }
 
 .profile {
-    position: relative;
-    top: -1px;
+  position: relative;
+  top: -1px;
 }
 
 .quick-download {
-    position: relative;
-    top: -2px;
+  position: relative;
+  top: -2px;
 }
 
 .download-description {
-    color: black
+  color: black;
 }
 
 a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.87);
+  text-decoration: none;
+  color: white;
 }
 
 .sidebar-icon {
-    padding-bottom: 5px;
-    color: rgba(75, 24, 161, 0.847)!important;
+  padding-bottom: 5px;
+  color: white !important;
 }
 
 .navigation {
-    display: inline;
-    position: relative;
-    left: 5px;
+  display: inline;
+  position: relative;
+  left: 5px;
 }
 
 @media screen and (max-width: 1050px) {
-    #sidebar-container {
-        width: 50px;
-        min-width: 50px;
-    }
-    .navigation {
-        display: none;
-    }
+  #sidebar-container {
+    width: 50px;
+    min-width: 50px;
+  }
+  .navigation {
+    display: none;
+  }
 }
 
+.example-container {
+  /* width: 200px; */
+  height: 100vh;
+}
 
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
 
+.example-sidenav {
+  padding: 20px;
+  background-color: rgb(22, 22, 24) !important;
+}
+
+.sidenav-container {
+  height: 100%;
+  width: auto;
+  /* display: block; */
+}
+
+::ng-deep .mat-drawer-content {
+  background-color: rgb(22, 22, 24) !important;
+}
+
+.person {
+  display: flex;
+  flex-direction: row;
+  color: white;
+}
+
+.person p:nth-child(1) {
+  margin-bottom: 5px !important;
+  font-size: 10px;
+}

@@ -15,14 +15,21 @@ export class HeaderComponent implements OnInit {
   category = '';
   currentURL = '';
   user: User;
-  categories = ['title', 'authors', 'applications', 'modifications', 'keywords', 'user_name'];
+  categories = [
+    'title',
+    'authors',
+    'applications',
+    'modifications',
+    'keywords',
+    'user_name',
+  ];
   options = {
     title: [],
     user_name: [],
     applications: [],
     modifications: [],
     keywords: [],
-    authors: []
+    authors: [],
   };
   filteredOptions = {
     title: [],
@@ -30,15 +37,20 @@ export class HeaderComponent implements OnInit {
     applications: [],
     modifications: [],
     keywords: [],
-    authors: []
+    authors: [],
   };
 
-  constructor(private router: Router, private userService: UserService, private structService: StructureService) { }
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private structService: StructureService
+  ) {}
 
   ngOnInit(): void {
-    this.userService.currentUser.subscribe(
-      userData => this.user = userData
-    );
+    this.userService.currentUser.subscribe((userData) => {
+      this.user = userData;
+      console.log(userData);
+    });
     this.currentURL = window.location.href;
 
     // this.router.events.subscribe(val => {
@@ -48,14 +60,14 @@ export class HeaderComponent implements OnInit {
     // });
 
     this.structService.getAutofill(100).subscribe(
-      data => this.options = data,
-      err => console.log('err', err)
+      (data) => (this.options = data),
+      (err) => console.log('err', err)
     );
 
     for (const category of this.categories) {
       this.filteredOptions[category] = this.input.valueChanges.pipe(
         startWith(''),
-        map(value => this._filter(value))
+        map((value) => this._filter(value))
       );
     }
   }
@@ -64,13 +76,16 @@ export class HeaderComponent implements OnInit {
     if (!this.category) {
       this.category = 'title';
     }
-    this.router.navigateByUrl(`/?input=${this.input.value}&category=${this.category}`);
+    this.router.navigateByUrl(
+      `/?input=${this.input.value}&category=${this.category}`
+    );
   }
 
   private _filter(value: string): string[] {
     const category = this.category ? this.category : 'title';
     const filterValue = value.toLowerCase();
-    return this.options[category].filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+    return this.options[category].filter(
+      (option) => option.toLowerCase().indexOf(filterValue) === 0
+    );
   }
-
 }

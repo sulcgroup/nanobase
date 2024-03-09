@@ -19,13 +19,12 @@ import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-m
 
 import { HeaderComponent } from './layout/header/header.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
+import { MaterialModule } from './material/material.module';
+import { RoundInitialsChipComponent } from './Shared/round-initials-chip/round-initials-chip.component';
+import { ScrollToTopComponent } from './Shared/scroll-to-top/scroll-to-top.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    SidebarComponent,
-  ],
+  declarations: [AppComponent, HeaderComponent, SidebarComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -33,6 +32,7 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    MaterialModule,
     MatInputModule,
     MatButtonModule,
     MatSliderModule,
@@ -41,10 +41,12 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
     MatSelectModule,
     MatAutocompleteModule,
     MatMenuModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    RoundInitialsChipComponent,
+    ScrollToTopComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule { }
+export class AppModule {}

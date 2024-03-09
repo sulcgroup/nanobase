@@ -11,10 +11,10 @@ import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy
 import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar';
 import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
 import { FormsModule } from '@angular/forms';
-
+import { SearchStrcturesComponent } from './search-strctures/search-strctures.component';
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, SearchStrcturesComponent],
   imports: [
     CommonModule,
     HomeRoutingModule,
@@ -25,7 +25,7 @@ import { FormsModule } from '@angular/forms';
     MatProgressBarModule,
     MatSlideToggleModule,
     HttpClientModule,
-    FormsModule
-  ]
+    FormsModule,
+  ],
 })
-export class HomeModule { }
+export class HomeModule {}

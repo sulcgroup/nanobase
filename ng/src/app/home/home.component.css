@@ -1,160 +1,159 @@
 #content-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    width: 100%;
-    height: 100%;
-    margin: auto;
-
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  height: 100%;
+  margin: auto;
 }
 #list-container {
-    margin-right: auto;
-    margin-left: auto;
-    width: 100%;
-    height: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
+  height: 100%;
 }
 #extras-container {
-    flex-basis: 50%;
-    margin: 0px auto;
-    width: 100%;
-    height: 100%;
+  flex-basis: 50%;
+  margin: 0px auto;
+  width: 100%;
+  height: 100%;
 }
 
 .structure-container {
-    background-color: rgb(224, 224, 230);
-    box-shadow: 0 0 7px 2px rgb(190, 190, 190)!important;
-    z-index: 0;
-    margin: 20px auto 30px;
-    width: 75%;
-    max-width: 625px;
+  background-color: white;
+  box-shadow: 0 0 7px 2px rgb(190, 190, 190) !important;
+  z-index: 0;
+  margin: 20px auto 30px;
+  width: 75%;
+  max-width: 625px;
 }
 
 .structure-button {
-    padding-left: 10px;
-    padding-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .message {
-    font-weight: 500;
-    font-size: 18px;
-    margin-left: 15px;
-    margin-top: 15px;
+  font-weight: 500;
+  font-size: 18px;
+  margin-left: 15px;
+  margin-top: 15px;
 }
 
 .mat-card-subtitle {
-    margin-bottom: 5px!important;
+  margin-bottom: 5px !important;
 }
 
 :host ::ng-deep .mat-card-content {
-    margin-bottom: 0!important;
+  margin-bottom: 0 !important;
 }
 
 .grid-display-image {
-    width: calc(100% + 24px)!important;
-    margin: 0 -16px 2px -12px!important;
-    border: 1px solid rgb(178, 183, 196);
-    border-left: 0px;
-    border-right: 0px;
+  width: calc(100% + 24px) !important;
+  margin: 0 -16px 2px -12px !important;
+  border: 1px solid rgb(178, 183, 196);
+  border-left: 0px;
+  border-right: 0px;
 }
 .display-image {
-    border: 1px solid rgb(178, 183, 196);
-    border-left: 0px;
-    border-right: 0px;
+  border: 1px solid rgb(178, 183, 196);
+  border-left: 0px;
+  border-right: 0px;
 }
 
 .poster {
-    margin-left: auto;
-    font-size: 13px;
-    color: rgba(0, 0, 0, 0.8)!important;
+  margin-left: auto;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.8) !important;
 }
 
 .view-toggle {
-    width: 80%;
-    margin: 15px auto;
-    margin-left: auto;
-    margin-right: auto;
+  width: 80%;
+  margin: 15px auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .invisible {
-    display: none;
+  display: none;
 }
 
 /* .toggle-button {
 } */
 #grid-container {
-    margin-right: auto;
-    margin-left: auto;
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    /* grid-gap: 1rem; */
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* grid-gap: 1rem; */
 }
 .grid-structure-container {
-    background: #EDE7F6;
-    padding: 1.5rem;
-    border-radius: 1rem;
-    background-color: rgb(224, 224, 230);
-    box-shadow: 0 0 7px 2px rgb(190, 190, 190)!important;
-    z-index: 0;
-    margin: 20px;
-    /* margin: 20px auto 30px; */
-    /* width: 75%; */
-    max-width: 625px;
-    padding: 12px!important;
+  background: #ede7f6;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background-color: rgb(224, 224, 230);
+  box-shadow: 0 0 7px 2px rgb(190, 190, 190) !important;
+  z-index: 0;
+  margin: 20px;
+  /* margin: 20px auto 30px; */
+  /* width: 75%; */
+  max-width: 625px;
+  padding: 12px !important;
 }
 .grid-content {
-    margin-bottom: 0px!important;
+  margin-bottom: 0px !important;
 }
 .grid-subtitle {
-    position: relative;
-    right: 16px;
-    font-size: 12px;
-    line-height: 1.4;
+  position: relative;
+  right: 16px;
+  font-size: 12px;
+  line-height: 1.4;
 }
 .grid-actions {
-    position: relative;
-    float: bottom;
+  position: relative;
+  float: bottom;
 }
 
 .box {
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 40px;
-    padding: 5px 5px 12px 5px;
-    border-radius: 10px;
-    background-color: rgb(224, 224, 230);
-    box-shadow: 0 0 7px 2px rgb(190, 190, 190)!important;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 40px;
+  padding: 5px 5px 12px 5px;
+  border-radius: 10px;
+  background-color: rgb(224, 224, 230);
+  box-shadow: 0 0 7px 2px rgb(190, 190, 190) !important;
 }
 
 .expand-button {
-    width: 100%;
-    margin-bottom: 10px;
-    background-color: rgba(211, 205, 224, 0.9)!important;
-    border: 1px solid rgb(170, 154, 209)!important;
+  width: 100%;
+  margin-bottom: 10px;
+  background-color: rgba(211, 205, 224, 0.9) !important;
+  border: 1px solid rgb(170, 154, 209) !important;
 }
 
 .grid-title {
-    position: relative;
-    right: 16px;
-    
-    cursor: pointer;
-    color: rgb(46, 8, 95);
-    line-height: 1.25!important;
+  position: relative;
+  right: 16px;
+
+  cursor: pointer;
+  color: rgb(46, 8, 95);
+  line-height: 1.25 !important;
 }
 
 .title {
-    cursor: pointer;
-    color: rgb(46, 8, 95);
-    line-height: 1.25!important;
+  cursor: pointer;
+  color: rgb(46, 8, 95);
+  line-height: 1.25 !important;
 }
 
 .box-title {
-    color: rgba(0, 0, 0, 0.9)!important;
-    font-weight: 500!important;
-    font: 15px sans-serif;
-    opacity: 0.85;
+  color: rgba(0, 0, 0, 0.9) !important;
+  font-weight: 500 !important;
+  font: 15px sans-serif;
+  opacity: 0.85;
 }
 
 /* .expand-button:after {
@@ -168,38 +167,38 @@
 } */
 
 .invisible {
-    visibility: hidden!important;
+  visibility: hidden !important;
 }
 
 #progress-bar {
-    position: fixed!important;
-    z-index: 100!important;
-    bottom: 92.1%!important;
-    right: 1px!important;
+  position: fixed !important;
+  z-index: 100 !important;
+  bottom: 92.1% !important;
+  right: 1px !important;
 }
 
 .chip {
-    font-weight: normal!important;
-    cursor: pointer!important;
+  font-weight: normal !important;
+  cursor: pointer !important;
 }
 
 .application {
-    background-color: rgba(136, 1, 160, 0.8)!important;
-    color: rgba(255, 255, 255, 0.9)!important;
+  background-color: rgba(136, 1, 160, 0.8) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .modification {
-    background-color: rgba(93, 241, 158, 0.8)!important;
-    color: rgba(0, 0, 0, 0.9)!important;
+  background-color: rgba(93, 241, 158, 0.8) !important;
+  color: rgba(0, 0, 0, 0.9) !important;
 }
 
 .keyword {
-    background-color: rgba(255, 208, 50, 0.8)!important;
-    color: rgba(0, 0, 0, 0.9)!important;
+  background-color: rgba(255, 208, 50, 0.8) !important;
+  color: rgba(0, 0, 0, 0.9) !important;
 }
 
 @media screen and (max-width: 560px) {
-    #extras-container {
-        display: none;
-    }
+  #extras-container {
+    display: none;
+  }
 }

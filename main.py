@@ -24,6 +24,7 @@ def not_found_error(error):
 
 @app.route('/file/<id>/<file_type>/<file>')
 def get_file(id=None, file_type=None, file=None):
+	print('structures/{}/{}/{}'.format(id, file_type, file))
 	if os.path.isfile('structures/{}/{}/{}'.format(id, file_type, file)):
 		return send_file('structures/{}/{}/{}'.format(id, file_type, file))
 	else:
@@ -117,7 +118,8 @@ def get_recent_tags(count):
 
 @app.route('/api/tags/autofill/<count>', methods=['GET'])
 def get_autofill(count):
-	return structure.get_autofill(int(count))
+    print("Here")
+    return structure.get_autofill(int(count))
 	
 @app.route('/api/search/<input>/<category>', methods=['GET'])
 def search(input, category):

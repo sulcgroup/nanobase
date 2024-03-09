@@ -48,12 +48,69 @@ toggle_private_query = ('UPDATE Structures SET private = %s WHERE id = %s')
 update_hash_query = ('UPDATE Structures SET private_hash = %s WHERE id = %s')
 update_date_query = ('UPDATE Structures SET uploadDate = %s WHERE id = %s')
 
-recent_titles_query = ('SELECT DISTINCT title FROM Structures ORDER BY uploadDate DESC LIMIT %s')
-recent_username_query = ('SELECT DISTINCT Users.firstName, Users.lastName FROM Structures INNER JOIN Users ON Structures.userId=Users.id ORDER BY Structures.uploadDate DESC LIMIT %s')
-recent_applications_query = ('SELECT DISTINCT Applications.application FROM Applications INNER JOIN ApplicationsJoin ON Applications.id = ApplicationsJoin.applicationId INNER JOIN Structures ON Structures.id = ApplicationsJoin.structureId ORDER BY Structures.uploadDate DESC LIMIT %s')
-recent_modifications_query = ('SELECT DISTINCT Modifications.modification FROM Modifications INNER JOIN ModificationsJoin ON Modifications.id = ModificationsJoin.modificationId INNER JOIN Structures ON Structures.id = ModificationsJoin.structureId ORDER BY Structures.uploadDate DESC LIMIT %s')
-recent_keywords_query = ('SELECT DISTINCT Keywords.keyword FROM Keywords INNER JOIN KeywordsJoin ON Keywords.id = KeywordsJoin.keywordId INNER JOIN Structures ON Structures.id = KeywordsJoin.structureId ORDER BY Structures.uploadDate DESC LIMIT %s')
-recent_authors_query = ('SELECT DISTINCT Authors.author FROM Authors INNER JOIN AuthorsJoin ON Authors.id = AuthorsJoin.authorId INNER JOIN Structures ON Structures.id = AuthorsJoin.structureId ORDER BY Structures.uploadDate DESC LIMIT %s')
+recent_titles_query = ("""
+                       SELECT subQuery.title
+                       FROM (
+                       SELECT DISTINCT title, uploadDate 
+                       FROM Structures
+                       ORDER BY uploadDate 
+                       DESC LIMIT %s
+                       ) AS subQuery
+                       """)
+recent_username_query = ("""
+                         SELECT subQuery.firstName, subQuery.lastName
+                        FROM (
+                         SELECT DISTINCT Users.firstName, Users.lastName, Structures.uploadDate 
+                         FROM Structures 
+                         INNER JOIN Users ON Structures.userId=Users.id 
+                         ORDER BY Structures.uploadDate 
+                         DESC LIMIT %s
+                         ) AS subQuery
+                         """)
+recent_applications_query = ("""
+            SELECT subQuery.application
+            FROM (
+                SELECT DISTINCT Applications.application, Structures.uploadDate
+                FROM Applications
+                INNER JOIN ApplicationsJoin ON Applications.id = ApplicationsJoin.applicationId
+                INNER JOIN Structures ON Structures.id = ApplicationsJoin.structureId
+                ORDER BY Structures.uploadDate DESC
+                LIMIT %s
+            ) AS subQuery
+        """)
+recent_modifications_query = ("""
+                              SELECT subQuery.modification
+                              FROM (
+                              SELECT DISTINCT Modifications.modification, Structures.uploadDate 
+                              FROM Modifications 
+                              INNER JOIN ModificationsJoin ON Modifications.id = ModificationsJoin.modificationId 
+                              INNER JOIN Structures ON Structures.id = ModificationsJoin.structureId 
+                              ORDER BY Structures.uploadDate DESC 
+                              LIMIT %s
+                              ) AS subQuery
+                              """)
+recent_keywords_query = ("""
+                         SELECT subQuery.keyword
+                         FROM (
+                         SELECT DISTINCT Keywords.keyword, Structures.uploadDate 
+                         FROM Keywords 
+                         INNER JOIN KeywordsJoin ON Keywords.id = KeywordsJoin.keywordId 
+                         INNER JOIN Structures ON Structures.id = KeywordsJoin.structureId 
+                         ORDER BY Structures.uploadDate DESC 
+                         LIMIT %s
+                         ) AS subQuery
+                         """)
+recent_authors_query = ("""
+                        SELECT subQuery.author
+                        FROM (
+                        SELECT DISTINCT Authors.author, Structures.uploadDate 
+                        FROM Authors 
+                        INNER JOIN AuthorsJoin ON Authors.id = AuthorsJoin.authorId 
+                        INNER JOIN Structures ON Structures.id = AuthorsJoin.structureId 
+                        ORDER BY Structures.uploadDate 
+                        DESC LIMIT %s
+                        ) AS subQuery
+                        """)
 
 get_applications_query = ('SELECT application FROM Applications WHERE id IN (SELECT applicationId FROM ApplicationsJoin WHERE structureId = %s)')
 get_modifications_query = ('SELECT modification FROM Modifications WHERE id IN (SELECT modificationId FROM ModificationsJoin WHERE structureId = %s)')

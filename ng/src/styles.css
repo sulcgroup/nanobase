@@ -1,4 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; background-color: rgb(242, 242, 242); }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+  background-color: rgb(242, 242, 242);
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/*Scroller design - orange thin scroller*/
+
+::-webkit-scrollbar {
+  /* //background-color: #c8c8c8; */
+  padding: 10px;
+}
+
+::-webkit-scrollbar:vertical {
+  width: 12px;
+  height: 40px;
+}
+
+::-webkit-scrollbar:horizontal {
+  /* //width: 20px; */
+  height: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d8dbe0;
+  border-radius: 6px;
+  border: 4px solid transparent;
+  background-clip: padding-box;
+}
+
+/*scrollbar for IE*/
+
+body {
+  scrollbar-base-color: #c8c8c8;
+  scrollbar-3dlight-color: #c8c8c8;
+  scrollbar-highlight-color: #c8c8c8;
+  scrollbar-track-color: #3d5465;
+  scrollbar-arrow-color: #07263b;
+  scrollbar-shadow-color: #c8c8c8;
+  scrollbar-face-color: #07263b;
+}

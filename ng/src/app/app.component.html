@@ -1,11 +1,45 @@
-<app-header></app-header>
-<mat-progress-bar [ngStyle]="{'visibility': loadBarService.loadBar ? 'visible' : 'hidden'}" class='progress-bar' mode="indeterminate"></mat-progress-bar>
-<div id="body">
-    <app-sidebar id="sidebar"></app-sidebar>
+<div class="container">
+  <div class="sidebar">
+    <app-sidebar [sideNavOpen]="sideNavOpen"></app-sidebar>
+  </div>
 
-    <div id="main">
-        <router-outlet></router-outlet>
+  <div class="main-content">
+    <div class="header">
+      <!-- <button type="button" mat-button (click)="toggleSideBar()"> -->
+      <div class="button">
+        <mat-icon class="sidebar-icon" (click)="toggleSideBar()">menu</mat-icon>
+      </div>
+      <!-- </button> -->
+
+      <div class="nanobase">
+        <img src="assets/favicon.png" />
+        <span class="icon">Nanobase</span>
+      </div>
+    </div>
+    <div id="main" class="scrollable-div">
+      <router-outlet></router-outlet>
+
+      <div class="scroll-to-top" [ngClass]="{ 'show-scrollTop': true }">
+        <button (click)="scrollToTop()">
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+      </div>
     </div>
 
+    <app-scroll-to-top></app-scroll-to-top>
+  </div>
 </div>
 
+<!-- <app-header></app-header>
+<mat-progress-bar
+  [ngStyle]="{ visibility: loadBarService.loadBar ? 'visible' : 'hidden' }"
+  class="progress-bar"
+  mode="indeterminate"
+></mat-progress-bar> -->
+<!-- <div id="body">
+  <app-sidebar id="sidebar"></app-sidebar>
+
+  <div id="main">
+    <router-outlet></router-outlet>
+  </div>
+</div> -->
