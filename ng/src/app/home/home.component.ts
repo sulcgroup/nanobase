@@ -1,14 +1,21 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation, ChangeDetectorRef, HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewEncapsulation,
+  ChangeDetectorRef,
+  HostListener,
+} from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { StructureService, StructureCover, LoadbarService } from 'src/app/core';
 
-const ev = e => e.stopImmediatePropagation();
+const ev = (e) => e.stopImmediatePropagation();
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent implements OnInit, OnDestroy {
   structures: Array<StructureCover> = [];
@@ -17,17 +24,30 @@ export class HomeComponent implements OnInit, OnDestroy {
   oldHeight = 0;
   message: string;
   tags: {
-    applications: Array<string>,
-    modifications: Array<string>,
-    keywords: Array<string>
+    applications: Array<string>;
+    modifications: Array<string>;
+    keywords: Array<string>;
   };
   tagStore: {
-    applications: Array<string>,
-    modifications: Array<string>,
-    keywords: Array<string>
+    applications: Array<string>;
+    modifications: Array<string>;
+    keywords: Array<string>;
   };
 
-  months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec'];
+  months = [
+    'Jan.',
+    'Feb.',
+    'Mar.',
+    'Apr.',
+    'May',
+    'Jun.',
+    'Jul.',
+    'Aug.',
+    'Sep.',
+    'Oct.',
+    'Nov.',
+    'Dec',
+  ];
   categories = {
     title: 'title',
     user_name: 'user',
@@ -35,15 +55,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     applications: 'application',
     modifications: 'modification',
     keywords: 'keyword',
-    authors: 'author'
+    authors: 'author',
   };
   appExpand: boolean;
   modExpand: boolean;
   keyExpand: boolean;
 
   currentHeight = window.scrollY + window.innerHeight;
-  totalHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight,
-                document.documentElement.clientHeight, document.documentElement.scrollHeight);
+  totalHeight = Math.max(
+    document.body.scrollHeight,
+    document.body.offsetHeight,
+    document.documentElement.clientHeight,
+    document.documentElement.scrollHeight
+  );
   iter = 0;
 
   constructor(
@@ -52,33 +76,37 @@ export class HomeComponent implements OnInit, OnDestroy {
     private structService: StructureService,
     public loadBarService: LoadbarService,
     private changeDetection: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadBarService.disable();
     let input = this.route.snapshot.queryParams.input;
     let category = this.route.snapshot.queryParams.category;
+    console.log(input, category);
     input ? this.loadSearch(input, category) : this.loadRecent(5);
     this.loadRecentTags(100);
 
-    this.router.events.subscribe(event =>{
-      if (event instanceof NavigationEnd){
-        if (event.url == '/') {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        if (event.url == '/home') {
           this.infiniteScroll();
-        }
-        else {
+        } else {
           document.removeEventListener('scroll', this.scrollListener);
         }
       }
-   })
+    });
 
     if (!input) {
       this.infiniteScroll();
     }
+    console.log('here');
 
-    this.router.events.subscribe(val => {
+    this.router.events.subscribe((val) => {
       // this.infiniteScroll();
-      if (val instanceof NavigationEnd && (val.url.startsWith('/?') || val.url === '/')) {
+      if (
+        val instanceof NavigationEnd &&
+        (val.url.startsWith('/home?') || val.url === '/home')
+      ) {
         const url = new URLSearchParams(val.url.slice(2));
         input = url.get('input');
         category = url.get('category');
@@ -97,8 +125,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     const body = document.body;
     const html = document.documentElement;
     const currentHeight = window.scrollY + window.innerHeight;
-    const totalHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight);
-    
+    const totalHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight
+    );
+
     if (currentHeight + 450 >= totalHeight && !this.wait) {
       this.wait = true;
       this.loadNext();
@@ -114,18 +147,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.oldHeight = Infinity;
     this.message = '';
     this.structService.search(input, category).subscribe(
-      data => {
+      (data) => {
         if (Object.keys(data).length === 0) {
           this.message = `No structures match the query '${input}'.`;
           this.structures = [];
-        }
-        else {
-          data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
+        } else {
+          data.forEach(
+            (structure, i) =>
+              (data[i].uploadDate = new Date(structure.uploadDate))
+          );
           this.structures = data;
           if (this.categories[category] === 'user_id') {
             this.message = 'Showing your structures...';
-          }
-          else {
+          } else {
             this.message = `Showing search results for ${this.categories[category]} '${input}':`;
           }
           console.log('Loaded searched structures: ', this.structures);
@@ -134,7 +168,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         //this.keepLoading();
       },
-      err => {
+      (err) => {
         console.log('err', err);
         this.loadBarService.disable();
       }
@@ -143,14 +177,17 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   loadRandom(count: number): void {
     this.structService.getRandom(count).subscribe(
-      data => {
-        data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
+      (data) => {
+        data.forEach(
+          (structure, i) =>
+            (data[i].uploadDate = new Date(structure.uploadDate))
+        );
         this.structures.push(...data);
         this.changeDetection.detectChanges();
         console.log(`Loaded ${count} more structures: `, data);
         this.loadBarService.disable();
       },
-      err => {
+      (err) => {
         console.log('err', err);
         this.loadBarService.disable();
       }
@@ -161,15 +198,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     const id = this.structures[this.structures.length - 1].id;
     this.structService.getNext(id).subscribe(
       (data) => {
-        data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
+        data.forEach(
+          (structure, i) =>
+            (data[i].uploadDate = new Date(structure.uploadDate))
+        );
         this.structures.push(...data);
         this.changeDetection.detectChanges();
         console.log(`Loaded 5 more structures2: `, data);
-        
+
         this.loadBarService.disable();
         this.wait = false;
       },
-      err => {
+      (err) => {
         console.log('err', err);
         this.loadBarService.disable();
       }
@@ -181,20 +221,27 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.message = '';
 
     this.structService.getRecent(count).subscribe(
-      data => {
-        data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
+      (data) => {
+        data.forEach(
+          (structure, i) =>
+            (data[i].uploadDate = new Date(structure.uploadDate))
+        );
         this.structures = data;
         console.log('Loaded recent structures: ', this.structures);
         this.loadBarService.disable();
 
         this.currentHeight = window.scrollY + window.innerHeight;
-        this.totalHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight,
-                      document.documentElement.clientHeight, document.documentElement.scrollHeight);
+        this.totalHeight = Math.max(
+          document.body.scrollHeight,
+          document.body.offsetHeight,
+          document.documentElement.clientHeight,
+          document.documentElement.scrollHeight
+        );
         this.iter = 0;
 
         this.keepLoading();
       },
-      err => {
+      (err) => {
         console.log('err', err);
         this.loadBarService.disable();
       }
@@ -213,30 +260,34 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     if (this.currentHeight !== this.totalHeight || this.iter > 5) {
       return;
-    }
-    else {
+    } else {
       const id = this.structures[this.structures.length - 1].id;
       this.structService.getNext(id).subscribe(
         (data) => {
-          data.forEach((structure, i) => data[i].uploadDate = new Date(structure.uploadDate));
+          data.forEach(
+            (structure, i) =>
+              (data[i].uploadDate = new Date(structure.uploadDate))
+          );
           this.structures.push(...data);
           this.changeDetection.detectChanges();
           console.log(`Loaded 5 more structures: `, data);
 
           this.iter++;
           this.currentHeight = window.scrollY + window.innerHeight;
-          this.totalHeight = Math.max( document.body.scrollHeight, document.body.offsetHeight,
-                            document.documentElement.clientHeight, document.documentElement.scrollHeight);
+          this.totalHeight = Math.max(
+            document.body.scrollHeight,
+            document.body.offsetHeight,
+            document.documentElement.clientHeight,
+            document.documentElement.scrollHeight
+          );
 
           this.keepLoading();
         },
-        err => {
+        (err) => {
           console.log('err', err);
         }
       );
     }
-
-
   }
 
   loadRecentTags(count: number): void {
@@ -252,15 +303,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     //       keywords: this.tagStore.keywords.slice(0, 10)
     // };
     this.structService.getRecentTags(count).subscribe(
-      data => {
+      (data) => {
         this.tagStore = data;
         this.tags = {
           applications: this.tagStore.applications.slice(0, 10),
           modifications: this.tagStore.modifications.slice(0, 10),
-          keywords: this.tagStore.keywords.slice(0, 10)
+          keywords: this.tagStore.keywords.slice(0, 10),
         };
       },
-      err => console.log('err', err)
+      (err) => console.log('err', err)
     );
     this.appExpand = false;
     this.modExpand = false;
@@ -272,15 +323,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   formatDate(date: Date): string {
-    return this.months[date.getMonth()] + ` ${date.getDate()}, ${date.getFullYear()}`;
+    return (
+      this.months[date.getMonth()] + ` ${date.getDate()}, ${date.getFullYear()}`
+    );
   }
 
   toggleApplicationExpand(): void {
     this.appExpand = !this.appExpand;
     if (this.appExpand) {
       this.tags.applications = [...this.tagStore.applications];
-    }
-    else {
+    } else {
       this.tags.applications.splice(10, this.tags.applications.length - 5);
     }
   }
@@ -288,8 +340,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.modExpand = !this.modExpand;
     if (this.modExpand) {
       this.tags.modifications = [...this.tagStore.modifications];
-    }
-    else {
+    } else {
       this.tags.modifications.splice(10, this.tags.modifications.length - 5);
     }
   }
@@ -297,8 +348,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.keyExpand = !this.keyExpand;
     if (this.keyExpand) {
       this.tags.keywords = [...this.tagStore.keywords];
-    }
-    else {
+    } else {
       this.tags.keywords.splice(10, this.tags.keywords.length - 5);
     }
   }
@@ -308,12 +358,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       // this.infiniteScroll();
       setTimeout(() => {
         this.currentHeight = window.scrollY + window.innerHeight;
-        this.totalHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight,
-                      document.documentElement.clientHeight, document.documentElement.scrollHeight);
+        this.totalHeight = Math.max(
+          document.body.scrollHeight,
+          document.body.offsetHeight,
+          document.documentElement.clientHeight,
+          document.documentElement.scrollHeight
+        );
         this.iter = 0;
         this.keepLoading();
       }, 50);
     }
   }
-
 }

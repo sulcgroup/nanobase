@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
     private el: ElementRef
   ) {}
 
-  sideNavOpen: boolean = true;
+  sideNavOpen: boolean = false;
   ngOnInit(): void {
     this.userService.populate();
 

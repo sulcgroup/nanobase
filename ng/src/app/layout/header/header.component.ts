@@ -77,7 +77,7 @@ export class HeaderComponent implements OnInit {
       this.category = 'title';
     }
     this.router.navigateByUrl(
-      `/?input=${this.input.value}&category=${this.category}`
+      `/home?input=${this.input.value}&category=${this.category}`
     );
   }
 
