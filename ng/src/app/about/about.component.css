@@ -22,3 +22,14 @@ h1 {
   padding: 0 20px;
   background-color: rgb(244, 244, 244);
 }
+
+::ng-deep .search-container{
+  flex-direction: row !important;
+  justify-content: space-around !important;
+  width: 40% !important;
+}
+
+
+#about-body{
+  width: 100%;
+}

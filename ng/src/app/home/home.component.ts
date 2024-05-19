@@ -107,10 +107,20 @@ export class HomeComponent implements OnInit, OnDestroy {
         val instanceof NavigationEnd &&
         (val.url.startsWith('/home?') || val.url === '/home')
       ) {
-        const url = new URLSearchParams(val.url.slice(2));
-        input = url.get('input');
-        category = url.get('category');
-        input ? this.loadSearch(input, category) : this.loadRecent(5);
+        console.log('val ' + val);
+
+        this.route.queryParams.subscribe((params) => {
+          const input = params['input'];
+          const category = params['category'];
+
+          input ? this.loadSearch(input, category) : this.loadRecent(5);
+        });
+        // const url = new URLSearchParams(val.url.slice(2));
+        // input = url.get('input');
+        // category = url.get('category');
+
+        // console.log('input' + input);
+        // input ? this.loadSearch(input, category) : this.loadRecent(5);
       }
     });
   }
@@ -144,6 +154,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   loadSearch(input: string, category: string): void {
+    console.log('Searching');
     this.oldHeight = Infinity;
     this.message = '';
     this.structService.search(input, category).subscribe(

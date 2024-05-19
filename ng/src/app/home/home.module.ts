@@ -19,5 +19,6 @@ import { MaterialModule } from '../material/material.module';
     FormsModule,
     MaterialModule,
   ],
+  exports:[SearchStrcturesComponent]
 })
 export class HomeModule {}

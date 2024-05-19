@@ -84,8 +84,12 @@ export class SearchStrcturesComponent {
   private _filter(value: string): string[] {
     const category = this.category ? this.category : 'title';
     const filterValue = value.toLowerCase();
+    console.log(filterValue);
+    console.log(this.options);
     return this.options[category].filter(
-      (option) => option.toLowerCase().indexOf(filterValue) === 0
+      (option, index, self) =>
+        option.toLowerCase().startsWith(filterValue) &&
+        self.indexOf(option) === index
     );
   }
 }

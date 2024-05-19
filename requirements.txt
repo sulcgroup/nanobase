@@ -39,4 +39,5 @@ typing-extensions==3.10.0.2
 urllib3==1.26.4
 Werkzeug==1.0.1
 wrapt==1.12.1
-yagmail==0.14.247
+yagmail==0.14.24
+python-dotenv

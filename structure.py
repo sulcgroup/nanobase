@@ -19,10 +19,10 @@ import requests
 es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 
 # PRINT SPECIFIC ID
-# print(es.get(index='structures', id=3))
+print(es.get(index='structures', id=8))
 
 # PRINT ALL
-# print(es.search(index='structures', body={'query': {'match_all' : {}}}))
+print(es.search(index='structures', body={'query': {'match_all' : {}}}))
 
 get_structure_query = ('SELECT Structures.*, Users.firstName, Users.lastName, Users.institution FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.id = %s')
 get_private_structure_query = ('SELECT Structures.*, Users.firstName, Users.lastName, Users.institution FROM Structures INNER JOIN Users ON Structures.userId=Users.id WHERE Structures.private_hash = %s')
@@ -749,20 +749,23 @@ def search(input, category):
                     {'match': {
                         'private': 0
                     }},
-                    {'match': {
+                    {'match_phrase': {
                         category: {
-                            'query': input,
-                            'fuzziness': 'AUTO'
+                            'query': input
                         }
                     }}
                 ],
             },
-        }
+        },
+        "size": 2000
     }
 
+    print(query)
     # Find structures that match the query
     hits = es.search(index='structures', body=query)['hits']['hits']
     ids = [hit['_id'] for hit in hits]
+    print(ids)
+    # print("hits ",hits)
     if not ids:
         return {}
     
@@ -771,9 +774,11 @@ def search(input, category):
     with connection.cursor() as cursor:
         for id in ids:
             cursor.execute(get_by_id_single, id)
-            structures.append(cursor.fetchone())
+            result = cursor.fetchone()
+            if result is not None:
+                structures.append(result)
     connection.close()
-
+    print(structures)
     response = []
     for structure in structures:
         response.append({
@@ -785,7 +790,7 @@ def search(input, category):
             'firstName': structure[5],
             'lastName': structure[6]
         })
-    
+    # print(jsonify(response))
     return jsonify(response)
 
 def is_data_url(file):
