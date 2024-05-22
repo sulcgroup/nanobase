@@ -39,11 +39,22 @@
           class="sidebar-link"
           mat-button
           (click)="scrollTop()"
+          routerLink="/about"
+          color="primary"
+        >
+          <mat-icon class="sidebar-icon">description</mat-icon>
+          <div class="navigation">Information</div>
+        </a>
+
+        <a
+          class="sidebar-link"
+          mat-button
+          (click)="scrollTop()"
           routerLink="/home"
           color="primary"
         >
-          <mat-icon class="sidebar-icon">home</mat-icon>
-          <div class="navigation">Homepage</div>
+          <mat-icon class="sidebar-icon">dataset</mat-icon>
+          <div class="navigation">Explore Database</div>
         </a>
         <a
           class="sidebar-link"
@@ -65,16 +76,7 @@
           <mat-icon class="sidebar-icon">person</mat-icon>
           <div class="navigation profile">Profile</div>
         </a>
-        <a
-          class="sidebar-link"
-          mat-button
-          (click)="scrollTop()"
-          routerLink="/about"
-          color="primary"
-        >
-          <mat-icon class="sidebar-icon">description</mat-icon>
-          <div class="navigation">About</div>
-        </a>
+        
         <a
           class="sidebar-link"
           mat-button

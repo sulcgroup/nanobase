@@ -24,11 +24,21 @@ def not_found_error(error):
 
 @app.route('/file/<id>/<file_type>/<file>')
 def get_file(id=None, file_type=None, file=None):
+	print("here", id, file_type, file )
 	print('structures/{}/{}/{}'.format(id, file_type, file))
 	if os.path.isfile('structures/{}/{}/{}'.format(id, file_type, file)):
 		return send_file('structures/{}/{}/{}'.format(id, file_type, file))
 	else:
 		abort(404, description='File not found')
+  
+@app.route('/compressed/<id>/<file_type>/<file>')
+def get_file_compressed(id=None, file_type=None, file=None):
+	print("here", id, file_type, file )
+	print('structures/{}/{}/{}'.format(id, file_type, file))
+	if os.path.isfile('structures/{}/{}/compressed_imgs/{}'.format(id, file_type, file)):
+		return send_file('structures/{}/{}/compressed_imgs/{}'.format(id, file_type, file))
+	else:
+		abort(404, description='File not found')  
 
 @app.route('/oxdna/<id>')
 def get_oxdna_files(id=None):

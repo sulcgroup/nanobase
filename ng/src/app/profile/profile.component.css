@@ -1,6 +1,6 @@
 #login-container {
   /* flex: 1; */
-  width: 100%;
+  width: 60%;
   margin-top: 70px;
   margin-left: 7%;
 }
@@ -50,7 +50,8 @@ a {
 }
 
 .mat-mdc-card-header {
-  padding: 16px 150px !important;
+  padding: 16px;
+  justify-content: center
 }
 
 #submit-button {
